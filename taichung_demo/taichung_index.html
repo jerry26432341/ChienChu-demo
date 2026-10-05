@@ -1,0 +1,818 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>臺中市土地智慧選配服務平台</title>
+<link rel="stylesheet" href="https://js.arcgis.com/4.32/esri/themes/light/main.css" />
+
+
+<style>
+:root{
+  --brand:#1267e8;--brand2:#5a7cff;--navy:#12335f;--cyan:#17a8d7;--green:#18a16f;
+  --bg:#eef4fb;--panel:rgba(255,255,255,.96);--line:#dce6f2;--text:#18324f;--muted:#6e8198;
+  --shadow:0 14px 42px rgba(28,66,118,.16);--radius:16px;
+}
+*{box-sizing:border-box}html,body,#app{width:100%;height:100%;margin:0;font-family:"Microsoft JhengHei","Noto Sans TC",system-ui,sans-serif;color:var(--text);overflow:hidden;background:#eaf1f8}
+button,input{font:inherit}.topbar{height:58px;position:absolute;z-index:30;left:0;right:0;top:0;display:flex;align-items:center;padding:0 14px;background:rgba(255,255,255,.97);border-bottom:1px solid rgba(214,225,239,.95);box-shadow:0 2px 12px rgba(35,69,112,.08);backdrop-filter:blur(12px)}
+.brand{display:flex;align-items:center;gap:10px;min-width:310px}.logo{width:40px;height:40px;display:grid;place-items:center;filter:drop-shadow(0 5px 12px rgba(22,103,232,.18))}.logo svg{display:block;width:40px;height:40px}
+.brand-title{font-size:19px;font-weight:900;letter-spacing:.5px;color:#173b68}.brand-title span{color:var(--brand)}.brand-sub{font-size:10px;color:#8292a7;margin-top:1px;letter-spacing:.4px}.version{font-size:10px;color:#66819d;padding:3px 7px;background:#eff5fb;border:1px solid #dde8f4;border-radius:999px;margin-left:2px}
+.nav{display:flex;gap:3px;margin-left:12px}.nav button{border:0;background:transparent;color:#4e6680;font-weight:800;font-size:13px;padding:8px 11px;border-radius:9px;cursor:pointer}.nav button.active{background:#eef5ff;color:var(--brand)}
+.top-actions{margin-left:auto;display:flex;align-items:center;gap:8px}.area-pill{display:flex;align-items:center;gap:7px;border:1px solid #d8e5f4;background:#f9fbfe;border-radius:999px;padding:7px 11px;color:#355675;font-size:12px;font-weight:800}.dot{width:8px;height:8px;border-radius:50%;background:#3cb878;box-shadow:0 0 0 4px rgba(60,184,120,.13)}
+.searchbox{width:285px;height:38px;border:1px solid #d4e1f0;border-radius:12px;background:#f8fbff;display:flex;align-items:center;overflow:hidden}.searchbox input{flex:1;border:0;background:transparent;padding:0 12px;outline:none;font-size:13px;color:#274663}.searchbox button{height:100%;width:44px;border:0;background:transparent;color:#35668d;font-size:17px;cursor:pointer}.focus-btn{border:0;border-radius:11px;background:linear-gradient(135deg,var(--brand),#5d75f2);color:white;padding:10px 14px;font-size:12px;font-weight:900;box-shadow:0 6px 16px rgba(46,103,225,.25);cursor:pointer}.focus-btn:hover{filter:brightness(1.03)}
+#map2d,#map3d{position:absolute;inset:58px 0 0 0}.hidden{display:none!important}.loading{position:absolute;inset:58px 0 0;z-index:40;display:grid;place-items:center;background:#edf4fb}.loading-card{background:white;border:1px solid var(--line);border-radius:18px;padding:20px 26px;box-shadow:var(--shadow);text-align:center}.spinner{width:28px;height:28px;border:3px solid #deebf8;border-top-color:var(--brand);border-radius:50%;animation:spin .9s linear infinite;margin:0 auto 10px}@keyframes spin{to{transform:rotate(360deg)}}
+/* left rail */
+.rail{position:absolute;z-index:20;left:12px;top:72px;width:48px;border-radius:15px;background:rgba(255,255,255,.96);border:1px solid rgba(217,228,241,.98);box-shadow:0 10px 30px rgba(42,74,116,.16);padding:6px;display:flex;flex-direction:column;gap:4px}.rail-btn{height:40px;border:0;background:transparent;border-radius:10px;color:#284a69;display:grid;place-items:center;cursor:pointer;font-size:19px;position:relative}.rail-btn:hover,.rail-btn.active{background:#eaf3ff;color:var(--brand)}.rail-btn[data-tip]:hover:after{content:attr(data-tip);position:absolute;left:50px;white-space:nowrap;background:#173b62;color:#fff;padding:6px 8px;border-radius:7px;font-size:11px;box-shadow:0 5px 14px rgba(0,0,0,.14)}.rail-sep{height:1px;background:#e8eef5;margin:3px}
+.drawer{position:absolute;z-index:19;left:70px;top:72px;width:286px;max-height:calc(100% - 94px);background:var(--panel);border:1px solid #dbe6f2;border-radius:16px;box-shadow:var(--shadow);overflow:hidden;transform:translateX(-15px);opacity:0;pointer-events:none;transition:.22s ease}.drawer.open{transform:translateX(0);opacity:1;pointer-events:auto}.drawer-head{display:flex;align-items:center;justify-content:space-between;padding:14px 15px 11px;border-bottom:1px solid #e7eef6}.drawer-head b{font-size:15px}.close-mini{border:0;background:#edf3f9;width:30px;height:30px;border-radius:9px;color:#5e748b;cursor:pointer}.drawer-body{padding:11px 12px 14px;overflow:auto;max-height:calc(100vh - 150px)}
+.layer-row{display:flex;align-items:center;gap:9px;padding:9px;border-radius:10px}.layer-row:hover{background:#f6f9fd}.layer-row input{accent-color:var(--brand);width:16px;height:16px}.layer-ico{width:26px;height:26px;border-radius:8px;display:grid;place-items:center;background:#eaf3ff;color:#2a75dc;font-size:13px}.layer-name{font-size:13px;font-weight:800}.layer-sub{font-size:10px;color:#8a9aac;margin-top:2px}.tag{margin-left:auto;font-size:9px;padding:2px 6px;border-radius:999px;background:#eef8f4;color:#248666;border:1px solid #d6eee6}
+.section-title{font-size:11px;font-weight:900;color:#8192a5;letter-spacing:.8px;margin:10px 5px 6px}.tool-card{border:1px solid #e0e9f3;border-radius:12px;padding:10px;margin-bottom:8px;background:linear-gradient(180deg,#fff,#f9fbfe)}.tool-card b{font-size:12px}.tool-card p{font-size:10px;line-height:1.5;color:#75889d;margin:4px 0 0}
+/* map overlays */
+.mode{position:absolute;z-index:15;right:18px;top:74px;background:rgba(255,255,255,.95);border:1px solid #dce6f1;border-radius:999px;padding:4px;box-shadow:0 8px 22px rgba(27,64,107,.15);display:flex}.mode button{border:0;background:transparent;padding:7px 12px;border-radius:999px;font-size:12px;font-weight:900;color:#59728b;cursor:pointer}.mode button.active{background:var(--brand);color:white;box-shadow:0 3px 8px rgba(29,105,220,.24)}
+.hero-card{position:absolute;z-index:14;left:78px;bottom:18px;width:350px;background:rgba(255,255,255,.95);border:1px solid #dce7f3;border-radius:18px;box-shadow:var(--shadow);backdrop-filter:blur(14px);padding:14px}.hero-eyebrow{font-size:10px;color:var(--brand);font-weight:900;letter-spacing:1px}.hero-card h3{margin:5px 0 5px;font-size:18px}.hero-card p{margin:0;color:#6d8197;font-size:11px;line-height:1.6}.hero-actions{display:flex;gap:7px;margin-top:10px}.hero-actions button{border:1px solid #d7e4f1;border-radius:10px;padding:8px 10px;background:#fff;color:#31577a;font-size:11px;font-weight:900;cursor:pointer}.hero-actions .primary{background:var(--brand);color:#fff;border-color:transparent}.status-chip{position:absolute;z-index:14;left:444px;bottom:20px;background:rgba(20,48,78,.88);color:#fff;border-radius:999px;padding:8px 12px;font-size:10px;box-shadow:0 6px 18px rgba(0,0,0,.15);backdrop-filter:blur(8px)}
+
+/* selected land / allocation info */
+.selection-panel{position:absolute;z-index:24;right:18px;bottom:90px;width:340px;max-height:520px;background:rgba(255,255,255,.985);border:1px solid #d9e5f1;border-radius:18px;box-shadow:0 16px 44px rgba(31,72,124,.22);overflow:hidden;opacity:0;pointer-events:none;transform:translateY(12px) scale(.98);transition:.16s ease}.selection-panel.open{opacity:1;pointer-events:auto;transform:none}.selection-head{display:flex;align-items:center;gap:9px;padding:12px 13px;border-bottom:1px solid #e5edf6;background:linear-gradient(135deg,#f8fbff,#eef6ff)}.selection-icon{width:34px;height:34px;border-radius:10px;display:grid;place-items:center;background:#e7f2ff;color:#176ed4;font-weight:900}.selection-head b{font-size:14px}.selection-head small{display:block;font-size:9px;color:#7890a6;margin-top:2px}.selection-close{margin-left:auto;border:0;background:#e8f0f8;width:28px;height:28px;border-radius:9px;color:#667e96;cursor:pointer}.selection-body{padding:11px 12px 13px;overflow:auto;max-height:440px}.info-kicker{font-size:9px;letter-spacing:.8px;color:#2b77d2;font-weight:900;margin-bottom:5px}.info-title{font-size:16px;font-weight:900;color:#173b68;margin-bottom:7px}.info-grid{display:grid;grid-template-columns:88px 1fr;border:1px solid #e1eaf4;border-radius:11px;overflow:hidden;background:#fff}.info-grid span{padding:7px 8px;font-size:10px;border-bottom:1px solid #edf2f7}.info-grid span:nth-child(odd){color:#73869a;background:#f8fbfe;font-weight:800}.info-grid span:nth-last-child(-n+2){border-bottom:0}.info-divider{height:1px;background:#e8eef5;margin:10px 0}.info-actions{display:flex;gap:7px;margin-top:10px}.info-actions button{flex:1;border:1px solid #d3e2f2;border-radius:10px;background:#fff;color:#31577a;padding:8px;font-size:10px;font-weight:900;cursor:pointer}.info-actions button.primary{border-color:transparent;background:linear-gradient(135deg,#147fe8,#5869ef);color:#fff}.info-note{font-size:9px;color:#8294a6;line-height:1.5;margin-top:7px}.map-busy{display:flex;align-items:center;gap:8px;color:#567189;font-size:11px;padding:5px 1px}.mini-spin{width:15px;height:15px;border:2px solid #dce8f4;border-top-color:#237be0;border-radius:50%;animation:spin .7s linear infinite}
+
+/* AI */
+.ai-fab{position:absolute;z-index:26;right:20px;bottom:22px;min-width:132px;height:54px;border-radius:18px;border:1px solid rgba(255,255,255,.55);background:linear-gradient(135deg,#0f8fe7,#5b65ef);color:#fff;box-shadow:0 12px 30px rgba(28,88,204,.36);cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;padding:0 15px;font-size:25px;transition:.2s}.ai-fab:hover{transform:translateY(-2px) scale(1.03)}.ai-fab .badge{position:absolute;right:-1px;top:-1px;width:15px;height:15px;border-radius:50%;background:#25c487;border:3px solid #fff}
+.ai-panel{position:absolute;z-index:25;right:18px;bottom:90px;width:380px;height:min(620px,calc(100vh - 120px));background:rgba(255,255,255,.98);border:1px solid #d9e5f1;border-radius:20px;box-shadow:0 18px 52px rgba(31,72,124,.24);overflow:hidden;display:flex;flex-direction:column;transform-origin:bottom right;transform:scale(.94) translateY(15px);opacity:0;pointer-events:none;transition:.16s ease;backdrop-filter:blur(18px)}.ai-panel.open{transform:scale(1) translateY(0);opacity:1;pointer-events:auto}.ai-head{height:72px;padding:12px 14px;display:flex;align-items:center;gap:10px;border-bottom:1px solid #e4edf5;background:linear-gradient(135deg,#f8fbff,#eef6ff)}.ai-avatar{width:42px;height:42px;border-radius:13px;background:linear-gradient(135deg,#168fe8,#665dee);display:grid;place-items:center;color:#fff;font-size:21px;box-shadow:0 6px 14px rgba(38,101,210,.22)}.ai-head b{font-size:16px}.ai-head small{display:block;color:#7790a7;font-size:10px;margin-top:3px}.ai-head .online{display:inline-flex;align-items:center;gap:4px;color:#2d9e72;font-size:9px;margin-left:5px}.ai-close{margin-left:auto;border:0;background:#e8f0f8;width:32px;height:32px;border-radius:10px;color:#667e96;cursor:pointer}.chat{flex:1;overflow:auto;padding:13px;background:linear-gradient(180deg,#fff,#f7faff)}.msg{max-width:92%;margin:7px 0;padding:10px 11px;border-radius:13px;font-size:12px;line-height:1.65;white-space:pre-wrap}.msg.botmsg{background:#eef5fb;border-bottom-left-radius:4px}.msg.user{margin-left:auto;background:linear-gradient(135deg,#197ae8,#5969ee);color:#fff;border-bottom-right-radius:4px}.result-card{margin-top:8px;background:#fff;border:1px solid #dde7f1;border-radius:11px;overflow:hidden}.result-card table{width:100%;border-collapse:collapse}.result-card td{padding:6px 8px;border-bottom:1px solid #eef3f8;font-size:10px;vertical-align:top}.result-card td:first-child{width:38%;color:#73869a}.result-actions{padding:8px}.result-actions button{border:1px solid #cbe0fb;background:#eef6ff;color:#1d67c2;border-radius:8px;padding:6px 8px;font-size:10px;cursor:pointer}.candidate-list{display:grid;gap:9px;margin-top:10px}.candidate-item{display:grid;grid-template-columns:30px 1fr auto;gap:10px;align-items:center;padding:10px 11px;border:1px solid #d9e6f3;border-radius:12px;background:#fff}.candidate-no{width:28px;height:28px;border-radius:9px;display:grid;place-items:center;background:#eef4ff;color:#2f67df;font-weight:900;font-size:12px}.candidate-main{min-width:0}.candidate-main b{display:block;font-size:13px;color:#203a55;white-space:normal}.candidate-main small{display:block;color:#73879a;font-size:11px;margin-top:3px;white-space:normal}.candidate-btn{border:0;border-radius:9px;background:#2f67df;color:#fff;font-weight:900;font-size:11px;padding:8px 10px;cursor:pointer}.candidate-btn:hover{filter:brightness(1.04)}.candidate-source{font-size:10px;color:#8ca0b2;margin-top:2px}.candidate-summary{margin-top:8px;color:#6f8296;font-size:12px;line-height:1.55}.quick{padding:9px 12px;border-top:1px solid #e7eef6;background:#fbfdff}.quick-title{font-size:10px;color:#8093a8;font-weight:900;margin-bottom:6px}.qgrid{display:flex;flex-wrap:wrap;gap:6px}.qbtn{border:1px solid #d9e5f0;background:#fff;border-radius:999px;padding:6px 9px;font-size:10px;color:#496781;cursor:pointer}.qbtn:hover{border-color:#98bff2;color:#1766c1}.inputbar{display:flex;gap:7px;padding:10px 11px;border-top:1px solid #e4edf6;background:#fff}.inputbar input{flex:1;border:1px solid #d6e2ef;border-radius:11px;padding:9px 10px;outline:none;font-size:11px}.inputbar input:focus{border-color:#8db8ef;box-shadow:0 0 0 3px rgba(44,116,218,.09)}.inputbar button{width:40px;border:0;border-radius:11px;background:linear-gradient(135deg,#147fe8,#5d68ef);color:#fff;cursor:pointer}.disclaimer{text-align:center;font-size:9px;color:#94a4b5;padding:0 8px 8px;background:#fff}
+.toast{position:absolute;z-index:50;top:76px;left:50%;transform:translateX(-50%) translateY(-10px);background:#173b62;color:#fff;padding:9px 13px;border-radius:999px;font-size:11px;opacity:0;pointer-events:none;transition:.2s;box-shadow:0 7px 22px rgba(13,47,83,.2)}.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+@media(max-width:980px){.nav{display:none}.brand{min-width:250px}.searchbox{width:220px}.hero-card{width:300px}.ai-panel{width:350px}.area-pill{display:none}}
+
+/* Welcome / refined entry */
+.welcome{--welcome-image:url("assets/qianzhu_03.png");position:absolute;z-index:50;inset:58px 0 0;background:linear-gradient(90deg,rgba(255,255,255,.97) 0%,rgba(255,255,255,.90) 31%,rgba(255,255,255,.52) 48%,rgba(255,255,255,.08) 68%,rgba(255,255,255,0) 100%),var(--welcome-image) center/cover no-repeat;display:flex;align-items:center;padding:0 6vw;transition:.45s ease}.welcome:after{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(180deg,rgba(255,255,255,.08),rgba(11,71,122,.05) 65%,rgba(8,44,77,.18))}.welcome.hide{opacity:0;pointer-events:none;transform:scale(1.01)}
+.welcome-card{position:relative;z-index:2;width:min(620px,48vw);padding:36px 40px;border:1px solid rgba(204,221,239,.9);border-radius:28px;background:rgba(255,255,255,.84);box-shadow:0 24px 70px rgba(34,78,126,.18);backdrop-filter:blur(14px);color:#163858}.welcome-kicker{font-size:12px;letter-spacing:2px;font-weight:900;color:#1575cf}.welcome h1{font-size:36px;line-height:1.25;margin:10px 0 12px;letter-spacing:1px;color:#123b66}.welcome p{font-size:14px;line-height:1.9;color:#557089;margin:0 0 22px}.welcome-actions{display:flex;gap:10px;flex-wrap:wrap}.welcome-actions button{border:1px solid #d4e4f2;background:rgba(255,255,255,.92);color:#2c587d;border-radius:12px;padding:11px 16px;font-weight:900;cursor:pointer;box-shadow:0 6px 16px rgba(52,96,143,.08)}.welcome-actions .primary{background:linear-gradient(135deg,#1578df,#596ceb);color:#fff;border-color:transparent}.welcome-note{margin-top:14px;font-size:11px;color:#7890a6}.welcome-gallery{position:absolute;z-index:3;right:34px;bottom:28px;display:flex;gap:10px;padding:10px;border-radius:18px;background:rgba(255,255,255,.82);border:1px solid rgba(220,232,244,.96);box-shadow:0 16px 40px rgba(36,75,116,.18);backdrop-filter:blur(12px)}.welcome-gallery button{width:86px;height:58px;border-radius:11px;border:2px solid transparent;padding:0;overflow:hidden;background:#fff;cursor:pointer;transition:.18s}.welcome-gallery button.active{border-color:#1f7de2;transform:translateY(-2px)}.welcome-gallery img{width:100%;height:100%;object-fit:cover}.welcome-scene-badge{position:absolute;z-index:3;right:36px;top:28px;background:rgba(255,255,255,.9);border:1px solid #dce8f3;border-radius:999px;padding:8px 12px;color:#355d7d;font-size:11px;font-weight:900;box-shadow:0 8px 24px rgba(38,76,118,.14)}
+.gallery-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}.gallery-card{border:1px solid #dfe8f1;background:#fff;border-radius:12px;overflow:hidden;cursor:pointer}.gallery-card img{display:block;width:100%;aspect-ratio:16/10;object-fit:cover}.gallery-card div{padding:7px 8px;font-size:10px;color:#647c93;font-weight:800}.vision-note{font-size:10px;line-height:1.6;color:#7d8fa1;margin:8px 2px}.lightbox{position:absolute;z-index:80;inset:0;background:rgba(6,24,43,.84);display:none;place-items:center;padding:40px}.lightbox.open{display:grid}.lightbox img{max-width:92vw;max-height:86vh;border-radius:16px;box-shadow:0 24px 80px rgba(0,0,0,.45)}.lightbox button{position:absolute;right:24px;top:24px;width:42px;height:42px;border:0;border-radius:50%;background:rgba(255,255,255,.9);font-size:22px;cursor:pointer}.scene-pill{display:inline-flex;align-items:center;gap:5px;color:#0d7e63;background:#ebf9f4;border:1px solid #ccefe3;padding:3px 7px;border-radius:999px;font-size:9px;font-weight:900}
+.robot-face{position:relative;display:inline-block;width:30px;height:24px;border:2px solid currentColor;border-radius:9px}.robot-face:before{content:"";position:absolute;left:50%;top:-7px;width:2px;height:6px;background:currentColor;transform:translateX(-50%)}.robot-face:after{content:"";position:absolute;left:50%;top:-10px;width:5px;height:5px;border-radius:50%;background:currentColor;transform:translateX(-50%)}.robot-face i{position:absolute;top:7px;width:4px;height:4px;border-radius:50%;background:currentColor}.robot-face i:first-child{left:7px}.robot-face i:nth-child(2){right:7px}.robot-face em{position:absolute;left:8px;right:8px;bottom:5px;height:2px;border-radius:2px;background:currentColor}.ai-fab .robot-face{width:31px;height:25px}.ai-fab .ai-label{position:static;background:transparent;color:#fff;font-size:12px;font-weight:900;padding:0;box-shadow:none;white-space:nowrap}.ai-fab .ai-label small{display:block;font-size:9px;font-weight:700;opacity:.8;margin-top:1px}.ai-avatar .robot-face{width:26px;height:21px;color:#fff}.brand{min-width:370px}.brand-title{font-size:18px}
+
+.zoning-summary{margin-top:10px;border:1px solid #d9e6f3;border-radius:12px;overflow:hidden;background:#fff}.zoning-summary .ztitle{padding:9px 10px;background:#f5f9fe;font-size:11px;font-weight:900;color:#315a7f}.zoning-chiprow{display:flex;gap:6px;flex-wrap:wrap;padding:9px}.zchip{font-size:9px;font-weight:800;padding:5px 8px;border-radius:999px;border:1px solid rgba(0,0,0,.06)}.z-res{background:#fff5a8;color:#6f5d00}.z-com{background:#ffd6d6;color:#9a3030}.z-rel{background:#ead9ff;color:#63399b}.z-util{background:#d9edff;color:#275f8d}.z-river{background:#d5f4f7;color:#236c75}.z-public{background:#dcf5df;color:#2e6d37}.brandmark,.aimark{display:block}.ai-avatar{background:linear-gradient(135deg,#0f7ce8,#6757ef)!important}.ai-fab .aimark{width:31px;height:31px}.ai-avatar .aimark{width:26px;height:26px}
+
+.zone-legend-card{margin-top:9px;border:1px solid #d9e6f3;border-radius:12px;background:#fff;padding:9px}.zone-legend-card b{font-size:10px;color:#315a7f}.zone-legend-list{display:grid;grid-template-columns:1fr 1fr;gap:5px;margin-top:7px}.zone-legend-list span{font-size:9px;color:#5d7389;display:flex;align-items:center;gap:5px}.zone-legend-list i{width:11px;height:11px;border-radius:3px;border:1px solid rgba(0,0,0,.08);flex:0 0 auto}.zone-source-badge{display:inline-flex;align-items:center;gap:4px;padding:3px 7px;border-radius:999px;background:#eef8f4;color:#238363;border:1px solid #d4eee4;font-size:9px;font-weight:900}.model-status{margin-top:8px;padding:8px 9px;border-radius:10px;background:#fff8ea;border:1px solid #f1deb6;color:#7b622d;font-size:9px;line-height:1.5}.zone-inline{display:inline-flex;align-items:center;gap:5px;font-weight:900}.zone-inline i{width:10px;height:10px;border-radius:3px;display:inline-block;border:1px solid rgba(0,0,0,.08)}
+
+.compare-panel{position:absolute;z-index:26;left:50%;bottom:18px;transform:translateX(-50%);width:min(760px,calc(100vw - 40px));background:rgba(255,255,255,.985);border:1px solid #d9e5f1;border-radius:18px;box-shadow:0 18px 48px rgba(31,72,124,.24);display:none;overflow:hidden}.compare-panel.open{display:block}.compare-head{display:flex;align-items:center;gap:8px;padding:10px 12px;border-bottom:1px solid #e5edf6;background:linear-gradient(135deg,#f8fbff,#eef6ff)}.compare-head b{font-size:13px;color:#173b68}.compare-head small{color:#7890a6;font-size:9px}.compare-close{margin-left:auto;border:0;background:#e8f0f8;width:28px;height:28px;border-radius:9px;color:#667e96;cursor:pointer}.compare-body{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:10px}.compare-card{border:1px solid #dfe9f3;border-radius:13px;padding:10px;background:#fff}.compare-card h4{margin:0 0 7px;font-size:12px;color:#1d4b79}.compare-grid{display:grid;grid-template-columns:82px 1fr;gap:0;border:1px solid #e7eef6;border-radius:9px;overflow:hidden}.compare-grid span{padding:6px 7px;font-size:9px;border-bottom:1px solid #edf2f7}.compare-grid span:nth-child(odd){background:#f8fbfe;color:#75899c;font-weight:800}.compare-grid span:nth-last-child(-n+2){border-bottom:0}.compare-summary{padding:0 10px 10px;font-size:9px;line-height:1.6;color:#577089}.model-fallback{position:absolute;z-index:18;inset:70px 70px 70px 380px;display:none;border-radius:20px;overflow:hidden;border:1px solid rgba(255,255,255,.72);box-shadow:0 20px 60px rgba(18,54,94,.25);background:#10263d}.model-fallback.open{display:block}.model-fallback img{width:100%;height:100%;object-fit:cover;filter:saturate(1.04) contrast(1.02)}.model-fallback .mf-overlay{position:absolute;inset:0;background:linear-gradient(180deg,rgba(4,18,32,.08),rgba(4,18,32,.56));pointer-events:none}.model-fallback .mf-copy{position:absolute;left:24px;bottom:24px;right:24px;color:white}.model-fallback .mf-copy b{font-size:18px}.model-fallback .mf-copy p{margin:6px 0 0;font-size:11px;line-height:1.55;max-width:620px}.model-fallback .mf-actions{position:absolute;right:18px;top:18px;display:flex;gap:7px}.model-fallback .mf-actions button{border:1px solid rgba(255,255,255,.7);background:rgba(255,255,255,.9);color:#234f78;border-radius:10px;padding:8px 10px;font-size:10px;font-weight:900;cursor:pointer}.zone-status-inline{margin-top:6px;padding:7px 8px;border-radius:9px;background:#f7fbff;border:1px solid #e2edf7;font-size:9px;color:#637b91}.selection-fast{font-size:9px;color:#2d7b63;font-weight:900;margin-bottom:7px}.compare-add{background:#fff7e7!important;border-color:#f0d69d!important;color:#8a641d!important}
+@media(max-width:900px){.model-fallback{inset:70px 12px 110px 12px}.compare-body{grid-template-columns:1fr}.compare-panel{bottom:10px}.compare-panel.open{max-height:70vh;overflow:auto}}
+
+.zone-override-box{margin-top:8px;border:1px solid #dce8f4;border-radius:11px;padding:8px;background:#fbfdff}.zone-override-box b{display:block;font-size:10px;color:#345b7e;margin-bottom:6px}.zone-picks{display:flex;flex-wrap:wrap;gap:5px}.zone-picks button{border:1px solid #d4e1ee;background:#fff;border-radius:999px;padding:5px 8px;font-size:9px;font-weight:800;color:#45647f;cursor:pointer}.zone-picks button:hover{border-color:#4b8ee8;background:#f1f7ff}.zone-picks button.active{background:#1f78e8;color:#fff;border-color:#1f78e8}.zone-source-note{font-size:8px;color:#7c91a5;margin-top:6px;line-height:1.45}.model-warning{display:inline-flex;align-items:center;gap:5px;padding:4px 7px;border-radius:999px;background:#fff2d8;color:#8a5c13;font-size:8px;font-weight:900;margin-top:6px}.compare-zone-source{font-size:8px;color:#8294a6;margin-top:4px}.mf-actions .danger-close{background:rgba(24,39,56,.78)!important;color:#fff!important;border-color:rgba(255,255,255,.4)!important}.model-source-status{position:absolute;left:18px;top:18px;background:rgba(13,28,44,.78);color:#fff;border:1px solid rgba(255,255,255,.35);border-radius:10px;padding:7px 10px;font-size:9px;font-weight:800;backdrop-filter:blur(8px)}
+
+/* v14 readability + true 3D model relocation */
+body{font-size:15px}
+.brand-title{font-size:22px}.brand-sub{font-size:12px}.nav button{font-size:15px}.area-pill{font-size:14px}.searchbox input{font-size:14px}.focus-btn{font-size:14px}
+.drawer{width:320px}.drawer-head b{font-size:17px}.layer-name{font-size:15px}.layer-sub{font-size:12px}.section-title{font-size:12px}.tool-card b{font-size:14px}.tool-card p{font-size:12px;line-height:1.65}
+.mode button{font-size:14px}.hero-card{width:390px}.hero-eyebrow{font-size:11px}.hero-card h3{font-size:20px}.hero-card p{font-size:13px}.hero-actions button{font-size:13px}.status-chip{font-size:12px}
+.selection-panel{width:390px}.selection-head b{font-size:16px}.selection-head small{font-size:11px}.info-kicker{font-size:11px}.info-title{font-size:18px}.info-grid{grid-template-columns:104px 1fr}.info-grid span{font-size:12px;padding:9px}.info-actions button{font-size:12px}.info-note{font-size:11px}
+.ai-panel{width:430px}.ai-head b{font-size:18px}.ai-head small{font-size:12px}.msg{font-size:14px;line-height:1.72}.result-card td{font-size:12px}.quick-title{font-size:11px}.qbtn{font-size:11.5px}.disclaimer{font-size:10.5px}.ai-label{font-size:15px}.ai-label small{font-size:10px}
+#cesium3d{position:absolute;inset:58px 0 0 0;z-index:2;background:#dfeaf3}.cesium-viewer,.cesium-viewer-cesiumWidgetContainer,.cesium-widget,canvas{outline:none}.cesium-viewer-bottom{display:none!important}
+.cesium-status{position:absolute;z-index:16;left:380px;top:74px;max-width:520px;padding:10px 14px;border-radius:12px;background:rgba(17,45,74,.90);color:#fff;font-size:13px;line-height:1.5;box-shadow:0 8px 24px rgba(0,0,0,.18);display:none}.cesium-status.show{display:block}
+#modelFallback{display:none!important}
+#modelControls{position:absolute;z-index:18;left:78px;bottom:185px;width:290px;padding:12px;background:rgba(255,255,255,.97);border:1px solid #dbe6f2;border-radius:12px;box-shadow:var(--shadow);font-size:12px}#modelControls label{display:block;margin-top:8px}#modelControls input[type=range]{width:100%}#modelControls p{font-size:11px;color:#61798d;line-height:1.5;margin:8px 0 0}
+
+#sceneToolbar{position:absolute;z-index:22;top:122px;left:78px;display:flex;gap:6px;padding:6px;background:rgba(255,255,255,.95);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow)}
+#sceneToolbar button,.scene-panel-head button{border:0;border-radius:9px;padding:8px 11px;background:#eef5ff;color:#245889;cursor:pointer;font-size:12px;font-weight:700}#sceneToolbar button[aria-expanded=true],#sceneToolbar button[aria-pressed=true]{background:var(--brand);color:white}
+#modelControls,#sceneViews{position:absolute;left:78px;top:177px;bottom:auto;width:300px;max-height:calc(100vh - 200px);overflow:auto;z-index:21;padding:14px;background:rgba(255,255,255,.97);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow);font-size:12px}
+.scene-panel-head{display:flex;align-items:center;justify-content:space-between}.scene-panel-head button{padding:4px 9px;font-size:18px}#sceneViews p{font-size:11px;line-height:1.6;color:var(--muted)}.preset-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin:12px 0}.preset-grid button{padding:11px 8px;text-align:left;border:1px solid var(--line);border-radius:10px;background:#f5f9ff;color:#224d78;cursor:pointer}.preset-grid button small{display:block;margin-top:5px;color:var(--muted);font-size:10px}.preset-grid button[aria-pressed=true]{border-color:var(--brand);background:#eaf3ff}
+#app.presentation .hero-card,#app.presentation .status-chip,#app.presentation .rail,#app.presentation .drawer,#app.presentation .ai-fab,#app.presentation .ai-panel,#app.presentation .selection-panel,#app.presentation #comparePanel,#app.presentation #cesiumStatus{display:none!important}
+@media(max-width:600px){#sceneToolbar{left:12px;top:122px}#sceneViews,#modelControls{left:12px;top:177px;width:min(300px,calc(100vw - 24px))}}
+#sceneToolbarLauncher{position:absolute;z-index:22;right:18px;top:174px;border:1px solid var(--line);border-radius:12px;padding:9px 12px;background:rgba(255,255,255,.96);color:#245889;box-shadow:var(--shadow);font:inherit;font-size:12px;cursor:pointer}
+#tourOverlay{position:absolute;inset:58px 0 0;z-index:40;pointer-events:none;color:white;background:linear-gradient(180deg,rgba(5,20,32,.28),transparent 24%,transparent 58%,rgba(5,20,32,.72));display:flex;align-items:flex-end;padding:clamp(24px,5vw,72px)}
+#tourOverlay .tour-copy{max-width:620px;text-shadow:0 2px 18px #102230}#tourOverlay small{letter-spacing:.22em;font-size:12px;color:#c7e5d7}#tourTitle{font-size:clamp(26px,4vw,52px);margin:10px 0;font-weight:700}#tourCaption{font-size:clamp(14px,1.5vw,19px);line-height:1.7;margin:0 0 22px}#tourProgress{height:3px;background:#ffffff35;overflow:hidden}#tourProgress span{display:block;height:100%;background:#a8ebcb;width:0;transition:width .8s ease}#tourStop{position:absolute;top:24px;right:24px;pointer-events:auto;border:1px solid #ffffff80;color:white;background:#102839b8;border-radius:24px;padding:10px 18px;cursor:pointer}#app.tour-playing #sceneToolbar,#app.tour-playing #sceneToolbarLauncher,#app.tour-playing .mode-switch{visibility:hidden}
+</style>
+<script>var dojoConfig={locale:"zh-tw"};</script>
+<script src="https://js.arcgis.com/4.32/"></script>
+<style>
+.zoning-legend{margin-top:10px;padding:10px 12px;border-radius:12px;background:#f7fbff;border:1px solid #dce9f6;font-size:12px;color:#3a5570}.zoning-legend:empty{display:none}.legend-field{margin:4px 0 8px;color:#1c6ec9;font-weight:700}.legend-items{display:grid;grid-template-columns:1fr 1fr;gap:5px 8px}.legend-items span{display:flex;align-items:center;gap:6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.legend-items i{width:12px;height:12px;border-radius:3px;border:1px solid rgba(0,0,0,.08);flex:0 0 12px}.mini-btn{margin-top:8px;border:1px solid #cfe0f1;background:#fff;color:#1c6ec9;border-radius:9px;padding:7px 10px;cursor:pointer;font-weight:700}.mini-btn:hover{background:#f1f7fd}
+
+.zoning-summary{margin-top:10px;border:1px solid #d9e6f3;border-radius:12px;overflow:hidden;background:#fff}.zoning-summary .ztitle{padding:9px 10px;background:#f5f9fe;font-size:11px;font-weight:900;color:#315a7f}.zoning-chiprow{display:flex;gap:6px;flex-wrap:wrap;padding:9px}.zchip{font-size:9px;font-weight:800;padding:5px 8px;border-radius:999px;border:1px solid rgba(0,0,0,.06)}.z-res{background:#fff5a8;color:#6f5d00}.z-com{background:#ffd6d6;color:#9a3030}.z-rel{background:#ead9ff;color:#63399b}.z-util{background:#d9edff;color:#275f8d}.z-river{background:#d5f4f7;color:#236c75}.z-public{background:#dcf5df;color:#2e6d37}.brandmark,.aimark{display:block}.ai-avatar{background:linear-gradient(135deg,#0f7ce8,#6757ef)!important}.ai-fab .aimark{width:31px;height:31px}.ai-avatar .aimark{width:26px;height:26px}
+
+.zone-legend-card{margin-top:9px;border:1px solid #d9e6f3;border-radius:12px;background:#fff;padding:9px}.zone-legend-card b{font-size:10px;color:#315a7f}.zone-legend-list{display:grid;grid-template-columns:1fr 1fr;gap:5px;margin-top:7px}.zone-legend-list span{font-size:9px;color:#5d7389;display:flex;align-items:center;gap:5px}.zone-legend-list i{width:11px;height:11px;border-radius:3px;border:1px solid rgba(0,0,0,.08);flex:0 0 auto}.zone-source-badge{display:inline-flex;align-items:center;gap:4px;padding:3px 7px;border-radius:999px;background:#eef8f4;color:#238363;border:1px solid #d4eee4;font-size:9px;font-weight:900}.model-status{margin-top:8px;padding:8px 9px;border-radius:10px;background:#fff8ea;border:1px solid #f1deb6;color:#7b622d;font-size:9px;line-height:1.5}.zone-inline{display:inline-flex;align-items:center;gap:5px;font-weight:900}.zone-inline i{width:10px;height:10px;border-radius:3px;display:inline-block;border:1px solid rgba(0,0,0,.08)}
+</style>
+</head>
+<body>
+<div id="app">
+  <header class="topbar">
+    <div class="brand"><div class="logo" aria-label="平台標誌"><svg class="brandmark" viewBox="0 0 48 48" role="img"><defs><linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#08a98a"/><stop offset="1" stop-color="#1267e8"/></linearGradient></defs><rect x="3" y="3" width="42" height="42" rx="14" fill="url(#bg)"/><path d="M14 15.5h9.5l4.8 5.5H34v11.5h-9.5l-4.8-5.5H14z" fill="none" stroke="#fff" stroke-width="2.3" stroke-linejoin="round"/><path d="M23.5 15.5v11.3M28.3 21v11.5" stroke="#fff" stroke-width="2" opacity=".92"/><circle cx="35.5" cy="13.5" r="4.5" fill="#ffd34e" stroke="#fff" stroke-width="1.5"/></svg></div><div><div class="brand-title">臺中市土地智慧選配服務平台</div><div class="brand-sub">LAND ALLOCATION & SITE SELECTION</div></div></div>
+    <nav class="nav"><button class="active">地圖探索</button><button>選地分析</button><button>土地資訊</button><button>使用說明</button></nav>
+    <div class="top-actions">
+      <div class="area-pill"><span class="dot"></span><span id="areaText">烏日前竹地區</span></div>
+      <div class="searchbox"><input id="searchText" placeholder="搜尋完整地址、道路或地標…"><button id="searchBtn">⌕</button></div>
+      <button id="focusQianzhu" class="focus-btn">◎ 定位前竹地區</button>
+    </div>
+  </header>
+
+  <div id="loading" class="loading"><div class="loading-card"><div class="spinner"></div><b>正在載入前竹地籍與配地資料</b><div id="loadErr" style="font-size:11px;color:#b42318;margin-top:7px"></div></div></div>
+  <div id="map2d"></div><div id="map3d" class="hidden"></div><div id="cesium3d" class="hidden"></div><div id="cesiumStatus" class="cesium-status"></div>
+  <section id="welcome" class="welcome hide">
+    <div class="welcome-card">
+      <div class="welcome-kicker">TAICHUNG SMART LAND SERVICE</div>
+      <h1>智慧選配土地，從空間開始</h1>
+      <p>整合地籍、地段、門牌與三維願景模型，讓使用者從臺中市整體空間快速進入烏日前竹地區，掌握土地位置、配地條件與未來發展情境。</p>
+      <div class="welcome-actions"><button id="enterQianzhu" class="primary">進入前竹地區</button><button id="enterMap">瀏覽臺中市地圖</button><button id="welcomeAi">詢問智選地 AI</button></div>
+      <div class="welcome-note">進入前竹後將聚焦前竹計畫範圍；切換 3D 可直接檢視前竹地區願景模型。</div>
+    </div>
+    <div class="welcome-scene-badge">烏日前竹地區｜願景成果影像</div>
+    <div class="welcome-gallery" id="welcomeGallery">
+      <button class="active" data-img="assets/qianzhu_03.png"><img src="assets/qianzhu_03.png" alt="前竹願景圖 1"></button>
+      <button data-img="assets/qianzhu_01.png"><img src="assets/qianzhu_01.png" alt="前竹願景圖 2"></button>
+      <button data-img="assets/qianzhu_02.png"><img src="assets/qianzhu_02.png" alt="前竹願景圖 3"></button>
+      <button data-img="assets/qianzhu_04.png"><img src="assets/qianzhu_04.png" alt="前竹願景圖 4"></button>
+    </div>
+  </section>
+
+
+  <div class="rail">
+    <button class="rail-btn active" data-tip="圖層" data-panel="layers">▱</button>
+    <button class="rail-btn" data-tip="選地條件" data-panel="tools">⌘</button>
+    <button class="rail-btn" data-tip="願景圖集" data-panel="gallery">▣</button>
+    <button class="rail-btn" data-tip="定位前竹" id="railQianzhu">◎</button>
+    <button class="rail-btn" data-tip="回臺中全區" id="railTaichung">⌂</button>
+    <div class="rail-sep"></div>
+    <button class="rail-btn" data-tip="清除選取" id="clearSel">×</button>
+  </div>
+
+  <section id="drawer" class="drawer">
+    <div class="drawer-head"><b id="drawerTitle">圖層控制</b><button class="close-mini" id="drawerClose">‹</button></div>
+    <div class="drawer-body" id="drawerBody"></div>
+  </section>
+
+  <div class="mode"><button id="b2d" class="active">2D</button><button id="b3d">3D</button></div>
+
+  <section class="hero-card">
+    <div class="hero-eyebrow">SMART SITE SELECTION</div>
+    <h3 id="heroTitle">烏日前竹｜土地選配重點區</h3>
+    <p id="heroText">整合地籍、地段與門牌資料，協助使用者進行配地、選地與空間條件判讀；可一鍵切換至烏日前竹地區。</p>
+    <div class="hero-actions"><button id="heroQianzhu" class="primary">前往前竹地區</button><button id="heroAi">詢問 AI 助理</button></div>
+  </section>
+  <div class="status-chip" id="coordText">臺中市總覽模式</div>
+
+
+  <section class="selection-panel" id="selectionPanel">
+    <div class="selection-head"><div class="selection-icon">◎</div><div><b>配地資訊</b><small>點選地圖即可查看土地與配地物件</small></div><button class="selection-close" id="selectionClose">×</button></div>
+    <div class="selection-body" id="selectionBody"><div class="info-note">請點選前竹地區的配地區塊、規劃線、CAD 點位或地籍宗地。</div></div>
+  </section>
+
+
+  <section class="compare-panel" id="comparePanel">
+    <div class="compare-head"><div><b>兩塊地比較</b><small>先加入 A，再選另一塊加入 B</small></div><button class="compare-close" onclick="clearComparison()">×</button></div>
+    <div class="compare-body" id="compareBody"></div><div class="compare-summary" id="compareSummary"></div>
+  </section>
+  <section class="model-fallback" id="modelFallback">
+    <img id="modelFallbackImg" src="assets/qianzhu_03.png" alt="前竹願景模型成果影像"><div class="mf-overlay"></div>
+    <div class="model-source-status">前竹願景模型 v3</div><div class="mf-actions"><button onclick="cycleModelFallback()">切換視角</button><button onclick="openDrawer('gallery')">願景圖集</button><button class="danger-close" onclick="closeModelView()">關閉</button></div>
+    <div class="mf-copy"><b>前竹 3D 願景成果</b><p>模型按服務發布座標及高程顯示；日照工具可調整日期、時間與陰影。</p></div>
+  </section>
+  <button class="ai-fab" id="aiFab" title="開啟智選地 AI 助理"><svg class="aimark" viewBox="0 0 40 40" aria-hidden="true"><rect x="5" y="7" width="30" height="26" rx="10" fill="none" stroke="currentColor" stroke-width="2.4"/><path d="M20 3v4" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/><circle cx="20" cy="3" r="2" fill="currentColor"/><circle cx="15" cy="18" r="2.2" fill="currentColor"/><circle cx="25" cy="18" r="2.2" fill="currentColor"/><path d="M15 25c3.2 2.6 6.8 2.6 10 0" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/><path d="M31 10l4-4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M33.5 6H36v2.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="ai-label">智選地 AI<small>土地選配小幫手</small></span><span class="badge"></span></button>
+  <section class="ai-panel" id="aiPanel">
+    <div class="ai-head"><div class="ai-avatar"><svg class="aimark" viewBox="0 0 40 40" aria-hidden="true"><rect x="5" y="7" width="30" height="26" rx="10" fill="none" stroke="currentColor" stroke-width="2.4"/><path d="M20 3v4" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/><circle cx="20" cy="3" r="2" fill="currentColor"/><circle cx="15" cy="18" r="2.2" fill="currentColor"/><circle cx="25" cy="18" r="2.2" fill="currentColor"/><path d="M15 25c3.2 2.6 6.8 2.6 10 0" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/><path d="M31 10l4-4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M33.5 6H36v2.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div><b>智選地 AI 助理</b><span class="online">● ONLINE</span><small>配地選址・地籍・門牌・地圖操作</small></div><button id="aiClose" class="ai-close">×</button></div>
+    <div class="chat" id="chat"></div>
+    <div class="quick"><div class="quick-title">快速查詢</div><div class="qgrid"><button class="qbtn">查這裡的地籍資料</button><button class="qbtn">查看目前配地資訊</button><button class="qbtn">定位前竹地區</button><button class="qbtn">如何用門牌查地號？</button><button class="qbtn">前竹有哪些使用分區？</button><button class="qbtn">這裡是什麼分區？</button><button class="qbtn">分區配色圖例</button><button class="qbtn">開啟日照陰影</button><button class="qbtn">比較這兩塊地</button><button class="qbtn">使用說明</button></div></div>
+    <div class="inputbar"><input id="ask" placeholder="輸入地址、道路、地標，或詢問選地資訊…"><button id="send">➤</button></div>
+    <div class="disclaimer">AI 查詢結果僅供輔助判讀，正式資料以權責機關發布為準。</div>
+  </section>
+  <div id="lightbox" class="lightbox"><button id="lightboxClose">×</button><img id="lightboxImg" alt="前竹願景圖"></div>
+  <div id="sceneToolbar" class="hidden" aria-label="3D 展示工具">
+<button id="viewsToggle" aria-expanded="false" aria-controls="sceneViews">展示視角</button>
+<button id="playTour">▶ 一鍵播放</button>
+<button id="modelToggle" aria-expanded="false" aria-controls="modelControls">模型設定</button>
+<button id="presentationToggle" aria-pressed="false">淨空展示</button><button id="sceneToolbarClose" aria-label="收起展示工具" title="收起展示工具">×</button></div>
+<button id="sceneToolbarLauncher" class="hidden" aria-label="展開 3D 展示工具" aria-controls="sceneToolbar" aria-expanded="false">展示工具</button>
+<section id="tourOverlay" class="hidden" aria-label="前竹願景動畫導覽"><button id="tourStop">■ 停止播放 · Esc</button><div class="tour-copy"><small>QIANZHU · FUTURE LIVING</small><h2 id="tourTitle" aria-live="polite">烏日前竹・未來生活願景</h2><p id="tourCaption">正在準備三維巡覽…</p><div id="tourProgress"><span></span></div></div></section>
+<section id="sceneViews" class="hidden" aria-label="展示視角"><div class="scene-panel-head"><b>一鍵展示視角</b><button id="viewsClose" aria-label="關閉展示視角">×</button></div>
+<p>選擇構圖後，仍可拖曳旋轉與縮放微調。</p><div id="presetButtons" class="preset-grid"></div>
+<button id="saveCamera" class="mini-btn">儲存目前視角</button><button id="recallCamera" class="mini-btn" disabled>回到儲存視角</button><p id="viewStatus" aria-live="polite">整體、街廓、公園與河岸，五種展示構圖。</p></section>
+<section id="modelControls" class="hidden" aria-label="模型設定"><div class="scene-panel-head"><b>模型設定</b><button id="modelClose" aria-label="關閉模型設定">×</button></div><p>使用 09/24 v3 願景模型</p>
+<label><input id="groundToggle" type="checkbox"> 顯示 Esri 地表（目前會遮住模型）</label>
+<label><input id="sceneOverlayToggle" type="checkbox"> 疊加地籍與分區</label>
+<label for="modelHeight">模型高度偏移：<output id="modelHeightValue">0 公尺</output></label>
+<input id="modelHeight" type="range" min="-100" max="150" step="1" value="0">
+<button id="resetModelHeight" class="mini-btn">恢復原始高程</button>
+<p>預設隱藏 Esri 地表以完整展示模型。高度偏移僅供預覽；原始高程待校正，陰影不作正式分析。</p></section>
+<div id="toast" class="toast"></div>
+</div>
+<script>
+const SERVICE='https://services6.arcgis.com/89UtaIS8RICl3XAp/arcgis/rest/services/Qianzhu_Publish_gdb/FeatureServer';
+const TEXT_SERVICE='https://services6.arcgis.com/89UtaIS8RICl3XAp/arcgis/rest/services/Qianzhu_Text_Publish_gdb/FeatureServer';
+const SCENE_SERVICE='https://tiles.arcgis.com/tiles/89UtaIS8RICl3XAp/arcgis/rest/services/ChienChu_20260930/SceneServer';
+const URBAN_SERVICE='https://services6.arcgis.com/89UtaIS8RICl3XAp/arcgis/rest/services/Taichung_UrbanPlan_gdb/FeatureServer';
+let sceneOverlayState=null,sceneModeRequest=0,presetRequest=0;
+let urbanZones,urbanLines,urbanText,daylightExpand,Graphic,GeometryEngine,urbanReady,urbanNames=[],urbanQueryState='idle';
+const TAICHUNG={center:[120.6736,24.1477],zoom:11.4};
+
+
+// 前竹區段徵收重點範圍：先以固定 WGS84 範圍作展示定位，避免受服務 extent / CAD 座標影響。
+// 範圍依前竹區段徵收的道路邊界關係（環中路六段、柳川、環河東路一段及南區交界）概略框定；正式上線應改接主管機關精確徵收範圍圖層。
+const QIANZHU={center:[120.6518,24.1108],zoom:15.25,extent:{xmin:120.6428,ymin:24.1027,xmax:120.6608,ymax:24.1188,spatialReference:{wkid:4326}},ring:[[120.6430,24.1168],[120.6482,24.1184],[120.6560,24.1176],[120.6604,24.1136],[120.6588,24.1050],[120.6530,24.1029],[120.6460,24.1042],[120.6428,24.1094],[120.6430,24.1168]]};
+let map,view2d,view3d,land,sect,poly,line,point,addr,textPoint,annotation,sceneModel,qianzhuHighlight,modelAnchorLayer,lastLandGraphic,lastClickedPoint,lastCadGraphic,lastZoneInfo,highlightHandle,cesiumViewer=null,i3sProvider=null,i3sTileset=null,i3sLoading=false,i3sReady=false,isCesiumMode=false,isQianzhuMode=false,qianzhuExtent=null,zoningField=null,zoningValues=[],sceneModelDiagnostic=null,WebMercatorUtils=null,compareA=null,compareB=null,selectionToken=0,modelFallbackIndex=0,currentPolyOid=null;
+let searchCandidates=[];
+const chat=document.getElementById('chat');
+const drawer=document.getElementById('drawer');
+const drawerTitle=document.getElementById('drawerTitle');
+const drawerBody=document.getElementById('drawerBody');
+function esc(v){return String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));}
+function toast(t){const el=document.getElementById('toast');el.textContent=t;el.classList.add('show');clearTimeout(window.__tt);window.__tt=setTimeout(()=>el.classList.remove('show'),1800)}
+function activeView(){if(isCesiumMode)return view2d;return document.getElementById('map3d').classList.contains('hidden')?view2d:view3d}
+function addMsg(text,who='bot',html=''){const d=document.createElement('div');d.className='msg '+(who==='user'?'user':'botmsg');if(html)d.innerHTML=html;else d.textContent=text;chat.appendChild(d);chat.scrollTop=chat.scrollHeight;return d}
+
+function aiWelcomeHtml(){return `<b>您好！我是「智選地 AI 助理」</b><br>目前可協助查詢 <b>烏日前竹地區</b> 的地籍、配地規劃、門牌與108 年都市計畫分區資訊，並可直接操作地圖。<br><br><b>1. 土地與地籍查詢</b><br>・點選宗地查看地號、地籍屬性與位置。<br><span style="color:#6f8296">例：「查這裡的地籍資料」、「這塊土地是哪個地號？」</span><br><br><b>2. 配地規劃查詢</b><br>・查看配地規劃面、分割／箭頭線與 CAD 輔助點位。<br><span style="color:#6f8296">例：「查看目前配地資訊」、「把配地規劃線關掉」</span><br><br><b>3. 108 年都市計畫分區查詢</b><br>・查詢位置的分區名稱、分類配色與資料來源；新服務未提供建蔽率、容積率。<br><span style="color:#6f8296">例：「前竹有哪些使用分區？」、「這裡是什麼分區？」</span><br><br><b>4. 門牌與位置搜尋</b><br>・輸入道路或門牌關鍵字協助定位。<br><span style="color:#6f8296">例：「台中市烏日區站區二路8號」、「台中高鐵站」</span><br><br><b>5. 圖台操作</b><br>・定位前竹、開關圖層、切換 2D／3D、查看願景圖，也可把兩塊地加入比較。<br><span style="color:#6f8296">例：「定位前竹地區」、「開啟地籍圖」、「切換 3D」</span><br><br><span style="color:#6f8296">已介接都市計畫分區面與文字。點選地圖後可詢問分區、配色及來源；資料為 108 年 CAD 成果，未包含現行建蔽率／容積率。3D 模式可檢視模型與日照陰影。</span>`}
+function currentSelectionSummary(){
+  const ca=lastCadGraphic?.attributes||{}, pa=lastLandGraphic?.attributes||{};
+  const rows=[];
+  if(lastZoneInfo){rows.push(`<tr><td>使用分區</td><td>${esc(lastZoneInfo.zone||'')}</td></tr>`);if(lastZoneInfo.text)rows.push(`<tr><td>文字依據</td><td>${esc(lastZoneInfo.text)}</td></tr>`);}
+  if(lastCadGraphic){
+    const t=lastCadGraphic.layer===poly?'配地規劃面':lastCadGraphic.layer===line?'配地規劃線／箭頭':lastCadGraphic.layer===point?'CAD 點位（方向／輔助點）':lastCadGraphic.layer===land?'地籍宗地':'地圖物件';
+    rows.push(`<tr><td>選取類型</td><td>${esc(t)}</td></tr>`);
+    ['Layer','Color','Linetype','OBJECTID'].forEach(k=>{if(ca[k]!==undefined&&ca[k]!==null&&ca[k]!=='' )rows.push(`<tr><td>${esc(k)}</td><td>${esc(ca[k])}</td></tr>`)});
+  }
+  ['KCNT','AA48','AA49','AA05','AA10','AA17','THEKEY'].forEach(k=>{if(pa[k]!==undefined&&pa[k]!==null&&pa[k]!=='')rows.push(`<tr><td>${esc(k)}</td><td>${esc(pa[k])}</td></tr>`)});
+  return rows.length?`<div class="result-card"><table>${rows.join('')}</table></div>`:'';
+}
+function setLayerVisible(layerObj, visible, label){ if(!layerObj)return false; layerObj.visible=visible; toast(`${label}${visible?'已開啟':'已關閉'}`); layerPanel(); return true; }
+function attrsTable(a){const preferred=['OBJECTID','KCNT','AA48','AA49','AA05','AA06','AA10','AA17','THEKEY','TWD97E','TWD97N'];let keys=preferred.filter(k=>a[k]!==undefined&&a[k]!==null&&a[k]!=='');if(!keys.length)keys=Object.keys(a).slice(0,10);return `<div class="result-card"><table>${keys.map(k=>`<tr><td>${esc(k)}</td><td>${esc(a[k])}</td></tr>`).join('')}</table><div class="result-actions"><button onclick="zoomLastLand()">定位此宗地</button></div></div>`}
+function addrTable(a){const keys=['村里','街_路段','地區','巷','弄','號','WGS84經度','WGS84緯度'];return `<div class="result-card"><table>${keys.filter(k=>a[k]!==undefined&&a[k]!==null&&a[k]!=='').map(k=>`<tr><td>${esc(k)}</td><td>${esc(a[k])}</td></tr>`).join('')}</table></div>`}
+function compactRows(a, keys){return keys.filter(k=>a&&a[k]!==undefined&&a[k]!==null&&a[k]!=='').map(k=>`<span>${esc(k)}</span><span>${esc(a[k])}</span>`).join('')}
+function parcelLabel(a){return (a&&(a.AA48||a.AA49||a.AA05||a.THEKEY)) ? [a.AA48,a.AA49,a.AA05].filter(Boolean).join(' · ') || a.THEKEY : '地籍宗地'}
+
+function zoneSourceLabel(info){return info?.source==='urban'?'都市計畫 Polygon / Layer（108 年 CAD）':'未確認';}
+function selectionSnapshot(){
+  const ca=lastCadGraphic?.attributes||{},pa=lastLandGraphic?.attributes||{};
+  return {zone:lastZoneInfo?.zone||'',zoneText:lastZoneInfo?.text||'',zoneSource:lastZoneInfo?.source||'',cad:{OBJECTID:ca.OBJECTID,Layer:ca.Layer,Color:ca.Color,Linetype:ca.Linetype},land:{KCNT:pa.KCNT,AA48:pa.AA48,AA49:pa.AA49,AA05:pa.AA05,AA10:pa.AA10,AA17:pa.AA17,THEKEY:pa.THEKEY},geometry:(lastLandGraphic||lastCadGraphic)?.geometry||null};
+}
+function snapshotRows(x){const a=x.land||{},c=x.cad||{};const rows=[['分區',x.zone||'尚未辨識'],['判讀來源',x.zone?zoneSourceLabel({source:x.zoneSource}):'—'],['段／地號',[a.AA48,a.AA49].filter(Boolean).join(' ')||'—'],['地籍代碼',a.AA05||a.THEKEY||'—'],['配地圖層',c.Layer||'—']];return rows}
+function renderComparison(){const p=document.getElementById('comparePanel'),b=document.getElementById('compareBody'),s=document.getElementById('compareSummary');if(!compareA&&!compareB){p.classList.remove('open');return}const card=(x,l)=>`<div class="compare-card"><h4>${l}</h4>${x?`<div class="compare-grid">${snapshotRows(x).map(r=>`<span>${esc(r[0])}</span><span>${esc(r[1])}</span>`).join('')}</div>`:`<div class="info-note">尚未加入土地</div>`}</div>`;b.innerHTML=card(compareA,'土地 A')+card(compareB,'土地 B');p.classList.add('open');if(compareA&&compareB){const notes=[];if(compareA.zone||compareB.zone)notes.push(`分區：A ${compareA.zone||'未辨識'}；B ${compareB.zone||'未辨識'}`);s.textContent=notes.length?'比較摘要｜'+notes.join('；'):'已加入兩塊土地，可查看左右欄位差異。'}else s.textContent='再點另一塊地，按「加入比較 B」。'}
+window.addCurrentToCompare=()=>{const snap=selectionSnapshot();if(!snap.geometry&&!snap.land.AA05&&!snap.cad.OBJECTID){toast('請先點選一塊地');return}if(!compareA){compareA=snap;toast('已加入土地 A')}else if(!compareB){compareB=snap;toast('已加入土地 B')}else{compareA=snap;compareB=null;toast('已重新設定土地 A')}renderComparison()};
+window.clearComparison=()=>{compareA=compareB=null;renderComparison()};
+window.cycleModelFallback=()=>{const imgs=['assets/qianzhu_03.png','assets/qianzhu_01.png','assets/qianzhu_02.png','assets/qianzhu_04.png'];modelFallbackIndex=(modelFallbackIndex+1)%imgs.length;document.getElementById('modelFallbackImg').src=imgs[modelFallbackIndex]};
+function showModelFallback(show=true){document.getElementById('modelFallback').classList.remove('open')}
+window.closeModelView=function(){showModelFallback(false);if(sceneModel)sceneModel.visible=false;if(i3sProvider)i3sProvider.show=false;if(modelAnchorLayer)modelAnchorLayer.removeAll();const se=document.getElementById('sceneChk');if(se)se.checked=false;toast('已關閉前竹 3D 願景模型')}
+function showSelectionLoading(){const p=document.getElementById('selectionPanel');p.classList.add('open');document.getElementById('selectionBody').innerHTML=`<div class="map-busy"><i class="mini-spin"></i>正在讀取此位置的配地與地籍資訊…</div>`}
+function closeSelection(){document.getElementById('selectionPanel').classList.remove('open')}
+function showSelectionInfo(cad, parcel, mapPoint){
+  const panel=document.getElementById('selectionPanel'), body=document.getElementById('selectionBody');
+  const type=cad?.graphic?.layer===urbanZones?'都市計畫使用分區':cad?.layer===poly||cad?.graphic?.layer===poly?'配地規劃面':cad?.layer===line||cad?.graphic?.layer===line?'配地規劃線／箭頭':cad?.layer===point||cad?.graphic?.layer===point?'CAD 點位（方向／輔助點）':cad?.layer===land||cad?.graphic?.layer===land?'地籍宗地':'點選位置';
+  const g=cad?.graphic||cad; const ca=g?.attributes||{}; const pa=parcel?.attributes||{};
+  const cadRows=compactRows(ca,['OBJECTID','Layer','Color','Linetype','DocName']);
+  const landRows=compactRows(pa,['KCNT','AA48','AA49','AA05','AA10','AA17','THEKEY']);
+  let zoneHtml='';
+  if(lastZoneInfo){
+
+    const c=zoningColor(lastZoneInfo.zone); const sw=`rgba(${c[0]},${c[1]},${c[2]},.85)`;
+    zoneHtml=`<div class="info-kicker">都市計畫分區（${esc(zoneSourceLabel(lastZoneInfo))}）</div><div class="info-title"><span class="zone-inline"><i style="background:${sw}"></i>${esc(lastZoneInfo.zone)}</span></div><div class="info-grid"><span>判讀文字</span><span>${esc(lastZoneInfo.text||lastZoneInfo.zone)}</span></div><div class="info-note">判讀來源：${esc(zoneSourceLabel(lastZoneInfo))}。自動結果僅供輔助；正式用途仍以核定都市計畫圖為準。</div><div class="info-divider"></div>`;
+  }
+  body.innerHTML=`<div class="info-kicker">QIANZHU LAND ALLOCATION</div><div class="info-title">${esc(type)}</div>${zoneHtml}${lastZoneInfo?.source==='urban'?`<div class="info-note">${lastZoneInfo.names.length>1?'此點命中多個分區，請放大確認重疊面或邊界。':''}來源為 108 年 CAD 成果；配色為展示分類，服務未提供建蔽率／容積率。</div>`:''}${cadRows?`<div class="info-grid">${cadRows}</div>`:''}${cadRows&&landRows?`<div class="info-divider"></div>`:''}${landRows?`<div class="info-kicker">對應地籍</div><div class="info-title" style="font-size:13px">${esc(parcelLabel(pa))}</div><div class="info-grid">${landRows}</div>`:`<div class="info-note">此位置尚未取得可對應的地籍屬性；仍可查看配地 CAD / 分區資訊。</div>`}<div class="zone-status-inline">${lastZoneInfo?`已辨識分區：${esc(lastZoneInfo.zone)}（${esc(zoneSourceLabel(lastZoneInfo))}）`:(urbanQueryState==='error'?'分區查詢失敗，請重新點選重試。':'此點未查到都市計畫分區面。')}</div><div class="info-actions"><button class="primary" onclick="explainSelectionWithAI()">AI 說明</button><button onclick="zoomSelection()">放大查看</button><button class="compare-add" onclick="addCurrentToCompare()">加入比較 ${compareA?'B':'A'}</button></div>`;
+  panel.classList.add('open');
+}
+window.zoomSelection=()=>{const g=lastCadGraphic||lastLandGraphic;if(g&&g.geometry){const target=g.geometry.extent||g.geometry;activeView().goTo(target.extent?target.extent.expand(2):target,{duration:350}).catch(()=>{})}};
+window.explainSelectionWithAI=()=>{if(lastZoneInfo?.source==='urban'){askAI('這裡是什麼分區？');return;}openAI();const ca=lastCadGraphic?.attributes||{},pa=lastLandGraphic?.attributes||{};const bits=[];if(lastZoneInfo?.zone){bits.push(`使用分區：${lastZoneInfo.zone}`);}if(ca.Layer)bits.push(`配地圖層：${ca.Layer}`);if(pa.AA48)bits.push(`段：${pa.AA48}`);if(pa.AA49)bits.push(`地號：${pa.AA49}`);if(pa.AA05)bits.push(`地籍代碼：${pa.AA05}`);addMsg(bits.length?`目前選到的位置包含 ${bits.join('、')}。我可以再協助你解讀這筆土地與配地規劃的關係。`:`目前已選取一個前竹配地物件，我可以協助解讀其圖層與空間位置。`)};
+window.zoomLastLand=()=>{if(lastLandGraphic)activeView().goTo(lastLandGraphic.geometry.extent.expand(2))};
+function buildAddress(a){return [a['村里'],a['街_路段'],a['地區'],a['巷'],a['弄'],a['號']].filter(Boolean).join('')}
+function layerPanel(){drawerTitle.textContent='圖層控制';drawerBody.innerHTML=`
+<div class="section-title">常用圖層</div>
+${layerRow('landChk','▰','地籍圖','Land11505','','正式')}
+${layerRow('sectChk','◇','地段範圍','Sect11505','','正式')}
+${layerRow('addrChk','⌖','門牌','臺中市門牌點位','','正式')}
+${layerRow('urbanChk','▦','都市計畫使用分區','108 年 CAD 成果｜分類配色','','資料')}
+${layerRow('urbanTextChk','文','都市計畫分區標註','原始 TextPoint 文字','','資料')}
+${layerRow('urbanLineChk','╱','都市計畫界線','原始 Polyline','','資料')}
+<div class="tool-card"><b>使用分區圖例</b><p>依分區名稱分類著色，非原 CAD 法定配色。來源：108 年都市計畫成果。</p><div id="urbanLegend">${urbanLegendHtml()}</div></div>
+${layerRow('textChk','文','配地編號標註','配地 CAD 的街廓編號','','文字')}
+<div class="section-title">前竹規劃資料</div>
+${layerRow('polyChk','▱','配地規劃面','Polygon｜FeatureServer / 2','','CAD')}
+${layerRow('lineChk','╱','配地規劃線／箭頭','Polyline｜FeatureServer / 3','','CAD')}
+${layerRow('pointChk','•','CAD 點位（方向／輔助點）','Point｜FeatureServer / 4｜箭頭端點、方向點或其他 CAD 點','','CAD')}
+${layerRow('sceneChk','◈','前竹 3D 願景模型','ChienChu_20260924_v3','','3D')}
+<div class="section-title">分區判讀</div>
+<div id="zonePanelStatus" class="tool-card"><b>依都市計畫圖層查詢</b><p>分區直接讀取 Polygon 的 Layer 欄位；配地編號標註僅顯示街廓編號，不用來推估分區。</p></div>
+<div class="tool-card"><b>預設顯示原則</b><p>參考政府 GIS 圖台的做法：地籍圖預設開啟，但設定比例尺門檻，臺中全市總覽時不大量繪製；進入前竹後即可直接看到宗地線，其他圖層按需開啟。</p></div>`;bindLayerChecks()}
+function layerRow(id,ico,name,sub,checked,tag){return `<label class="layer-row"><input id="${id}" type="checkbox" ${checked}><span class="layer-ico">${ico}</span><span><div class="layer-name">${name}</div><div class="layer-sub">${sub}</div></span>${tag?`<span class="tag">${tag}</span>`:''}</label>`}
+function toolsPanel(){drawerTitle.textContent='選地工具';drawerBody.innerHTML=`<div class="section-title">配地・選地條件</div>
+<div class="tool-card"><b>① 地籍條件</b><p>點選地圖宗地，取得地號、地籍屬性與位置。</p></div>
+<div class="tool-card"><b>② 門牌條件</b><p>可輸入道路或門牌關鍵字，自動定位至候選位置。</p></div>
+<div class="tool-card"><b>③ 都市計畫分區</b><p>點選地圖查詢分區名稱、配色及來源。依 108 年 CAD 成果，不另作文字推估或人工覆寫；服務未提供建蔽率、容積率。</p></div>
+<div class="tool-card"><b>④ 三維願景檢視</b><p>切換 3D 後可套用前竹地區願景模型，輔助理解道路、街廓與建築配置。</p></div>
+<button class="focus-btn" style="width:100%;margin-top:4px" onclick="focusQianzhu()">◎ 進入前竹地區</button>`}
+function galleryPanel(){drawerTitle.textContent='前竹願景圖集';drawerBody.innerHTML=`<div class="vision-note">以下 4 張影像作為前竹地區規劃成果快速導覽，後續只要替換 assets 內同名圖片即可更新。</div><div class="gallery-grid">${[['qianzhu_03.png','整體鳥瞰'],['qianzhu_01.png','公園校園鳥瞰'],['qianzhu_02.png','河岸全區鳥瞰'],['qianzhu_04.png','河岸住宅近景']].map(([f,t])=>`<div class="gallery-card" onclick="openVision('assets/${f}')"><img src="assets/${f}" alt="${t}"><div>${t}</div></div>`).join('')}</div><div class="tool-card" style="margin-top:12px"><b>3D 願景檢視 <span class="scene-pill">三維圖台</span></b><p>點選右上方「3D」可直接切換至前竹地區三維地圖。已接入新版 3D 模型。右上方日照工具可選日期、時間並播放陰影變化；模型按發布座標原位顯示。</p><button class="mini-btn" onclick="switchMode('3d')">切換 3D 地圖</button></div>`}
+window.openVision=(src)=>{document.getElementById('lightboxImg').src=src;document.getElementById('lightbox').classList.add('open')};
+function bindLayerChecks(){
+  [['urbanChk',urbanZones],['urbanLineChk',urbanLines],['urbanTextChk',urbanText],['landChk',land],['sectChk',sect],['polyChk',poly],['lineChk',line],['pointChk',point],['addrChk',addr],['textChk',textPoint]].forEach(([id,l])=>{const el=document.getElementById(id);if(el&&l){el.checked=l.visible;el.onchange=e=>{l.visible=e.target.checked;}}});
+  const se=document.getElementById('sceneChk');if(se){se.checked=sceneModel.visible;se.onchange=async e=>{if(e.target.checked)await switchMode('3d');else sceneModel.visible=false}}
+}
+function openDrawer(type){if(activeView()===view3d)setSceneToolbarCollapsed(true);drawer.classList.add('open');document.querySelectorAll('.rail-btn[data-panel]').forEach(b=>b.classList.toggle('active',b.dataset.panel===type));type==='tools'?toolsPanel():type==='gallery'?galleryPanel():layerPanel()}
+async function ensureQianzhuExtent(){
+  if(qianzhuExtent) return qianzhuExtent;
+  // 優先讀取前竹 CAD Polygon 的真正範圍；失敗時直接使用固定前竹範圍，不再讓定位流程中斷。
+  try{
+    await poly.load();
+    const q=poly.createQuery();q.where='1=1';q.outSpatialReference={wkid:4326};
+    const r=await poly.queryExtent(q);
+    if(r&&r.extent&&isFinite(r.extent.xmin)&&isFinite(r.extent.ymin)){
+      qianzhuExtent=r.extent.clone ? r.extent.clone() : r.extent;
+      return qianzhuExtent;
+    }
+    if(poly.fullExtent){qianzhuExtent=poly.fullExtent.clone ? poly.fullExtent.clone() : poly.fullExtent;return qianzhuExtent;}
+  }catch(e){console.warn('前竹 CAD 範圍讀取失敗，改用保底範圍',e)}
+  qianzhuExtent=SCENE_FOCUS;
+  return qianzhuExtent;
+}
+function exExpand(ex,f=1.18){if(ex&&typeof ex.expand==='function')return ex.expand(f);const cx=(ex.xmin+ex.xmax)/2,cy=(ex.ymin+ex.ymax)/2,hw=(ex.xmax-ex.xmin)*f/2,hh=(ex.ymax-ex.ymin)*f/2;return {xmin:cx-hw,ymin:cy-hh,xmax:cx+hw,ymax:cy+hh,spatialReference:ex.spatialReference};}
+async function drawQianzhuFocus(){
+  qianzhuHighlight.removeAll();
+  let boundaryGeom=null;
+  try{
+    // 用配地 Polygon 幾何建立前竹範圍外框，比單純矩形更接近實際區域形狀。
+    const q=poly.createQuery();
+    q.where='1=1'; q.returnGeometry=true; q.outFields=[];
+    const r=await poly.queryFeatures(q);
+    const geoms=r.features.map(f=>f.geometry).filter(Boolean);
+    if(geoms.length){
+      const hull=GeometryEngine.convexHull(geoms,true);
+      boundaryGeom=Array.isArray(hull)?hull[0]:hull;
+    }
+  }catch(e){console.warn('前竹外框由 CAD 建立失敗，改用範圍框',e)}
+  if(!boundaryGeom) boundaryGeom=await ensureQianzhuExtent();
+  qianzhuHighlight.add(new Graphic({
+    geometry:boundaryGeom,
+    symbol:{type:'simple-fill',color:[116,218,73,.055],outline:{color:[91,204,54,.95],width:3.2}}
+  }));
+}
+
+function setCesiumStatus(text,hold=false){const el=document.getElementById('cesiumStatus');if(!text){el.classList.remove('show');el.textContent='';return}el.textContent=text;el.classList.add('show');if(!hold){clearTimeout(window.__cs);window.__cs=setTimeout(()=>el.classList.remove('show'),3500)}}
+const SCENE_PRESETS=[
+  {id:'overview',name:'整體鳥瞰',note:'道路骨架・全區配置',x:.5,y:.5,scale:10000,tilt:48,heading:18},
+  {id:'blocks',name:'住宅街廓',note:'近景・建築量體',x:.42,y:.58,scale:1600,tilt:58,heading:35},
+  {id:'park',name:'公園與校園',note:'近景・綠地與公共空間',x:.47,y:.42,scale:1900,tilt:52,heading:350},
+  {id:'river',name:'河岸街景',note:'斜向構圖・沿岸建築',x:.61,y:.27,scale:4200,tilt:60,heading:310},
+  {id:'reverse',name:'反向街廓',note:'另一側立面・空間層次',x:.55,y:.55,scale:3600,tilt:56,heading:200}
+];
+// 規劃區範圍已以 CAD queryExtent(outSR=4326) 核對；服務 fullExtent 包含遠處背景地表。
+const SCENE_FOCUS={xmin:120.63953763381727,ymin:24.097838827366267,xmax:120.65774937916525,ymax:24.108082223328793,spatialReference:{wkid:4326}};
+const CAMERA_STORAGE_KEY='qianzhuPresentationCamera:'+SCENE_SERVICE;
+function scenePresetTarget(preset){
+  const ex=SCENE_FOCUS;
+  return {type:'point',x:ex.xmin+(ex.xmax-ex.xmin)*preset.x,y:ex.ymin+(ex.ymax-ex.ymin)*preset.y,z:Number(document.getElementById('modelHeight').value),spatialReference:ex.spatialReference};
+}
+const TOUR_SHOTS=[
+  {preset:'overview',title:'烏日前竹・未來生活願景',caption:'從城市鳥瞰，遇見新的生活想像。'},
+  {preset:'blocks',title:'走進理想街廓',caption:'以建築量體與道路紋理，描繪日常生活的尺度。'},
+  {preset:'park',title:'讓綠意融入日常',caption:'公園與校園，串起開放的公共空間。'},
+  {preset:'river',title:'沿著河岸，展開生活',caption:'從水岸到街區，看見城市與自然的連結。'},
+  {preset:'reverse',title:'從不同角度，看見前竹',caption:'在街廓之間，探索多層次的城市風景。'},
+  {preset:'overview',title:'前竹願景・向未來出發',caption:'規劃願景模型展示｜實際開發內容以主管機關公告為準。'}
+];
+let tourSession=null;
+function stopSceneTour(){
+  const session=tourSession;if(!session)return;
+  tourSession=null;view3d.animation?.stop();
+  document.getElementById('tourOverlay').classList.add('hidden');
+  document.getElementById('app').classList.remove('tour-playing');
+  setPresentation(session.presentation);
+  document.getElementById('playTour').disabled=false;
+}
+async function playSceneTour(){
+  if(tourSession)return;
+  const session={presentation:document.getElementById('app').classList.contains('presentation')};tourSession=session;
+  document.getElementById('playTour').disabled=true;
+  document.getElementById('tourTitle').textContent='烏日前竹・未來生活願景';
+  document.getElementById('tourCaption').textContent='正在準備三維巡覽…';
+  document.querySelector('#tourProgress span').style.width='0%';
+  document.getElementById('tourOverlay').classList.remove('hidden');
+  const current=()=>tourSession===session;
+  try{
+    if(activeView()!==view3d)await switchMode('3d');
+    if(!current())return;await sceneModel.load();if(!current())return;await view3d.when();if(!current())return;
+    presetRequest++;setPresentation(true);
+    document.getElementById('app').classList.add('tour-playing');
+    document.getElementById('tourOverlay').classList.remove('hidden');
+    for(let i=0;i<TOUR_SHOTS.length;i++){
+      if(!current())return;
+      const shot=TOUR_SHOTS[i],preset=SCENE_PRESETS.find(p=>p.id===shot.preset);
+      document.getElementById('tourTitle').textContent=shot.title;
+      document.getElementById('tourCaption').textContent=shot.caption;
+      document.querySelector('#tourProgress span').style.width=((i+1)/TOUR_SHOTS.length*100)+'%';
+      const target=new Graphic({geometry:scenePresetTarget(preset)}).geometry;
+      await view3d.goTo({target,scale:preset.scale*1.15,tilt:preset.tilt,heading:preset.heading-10},{duration:i?4000:1800,easing:'in-out-cubic'});
+      if(!current())return;
+      await view3d.goTo({target,scale:preset.scale,tilt:preset.tilt,heading:preset.heading+10},{duration:5500,easing:'linear'});
+    }
+    if(current())toast('前竹願景巡覽播放完成');
+  }catch(e){if(current()&&e.name!=='AbortError')toast('播放未完成：'+e.message);}
+  finally{if(current())stopSceneTour();}
+}
+function toggleScenePanel(which,open){
+  const panel=document.getElementById(which==='model'?'modelControls':'sceneViews'),button=document.getElementById(which==='model'?'modelToggle':'viewsToggle');
+  open=open??panel.classList.contains('hidden');
+  panel.classList.toggle('hidden',!open);button.setAttribute('aria-expanded',String(open));
+  if(open){const other=which==='model'?'views':'model';toggleScenePanel(other,false)}
+}
+function setPresentation(enabled){
+  document.getElementById('app').classList.toggle('presentation',enabled);
+  const button=document.getElementById('presentationToggle');button.setAttribute('aria-pressed',String(enabled));button.textContent=enabled?'退出展示':'淨空展示';
+  if(enabled){toggleScenePanel('model',false);toggleScenePanel('views',false);daylightExpand.expanded=false;}
+}
+async function goScenePreset(id){
+  stopSceneTour();
+  const preset=SCENE_PRESETS.find(p=>p.id===id);if(!preset)return;
+  const request=++presetRequest,status=document.getElementById('viewStatus');status.textContent='正在移動視角…';
+  try{
+    await sceneModel.load();if(request!==presetRequest||activeView()!==view3d)return;
+    const point=new Graphic({geometry:scenePresetTarget(preset)}).geometry;
+    await view3d.goTo({target:point,scale:preset.scale,tilt:preset.tilt,heading:preset.heading},{duration:1100});
+    if(request!==presetRequest)return;
+    document.querySelectorAll('[data-preset]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.preset===id)));
+    status.textContent=preset.name+'｜可微調後按「儲存目前視角」。';
+  }catch(e){if(request===presetRequest)status.textContent=e.name==='AbortError'?'已停止移動，可手動調整。':'視角移動失敗，請確認 3D 已完成載入。';}
+}
+let savedSceneCamera=null;
+function loadSavedCamera(){try{const c=JSON.parse(localStorage.getItem(CAMERA_STORAGE_KEY)||'null');if(c?.position&&Number.isFinite(c.tilt)&&Number.isFinite(c.heading)){savedSceneCamera=c;document.getElementById('recallCamera').disabled=false}}catch(e){}}
+
+function sceneFlatLayers(){return [qianzhuHighlight,sect,land,poly,line,point,addr,textPoint,urbanZones,urbanLines,urbanText,annotation,modelAnchorLayer].filter(Boolean)}
+function setSceneOverlay(show){
+  if(!sceneOverlayState)return;
+  for(const [layer,visible] of sceneOverlayState)layer.visible=show&&visible;
+}
+function setSceneToolbarCollapsed(collapsed){
+  document.getElementById('sceneToolbar').classList.toggle('hidden',collapsed);
+  const launcher=document.getElementById('sceneToolbarLauncher');launcher.classList.toggle('hidden',!collapsed);launcher.setAttribute('aria-expanded',String(!collapsed));
+  if(collapsed){toggleScenePanel('model',false);toggleScenePanel('views',false)}
+  else{drawer.classList.remove('open');document.querySelectorAll('.rail-btn[data-panel]').forEach(b=>b.classList.remove('active'))}
+}
+function enterModelDisplay(){
+  if(!sceneOverlayState)sceneOverlayState=sceneFlatLayers().map(layer=>[layer,layer.visible]);
+  setSceneOverlay(document.getElementById('sceneOverlayToggle').checked);
+  setSceneToolbarCollapsed(drawer.classList.contains('open'));
+}
+function leaveModelDisplay(){
+  if(sceneOverlayState){for(const [layer,visible] of sceneOverlayState)layer.visible=visible;sceneOverlayState=null;}
+  map.ground.opacity=1;
+  document.getElementById('sceneToolbarLauncher').classList.add('hidden');document.getElementById('sceneToolbar').classList.add('hidden');toggleScenePanel('model',false);toggleScenePanel('views',false);setPresentation(false);
+}
+function updateModelPreview(){
+  const offset=Number(document.getElementById('modelHeight').value);
+  sceneModel.elevationInfo={mode:'absolute-height',offset,unit:'meters'};
+  document.getElementById('modelHeightValue').textContent=offset+' 公尺';
+  map.ground.opacity=document.getElementById('groundToggle').checked?1:0;
+  setSceneOverlay(document.getElementById('sceneOverlayToggle').checked);
+}
+async function switchMode(mode){
+  if(tourSession&&mode!=='3d')stopSceneTour();
+  presetRequest++;const request=++sceneModeRequest;const is3=mode==='3d';isCesiumMode=false;
+  document.getElementById('map2d').classList.toggle('hidden',is3);
+  document.getElementById('map3d').classList.toggle('hidden',!is3);
+  document.getElementById('cesium3d').classList.add('hidden');
+  document.getElementById('b2d').classList.toggle('active',!is3);
+  document.getElementById('b3d').classList.toggle('active',is3);
+  sceneModel.visible=is3;
+  const se=document.getElementById('sceneChk');if(se)se.checked=is3;
+  if(!is3){setCesiumStatus('');leaveModelDisplay();bindLayerChecks();daylightExpand.expanded=false;return}
+  enterModelDisplay();updateModelPreview();bindLayerChecks();
+  setCesiumStatus('正在載入前竹 3D 模型…',true);
+  try{
+    let readinessTimer;try{await Promise.race([view3d.when(),new Promise((_,reject)=>{readinessTimer=setTimeout(()=>reject(new Error('3D 初始化逾時，請確認瀏覽器 WebGL 與網路。')),25000)})]);}finally{clearTimeout(readinessTimer)}
+    if(request!==sceneModeRequest)return;await sceneModel.load();if(request!==sceneModeRequest)return;
+    const preset=SCENE_PRESETS[0];
+    await view3d.goTo({target:new Graphic({geometry:scenePresetTarget(preset)}).geometry,scale:preset.scale,tilt:preset.tilt,heading:preset.heading},{duration:850});
+    if(request!==sceneModeRequest)return;setCesiumStatus('完整模型展示｜已隱藏會遮蔽模型的 Esri 地表；原始高程仍待校正。');
+  }catch(e){if(request!==sceneModeRequest)return;setCesiumStatus('3D 載入未完成：'+e.message,true);console.error(e)}
+}
+async function focusTaichung(){isQianzhuMode=false;if(sceneModel)sceneModel.visible=false;if(qianzhuHighlight)qianzhuHighlight.visible=false;land.visible=false;sect.visible=false;addr.visible=false;poly.visible=false;line.visible=false;point.visible=false;if(textPoint)textPoint.visible=false;document.getElementById('areaText').textContent='臺中市全區';document.getElementById('heroTitle').textContent='從臺中出發，快速找到合適土地';document.getElementById('heroText').textContent='預設顯示地籍、配地區塊與主要分割線；方向點改為按需開啟，畫面更清楚。';document.getElementById('coordText').textContent='臺中市總覽模式';if(activeView()===view3d){await switchMode('2d')}await view2d.goTo({center:TAICHUNG.center,zoom:TAICHUNG.zoom},{duration:1100});toast('已返回臺中市總覽')}
+window.focusQianzhu=async function(silent=false){
+  isQianzhuMode=true;
+  qianzhuHighlight.visible=true;
+  // 這三層就是前竹配地 CAD 的主體資料，預設全部顯示。
+  land.visible=true; poly.visible=true; line.visible=true; point.visible=false; textPoint.visible=true;
+  sect.visible=false; addr.visible=false;
+  document.getElementById('areaText').textContent='烏日前竹地區';
+  document.getElementById('heroTitle').textContent='烏日前竹｜土地選配重點區';
+  document.getElementById('heroText').textContent='點選地圖可查都市計畫分區與地籍；分類配色依 108 年 CAD 分區名稱呈現，3D 可檢視模型與日照。';
+  try{await drawQianzhuFocus();}catch(e){console.warn(e)}
+  let moved=false;
+  try{
+    const ex=await ensureQianzhuExtent();
+    if(!document.getElementById('map3d').classList.contains('hidden')){await goScenePreset('overview');} else await view2d.goTo(exExpand(ex,1.06),{duration:700});
+    moved=true;
+  }catch(e){console.warn('CAD extent 定位失敗，改用前竹固定座標',e)}
+  if(!moved){
+    if(!document.getElementById('map3d').classList.contains('hidden')){await view3d.goTo({center:QIANZHU.center,zoom:15,tilt:58,heading:18},{duration:500});} else await view2d.goTo({center:QIANZHU.center,zoom:QIANZHU.zoom},{duration:500});
+  }
+  if(i3sProvider)i3sProvider.show=false;if(sceneModel)sceneModel.visible=activeView()===view3d;showModelFallback(false);const se=document.getElementById('sceneChk');if(se)se.checked=sceneModel.visible
+  document.getElementById('coordText').textContent='前竹地區｜地籍＋配地 CAD 已載入';
+  if(activeView()===view3d&&sceneOverlayState)setSceneOverlay(document.getElementById('sceneOverlayToggle').checked);
+  layerPanel();
+  if(!silent)toast('已定位烏日前竹地區');
+}
+function normalizeSearchText(text){return String(text||'').normalize('NFKC').trim().replace(/臺/g,'台').replace(/\s+/g,'').replace(/[，,。．]/g,'')}
+async function navigateSearchCandidate(c){
+  // 模型展示隱藏地表；區外地點切回 2D，恢復底圖，避免飛往沒有模型的空白場景。
+  if(activeView()===view3d)await switchMode('2d');
+  await view2d.when();
+  const longitude=Number(c.longitude),latitude=Number(c.latitude);
+  if(!c.geometry&&(!Number.isFinite(longitude)||!Number.isFinite(latitude)))throw new Error('候選缺少有效座標');
+  // goTo 不會把 target 中的普通物件自動轉成 Point；地標直接用經緯度 center。
+  const destination=c.geometry?{target:c.geometry,zoom:c.zoom||18}:{center:[longitude,latitude],zoom:c.zoom||18};
+  await view2d.goTo(destination,{duration:650});
+  if(!c.geometry){
+    const center=view2d.center;
+    if(!center||Math.abs(center.longitude-longitude)>.002||Math.abs(center.latitude-latitude)>.002){
+      await view2d.goTo(destination,{animate:false});
+      const actual=view2d.center;
+      if(!actual||!Number.isFinite(actual.longitude)||!Number.isFinite(actual.latitude)||Math.abs(actual.longitude-longitude)>.002||Math.abs(actual.latitude-latitude)>.002)throw new Error('地圖尚未移至候選位置，請重新定位');
+    }
+  }
+  document.getElementById('areaText').textContent=c.label||'搜尋位置';
+  document.getElementById('coordText').textContent='搜尋定位｜'+(c.label||'候選位置');
+}
+function parseAddressQuery(raw){
+  const normalized=normalizeSearchText(raw);
+  const body=normalized.replace(/^台中市?/,'').replace(/^烏日區/,'');
+  const noMatch=body.match(/(.+?)(\d+(?:-\d+)?)號$/);
+  let road=body, number='';
+  if(noMatch){road=noMatch[1];number=noMatch[2]}
+  const roadMatch=road.match(/(.+?(?:路|街|大道|巷|弄))(.*)$/);
+  if(roadMatch)road=roadMatch[1];
+  return {normalized,body,road,number};
+}
+function addressWhere(parsed){
+  const clauses=[];
+  const safe=v=>String(v||'').replace(/'/g,"''");
+  if(parsed.road){
+    const r=safe(parsed.road.replace(/^台中市|^烏日區/g,''));
+    clauses.push(`(街_路段 LIKE '%${r}%' OR 地區 LIKE '%${r}%')`);
+  }
+  if(parsed.number){
+    const n=safe(parsed.number);
+    clauses.push(`(號 LIKE '${n}' OR 號 LIKE '${n}號' OR 號 LIKE '${n}-%' OR 號 LIKE '%${n}%')`);
+  }
+  return clauses.join(' AND ')||'1=0';
+}
+function candidateCardHtml(c,i){
+  const subtitle=c.subtitle||'';
+  return `<div class="candidate-item"><div class="candidate-no">${i+1}</div><div class="candidate-main"><b>${esc(c.label||'搜尋結果')}</b>${subtitle?`<small>${esc(subtitle)}</small>`:''}<div class="candidate-source">${esc(c.source||'')}</div></div><button class="candidate-btn" data-candidate-index="${i}">定位</button></div>`;
+}
+async function locateCandidate(index){
+  const c=searchCandidates[index];if(!c)return;
+  try{
+    await navigateSearchCandidate(c);
+    if(c.attributes){addMsg('', 'bot', `<b>${esc(c.label)}</b>${addrTable(c.attributes)}`)}
+    else addMsg(`已定位：${c.label}`);
+    document.getElementById('searchText').value=c.label;
+  }catch(e){addMsg('定位失敗：'+e.message)}
+}
+async function searchAddressLayer(raw){
+  const parsed=parseAddressQuery(raw), q=addr.createQuery();
+  q.where=addressWhere(parsed);q.outFields=['*'];q.returnGeometry=true;q.num=12;
+  const r=await addr.queryFeatures(q);
+  return r.features.map((g,idx)=>({
+    source:'門牌資料',geometry:g.geometry,attributes:g.attributes,zoom:18,
+    label:buildAddress(g.attributes)||`門牌候選 ${idx+1}`,
+    subtitle:[g.attributes['村里'],g.attributes['街_路段'],g.attributes['地區']].filter(Boolean).join('・')
+  }));
+}
+async function geocodeFallback(raw){
+  const aliases={
+    '台中高鐵站':{label:'高鐵台中站',subtitle:'台中市烏日區站區二路8號',longitude:120.616119,latitude:24.1121826,zoom:18},
+    '高鐵台中站':{label:'高鐵台中站',subtitle:'台中市烏日區站區二路8號',longitude:120.616119,latitude:24.1121826,zoom:18},
+    '高鐵臺中站':{label:'高鐵台中站',subtitle:'台中市烏日區站區二路8號',longitude:120.616119,latitude:24.1121826,zoom:18},
+    '台中高鐵':{label:'高鐵台中站',subtitle:'台中市烏日區站區二路8號',longitude:120.616119,latitude:24.1121826,zoom:18},
+    '臺中高鐵站':{label:'高鐵台中站',subtitle:'台中市烏日區站區二路8號',longitude:120.616119,latitude:24.1121826,zoom:18}
+  };
+  const key=normalizeSearchText(raw);
+  // ArcGIS 地理編碼核對：臺中國際機場航廈，兼容台／臺與常用名稱。
+  const airportNames=['台中機場','台中國際機場','清泉崗機場','清泉崗','台中清泉崗機場','台中國際機場(清泉崗機場)','rmq','taichunginternationalairport'];
+  const fuzzyKey=key.toLowerCase().replace(/機塲/g,'機場');
+  if(airportNames.includes(fuzzyKey))return [{label:'臺中國際機場（清泉崗機場）',subtitle:'臺中市沙鹿區中航路一段168號',longitude:120.6008145,latitude:24.2551368,zoom:15,source:'地標（ArcGIS 核對座標）'}];
+  const hits=Object.entries(aliases).filter(([name])=>normalizeSearchText(name).includes(key)&&key.length>=2).map(([,value])=>({...value,source:'地標'}));
+  // 部分名稱呈現多個候選，不把「台中」直接認定為單一地標。
+  if(fuzzyKey.length>=2&&airportNames.some(name=>name.includes(fuzzyKey)))hits.push({label:'臺中國際機場（清泉崗機場）',subtitle:'臺中市沙鹿區中航路一段168號',longitude:120.6008145,latitude:24.2551368,zoom:15,source:'地標名稱模糊比對'});
+  if(hits.length)return [...new Map(hits.map(hit=>[hit.label,hit])).values()];
+  try{
+    const p=new URLSearchParams({SingleLine:key,f:'json',sourceCountry:'TWN',outSR:'4326',maxLocations:'8',outFields:'Match_addr,PlaceName,Type,Addr_type',location:'120.6486,24.1030',forStorage:'false'});
+    const res=await fetch('https://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer/findAddressCandidates?'+p.toString(),{signal:AbortSignal.timeout(12000)});
+    if(!res.ok)throw new Error('地點搜尋服務 HTTP '+res.status);
+    const j=await res.json();
+    if(j.error)throw new Error(j.error.message||'地點搜尋服務錯誤');
+    let candidates=(j.candidates||[]).filter(x=>x.score>=85&&!['Locality','Postal'].includes(x.attributes?.Addr_type));
+    if(!candidates.length){
+      const base='https://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer/';
+      const suggestParams=new URLSearchParams({text:key,f:'json',countryCode:'TWN',location:'120.6486,24.1030',maxSuggestions:'5'});
+      const response=await fetch(base+'suggest?'+suggestParams,{signal:AbortSignal.timeout(12000)});
+      if(!response.ok)throw new Error('地點建議服務 HTTP '+response.status);
+      const suggestions=await response.json();if(suggestions.error)throw new Error(suggestions.error.message);
+      const resolved=await Promise.allSettled((suggestions.suggestions||[]).filter(s=>!s.isCollection).slice(0,5).map(async s=>{
+        const params=new URLSearchParams(p);params.set('SingleLine',s.text);params.set('magicKey',s.magicKey);
+        const r=await fetch(base+'findAddressCandidates?'+params,{signal:AbortSignal.timeout(12000)});if(!r.ok)throw new Error('候選搜尋失敗');
+        const result=await r.json();return result.candidates||[];
+      }));
+      candidates=resolved.flatMap(r=>r.status==='fulfilled'?r.value:[]).filter(x=>x.score>=85&&!['Locality','Postal'].includes(x.attributes?.Addr_type));
+    }
+    return candidates.sort((a,b)=>b.score-a.score).map(x=>({source:'地標／地址搜尋',label:x.attributes?.PlaceName||x.address||raw,subtitle:x.attributes?.Match_addr||'',longitude:x.location?.x,latitude:x.location?.y,zoom:x.attributes?.Type==='Airport'?15:18})).filter(x=>Number.isFinite(x.longitude)&&Number.isFinite(x.latitude));
+  }catch(e){console.warn('geocoder fallback failed',e);return []}
+}
+async function searchAddress(text,{echo=true}={}){
+  text=(text||'').trim();if(!text){toast('請輸入地址、道路或地標名稱');return}
+  openAI();if(echo)addMsg(`搜尋：「${text}」`,'user');document.getElementById('searchText').value=text;
+  const looksLikePoi=/高鐵|車站|火車站|捷運|醫院|學校|大學|國小|國中|高中|公園|政府|市公所|區公所|夜市|百貨|商場|機場|清泉崗|寺|廟|博物館|RMQ|airport/i.test(text);
+  let local=[],external=[];
+  // 地標不查門牌文字，避免道路中的同名片段排在真正地標之前。
+  if(looksLikePoi)external=await geocodeFallback(text);
+  else{try{local=await searchAddressLayer(text)}catch(e){console.warn('門牌圖層搜尋失敗',e)}if(!local.length)external=await geocodeFallback(text);}
+  // 去重：同一門牌或很接近座標只保留一次
+  const all=[...local,...external], seen=new Set();searchCandidates=[];
+  for(const c of all){
+    const xy=c.geometry?`${c.geometry.x?.toFixed?.(2)||''},${c.geometry.y?.toFixed?.(2)||''}`:`${Number(c.longitude).toFixed(5)},${Number(c.latitude).toFixed(5)}`;
+    const key=(c.label||'')+'|'+xy;if(seen.has(key))continue;seen.add(key);searchCandidates.push(c);if(searchCandidates.length>=10)break;
+  }
+  if(!searchCandidates.length){addMsg('目前找不到符合資料。可直接輸入完整地址，例如「台中市烏日區站區二路8號」，或地標名稱，例如「台中高鐵站」。');return}
+  const c0=searchCandidates[0];
+  let located=false;try{await navigateSearchCandidate(c0);located=true}catch(e){console.warn('定位未完成',e)}
+  const html=`找到 <b>${searchCandidates.length}</b> 筆候選，${located?'已先定位第一筆':'自動定位未完成，請按候選的「定位」重試'}。你可以點任一筆「定位」切換：<div class="candidate-list">${searchCandidates.map(candidateCardHtml).join('')}</div><div class="candidate-summary">完整地址會拆成「道路＋門牌號碼」查詢；地標名稱則會優先比對常用地標，再使用地理編碼搜尋。</div>`;
+  addMsg('', 'bot', html);
+}
+
+async function parcelAtPoint(mapPoint,{silent=false}={}){const q=land.createQuery();q.geometry=mapPoint;q.spatialRelationship='intersects';q.outFields=['OBJECTID','KCNT','AA48','AA49','AA05','AA10','AA17','THEKEY','TWD97E','TWD97N'];q.returnGeometry=true;q.num=1;try{const r=await land.queryFeatures(q);if(!r.features.length){if(!silent)addMsg('此位置沒有查到 Land11505 宗地資料。');return null}return r.features[0]}catch(e){console.warn('地籍查詢失敗',e);return null}}
+async function highlightGraphic(view,graphic){try{if(highlightHandle){highlightHandle.remove();highlightHandle=null}if(!graphic?.layer)return;const lv=await view.whenLayerView(graphic.layer);highlightHandle=lv.highlight(graphic)}catch(e){console.warn('highlight failed',e)}}
+async function handleMapClick(view,e){
+  if(!e.mapPoint)return;
+  const token=++selectionToken;urbanQueryState='loading';lastZoneInfo=null;lastClickedPoint=e.mapPoint;document.getElementById('coordText').textContent=`${e.mapPoint.longitude.toFixed(6)}, ${e.mapPoint.latitude.toFixed(6)}｜辨識中`;
+  let results=[];try{const h=await view.hitTest(e,{include:[poly,line,point,land]});results=h.results.filter(r=>r.type==='graphic'&&[poly,line,point,land].includes(r.graphic?.layer))}catch(err){console.warn('hitTest failed',err)}
+  if(token!==selectionToken)return;
+  const cadHit=results.find(r=>[poly,line,point].includes(r.graphic.layer));const landHit=results.find(r=>r.graphic.layer===land);
+  lastCadGraphic=cadHit?.graphic||null;lastLandGraphic=landHit?.graphic||null;currentPolyOid=lastCadGraphic?.layer===poly?String(lastCadGraphic.attributes?.OBJECTID??''):null;
+  lastZoneInfo=null;showSelectionLoading();
+  let urbanResult=null;try{urbanResult=await queryUrbanPoint(e.mapPoint);if(token!==selectionToken)return;urbanQueryState='ready';}catch(err){if(token!==selectionToken)return;urbanQueryState='error';console.warn(err)}
+  lastZoneInfo=urbanResult;
+  const primary=urbanResult?{graphic:urbanResult.graphic}:cadHit||landHit||null;if(primary)await highlightGraphic(view,primary.graphic);else if(highlightHandle){highlightHandle.remove();highlightHandle=null}
+  if(token!==selectionToken)return;
+  // 先用 hitTest 立即顯示，避免每次點擊都等待網路查詢。
+  showSelectionInfo(primary,lastLandGraphic,e.mapPoint);document.getElementById('coordText').textContent=`${e.mapPoint.longitude.toFixed(6)}, ${e.mapPoint.latitude.toFixed(6)}｜已選取${lastZoneInfo?'・'+lastZoneInfo.zone:''}`;
+  // 若畫面沒有命中地籍，再背景補查，不阻塞 UI。
+  if(!lastLandGraphic){const parcel=await parcelAtPoint(e.mapPoint,{silent:true});if(token!==selectionToken)return;if(parcel){lastLandGraphic=parcel;showSelectionInfo(primary,parcel,e.mapPoint)}}
+}
+function openAI(){document.getElementById('aiPanel').classList.add('open');document.getElementById('aiFab').style.opacity='.25';document.getElementById('selectionPanel').classList.remove('open')}function closeAI(){document.getElementById('aiPanel').classList.remove('open');document.getElementById('aiFab').style.opacity='1';if(lastCadGraphic||lastLandGraphic)document.getElementById('selectionPanel').classList.add('open')}
+function chatLocationIntent(raw){
+  const text=String(raw||'').trim();
+  if(/如何|怎麼|怎樣|什麼是|使用說明|可以做什麼/.test(text))return null;
+  if(/分區|配色|圖例|建蔽|容積|地籍|地號|宗地|配地|模型|日照|陰影|比較|圖層|標註|街廓|2d|3d|三維|二維|開啟|關閉|隱藏|打開|切換/i.test(text))return null;
+  if(/^(?:請|幫我)?(?:定位|前往|進入|顯示)前竹(?:地區)?[！!。]?$/u.test(text))return null;
+  const prefix=/^(?:請\s*|幫我\s*|請幫我\s*)?(?:搜尋|搜索|查詢|查找|找一下|找|查|定位到|定位|前往|帶我去|帶我到|我要去)\s*/;
+  const explicit=prefix.test(text);
+  let query=text.replace(prefix,'').replace(/^(?:地址|道路|地標|門牌)\s*[:：]?\s*/,'').replace(/[?？。！!]+$/,'').trim();
+  if(/(?:在哪裡|在哪|的位置)$/.test(query)){query=query.replace(/(?:在哪裡|在哪|的位置)$/,'').trim();if(query)return {query};}
+  if(explicit)return {query};
+  if(/(?:路|街|大道)(?:[一二三四五六七八九十\d]+段)?(?:\d+巷)?(?:\d+弄)?(?:\d+(?:之\d+|-\d+)?號)?$/.test(query)||/\d+(?:之\d+|-\d+)?號$/.test(query))return {query};
+  if(/高鐵|車站|捷運|醫院|學校|大學|國小|國中|高中|公園|區公所|市政府|夜市|百貨|商場|機場|寺|廟|博物館/.test(query))return {query};
+  if(/^[\p{L}\d·・\s-]{2,30}$/u.test(query)&&!/[嗎呢麼]|謝謝|你好|功能|說明|目前|這裡|這塊|選取|土地/.test(query))return {query};
+  return null;
+}
+
+async function askAI(t){
+  t=(t||'').trim();if(!t)return;openAI();addMsg(t,'user');document.getElementById('ask').value='';const s=t.toLowerCase();
+  if(/如何|怎麼|怎樣/.test(t)&&/門牌|地址|地號|定位|道路|地標/.test(t)){addMsg('可直接在這裡輸入地址、道路或地標，例如「台中市烏日區站區二路8號」、「站區二路」、「台中高鐵站」，也可輸入「幫我定位台中高鐵站」。找到候選後可按「定位」；若要查地號，再點選地圖上的宗地。');return}
+  const locationIntent=chatLocationIntent(t);if(locationIntent){if(locationIntent.query)await searchAddress(locationIntent.query,{echo:false});else addMsg('請輸入要定位的地址、道路或地標名稱。');return}
+  if(await answerUrbanQuestion(t))return;
+  if(/使用說明|可以做什麼|功能|怎麼用/.test(s)){addMsg('', 'bot', aiWelcomeHtml());return}
+  if(/政府/.test(s)&&/配地|選地|重劃/.test(s)&&/提供|服務|查詢|確認/.test(s)){addMsg('', 'bot', `<b>有。</b>政府在市地重劃或區段徵收案件中，會依辦理階段提供土地分配結果查詢、閱覽與公告服務。<br><br>本平台目前可先協助你做「地圖定位＋地籍查詢＋配地規劃圖層判讀＋門牌搜尋」。正式分配結果仍以主管機關公告、分配圖及清冊為準。`);return}
+  if(/查看目前配地資訊|目前配地資訊|配地資訊|選到什麼|目前選取/.test(s)){
+    const h=currentSelectionSummary();
+    if(h)addMsg('', 'bot', `<b>目前選取資訊</b>${h}<br>你也可以再問「查這裡的地籍資料」或點其他區塊比較。`);
+    else addMsg('目前尚未選取配地物件。請先點地圖上的配地區塊、配地線或宗地。');
+    return
+  }
+  if(/比較/.test(s)&&/兩塊|土地|地/.test(s)){if(compareA&&compareB){renderComparison();addMsg('', 'bot', `<b>已開啟兩塊地比較</b><br>土地 A：${esc(compareA.zone||'分區未辨識')}／${esc(compareA.land.AA48||'')}${esc(compareA.land.AA49||'')}<br>土地 B：${esc(compareB.zone||'分區未辨識')}／${esc(compareB.land.AA48||'')}${esc(compareB.land.AA49||'')}<br><br>下方比較卡會並列地籍、配地圖層與都市計畫分區。`)}else addMsg('請先點第一塊地按「加入比較 A」，再點第二塊地按「加入比較 B」。');return}
+  if(/分區文字|annotation|textpoint/.test(s)&&/開啟|顯示|打開/.test(s)){setLayerVisible(textPoint,true,'分區文字標註');addMsg('已開啟配地 CAD 編號標註。');return}
+  if(/分區文字|annotation|textpoint/.test(s)&&/關閉|隱藏/.test(s)){setLayerVisible(textPoint,false,'分區文字標註');addMsg('已關閉配地 CAD 編號標註。');return}
+
+  if(/前竹/.test(s)&&/願景圖|圖片|成果圖/.test(s)){openDrawer('gallery');addMsg('已開啟前竹願景圖集，可點選圖片放大檢視。');return}
+  if(/前竹/.test(s)&&/定位|前往|進入|顯示/.test(s)){await focusQianzhu();addMsg('已定位至烏日前竹地區。你可以直接點配地區塊或宗地查看相關資訊。');return}
+  if(/3d|三維|立體|模型/.test(s)){await switchMode('3d');addMsg('已切換 3D，新版模型按發布座標顯示。右上方可開啟日照與陰影工具。');return}
+  if(/2d|二維/.test(s)){switchMode('2d');addMsg('已切換至 2D 地圖。');return}
+  if(/開啟|打開|顯示/.test(s)&&/地籍/.test(s)){setLayerVisible(land,true,'地籍圖');addMsg('已開啟地籍圖。放大到前竹地區後會顯示宗地界線。');return}
+  if(/關閉|隱藏/.test(s)&&/地籍/.test(s)){setLayerVisible(land,false,'地籍圖');addMsg('已關閉地籍圖。');return}
+  if(/開啟|打開|顯示/.test(s)&&/門牌/.test(s)){setLayerVisible(addr,true,'門牌');addMsg('已開啟門牌圖層。門牌資料在較近比例尺會較清楚。');return}
+  if(/關閉|隱藏/.test(s)&&/門牌/.test(s)){setLayerVisible(addr,false,'門牌');addMsg('已關閉門牌圖層。');return}
+  if(/什麼是|是什麼|用途|說明/.test(s)&&/方向點|cad 點|point/.test(s)){addMsg('「CAD 點位」是由前竹配地 CAD 的 Point 圖層轉出，可能包含箭頭端點、分配方向點或其他輔助點位。它不是每一點都代表正式的配地方向，因此本平台將它標示為「CAD 點位（方向／輔助點）」；建議只在放大檢視時開啟。');return}
+  if(/切換/.test(s)&&/方向點|cad 點|point/.test(s)){const next=!point.visible;setLayerVisible(point,next,'CAD 點位');addMsg(next?'已開啟 CAD 點位；再次輸入「切換 CAD 點位」即可關閉。':'已關閉 CAD 點位。');return}
+  if(/開啟|打開|顯示/.test(s)&&/方向點|cad 點|point/.test(s)){setLayerVisible(point,true,'CAD 點位');addMsg('已開啟 CAD 點位（方向／輔助點）。再次輸入「關閉 CAD 點位」即可關閉。');return}
+  if(/關閉|隱藏/.test(s)&&/方向點|cad 點|point/.test(s)){setLayerVisible(point,false,'CAD 點位');addMsg('已關閉 CAD 點位（方向／輔助點）。');return}
+  if(/開啟|打開|顯示/.test(s)&&/配地.*線|polyline|箭頭/.test(s)){setLayerVisible(line,true,'配地規劃線');addMsg('已開啟配地規劃線／箭頭。');return}
+  if(/關閉|隱藏/.test(s)&&/配地.*線|polyline|箭頭/.test(s)){setLayerVisible(line,false,'配地規劃線');addMsg('已關閉配地規劃線／箭頭。');return}
+  if(/開啟|打開|顯示/.test(s)&&/配地.*面|polygon|區塊/.test(s)){setLayerVisible(poly,true,'配地規劃面');addMsg('已開啟配地規劃面。');return}
+  if(/關閉|隱藏/.test(s)&&/配地.*面|polygon|區塊/.test(s)){setLayerVisible(poly,false,'配地規劃面');addMsg('已關閉配地規劃面。');return}
+  if(/地籍|地號|宗地/.test(s)){
+    if(lastLandGraphic){addMsg('', 'bot', `這是你目前選取位置的地籍資料：${attrsTable(lastLandGraphic.attributes)}`)}
+    else if(lastClickedPoint){const g=await parcelAtPoint(lastClickedPoint,{silent:true});if(g)addMsg('', 'bot', `已取得此位置地籍資料：${attrsTable(g.attributes)}`);else addMsg('此位置目前沒有查到地籍宗地。')}
+    else addMsg('請先在地圖上點選前竹地區的一筆宗地，我會立即讀取地籍屬性。');return
+  }
+  addMsg('目前我可以協助：查地籍、查看目前配地資訊、搜尋門牌、定位前竹、開關地籍／門牌／配地圖層，以及切換 2D／3D。你也可以問「使用說明」查看實際提問範例。')
+}
+
+function zoningColor(v){const t=String(v||'');if(/住/.test(t))return [255,241,70,.68];if(/商/.test(t))return [239,82,82,.67];if(/宗教/.test(t))return [178,135,217,.65];if(/農業|保護|林業/.test(t))return [163,194,112,.65];if(/工/.test(t))return [180,129,89,.68];if(/學校|文教|文中|文小|文大|文高|高職/.test(t))return [190,113,224,.68];if(/機關|行政/.test(t))return [159,114,214,.66];if(/公園|綠地|園道|綠/.test(t))return [77,214,92,.65];if(/河川|河道|水/.test(t))return [82,210,225,.62];if(/道路|交通/.test(t))return [220,220,220,.55];if(/公共|設施/.test(t))return [73,154,225,.62];return [245,183,77,.58]}
+// Published CAD names are retained verbatim; colors below are a display legend.
+function urbanLegendHtml(){return `<div class="zone-legend-list">${['住宅區','商業區','工業區','公園用地','學校用地','機關用地','宗教專用區','農業區','河川區','道路用地','公共設施','其他'].map(n=>`<span><i style="background:rgb(${zoningColor(n).slice(0,3).join(',')})"></i>${esc(n)}</span>`).join('')}</div>`}
+async function configureUrbanZones(){
+  await urbanZones.load();
+  const q=urbanZones.createQuery();q.where='1=1';q.outFields=['Layer'];q.returnGeometry=false;q.returnDistinctValues=true;q.orderByFields=['Layer'];q.num=2000;
+  const r=await urbanZones.queryFeatures(q);
+  if(r.exceededTransferLimit)throw new Error('分區類別超過查詢上限');
+  urbanNames=[...new Set(r.features.map(f=>f.attributes.Layer).filter(Boolean))];
+  urbanZones.renderer={type:'unique-value',field:'Layer',defaultLabel:'其他／未分類',defaultSymbol:{type:'simple-fill',color:[160,170,180,.4],outline:{color:'#74859a',width:.5}},uniqueValueInfos:urbanNames.map(n=>({value:n,label:n,symbol:{type:'simple-fill',color:zoningColor(n),outline:{color:[80,90,110,.65],width:.6}}}))};
+}
+async function queryUrbanPoint(point){
+  await urbanZones.load();
+  const q=urbanZones.createQuery();q.geometry=point;q.spatialRelationship='intersects';q.outFields=['OBJECTID','Layer','Color','DocName'];q.returnGeometry=true;q.num=100;
+  const r=await urbanZones.queryFeatures(q);
+  if(r.exceededTransferLimit)throw new Error('此位置重疊圖徵過多，請放大後重試');
+  if(!r.features.length)return null;
+  const names=[...new Set(r.features.map(f=>f.attributes.Layer||'未分類'))];
+  return {zone:names.join('／'),names,text:names.length>1?'此點涉及多個分區／重疊面，請放大確認界線':r.features[0].attributes.Layer,source:'urban',graphic:r.features[0],records:r.features.map(f=>f.attributes)};
+}
+function urbanSelectionHtml(){
+  if(urbanQueryState==='loading')return '正在查詢目前位置的都市計畫分區，請稍候再詢問。';
+  if(urbanQueryState==='error')return '分區服務查詢失敗，請重新點選地圖重試；尚未確認此位置分區。';
+  if(lastZoneInfo?.source!=='urban')return lastClickedPoint?'此點未查到都市計畫分區面；不以附近文字猜測分區。':'請先點選地圖上的土地，再詢問「這裡是什麼分區？」。';
+  const z=lastZoneInfo;
+  return `<b>目前位置：${esc(z.zone)}</b>${z.names.length>1?'<br>此點命中多個分區，可能位於邊界或重疊面，請放大確認。':''}<br>${z.names.map(n=>`<span style="display:inline-block;width:12px;height:12px;background:rgb(${zoningColor(n).slice(0,3).join(',')})"></span> ${esc(n)}（分類配色）`).join('<br>')}<br>來源：都市計畫 Polygon 的 Layer 欄位。<br>${[...new Set(z.records.map(a=>a.DocName))].map(esc).join('<br>')}<br>此服務沒有建蔽率、容積率欄位；無法由這份資料確認現行建築強度。`;
+}
+async function answerUrbanQuestion(t){
+  if(/日照|陰影|日影/.test(t)){if(/關閉/.test(t)){view3d.environment.lighting.directShadowsEnabled=false;daylightExpand.expanded=false;addMsg('已關閉日照陰影。');return true}await switchMode('3d');view3d.environment.lighting.directShadowsEnabled=true;daylightExpand.expanded=true;addMsg('已開啟日照與陰影工具。可調整日期、臺灣時間（UTC+8）及播放一天的變化；這是模型視覺模擬。');return true}
+  if(/分區|配色|圖例|住宅|商業|建蔽|容積|用途/.test(t)){
+    if(/關閉|隱藏/.test(t)&&/分區/.test(t)){urbanZones.visible=false;layerPanel();addMsg('已關閉都市計畫分區面。');return true}
+    if(/開啟|顯示/.test(t)&&/分區/.test(t)){urbanZones.visible=true;layerPanel();addMsg('已開啟都市計畫分區面。');return true}
+    if(/這裡|這塊|目前|選取|此地/.test(t)){addMsg('', 'bot',urbanSelectionHtml());return true}
+    if(/配色|圖例|顏色/.test(t)){addMsg('', 'bot',`<b>分區分類配色</b>${urbanLegendHtml()}<br>依 Layer 名稱分類，屬網頁展示配色，不代表法定圖例。點選地圖可查該區名稱。`);return true}
+    if(/建蔽|容積/.test(t)){addMsg('108 年都市計畫分區服務未提供建蔽率與容積率，無法由這份圖層確認。請依該地適用的核定計畫查證。');return true}
+    if(/哪些|有什麼/.test(t)){
+      const msg=addMsg('正在查詢範圍內的分區…');
+      try{await urbanReady;const q=urbanZones.createQuery();q.geometry=/前竹/.test(t)?await ensureQianzhuExtent():activeView().extent;q.spatialRelationship='intersects';q.outFields=['Layer'];q.returnDistinctValues=true;q.returnGeometry=false;q.num=2000;const r=await urbanZones.queryFeatures(q);const names=[...new Set(r.features.map(f=>f.attributes.Layer))];msg.textContent=(/前竹/.test(t)?'前竹概略範圍':'目前地圖範圍')+'內查到：'+(names.join('、')||'沒有分區面')+'。來源：108 年 CAD 成果。'+(r.exceededTransferLimit?'結果超過上限，請縮小查詢範圍。':'');}catch(e){msg.textContent='分區查詢失敗，請確認網路後重試。'}return true;
+    }
+    addMsg('已接入都市計畫使用分區。請先點選土地，再問「這裡是什麼分區？」；也可問「分區配色圖例」或「前竹有哪些使用分區？」。資料來源為 108 年 CAD 成果。');return true;
+  }
+  return false;
+}
+
+
+require(['esri/Map','esri/views/MapView','esri/views/SceneView','esri/layers/FeatureLayer','esri/layers/SceneLayer','esri/layers/GraphicsLayer','esri/Graphic','esri/widgets/ScaleBar','esri/geometry/geometryEngine','esri/geometry/support/webMercatorUtils','esri/widgets/Daylight','esri/widgets/Expand'],(Map,MapView,SceneView,FeatureLayer,SceneLayer,GraphicsLayer,GraphicClass,ScaleBar,GeometryEngineModule,webMercatorUtils,Daylight,Expand)=>{
+Graphic=GraphicClass;GeometryEngine=GeometryEngineModule;
+WebMercatorUtils=webMercatorUtils;
+try{
+land=new FeatureLayer({url:SERVICE+'/0',title:'地籍圖',outFields:['OBJECTID','KCNT','AA48','AA49','AA05','AA10','AA17','THEKEY','TWD97E','TWD97N'],popupEnabled:false,opacity:.48,visible:true,minScale:28000,renderer:{type:'simple',symbol:{type:'simple-fill',color:[255,255,255,.035],outline:{color:[235,167,30,.72],width:.75}}}});
+sect=new FeatureLayer({url:SERVICE+'/1',title:'地段範圍',outFields:['OBJECTID','KCNT','AA48','AA46'],popupEnabled:false,opacity:.66,visible:false,minScale:80000,renderer:{type:'simple',symbol:{type:'simple-fill',color:[255,255,255,0],outline:{color:[64,117,163,.62],width:1.2}}}});
+poly=new FeatureLayer({url:SERVICE+'/2',title:'配地規劃面',outFields:['OBJECTID','Layer','Color','Linetype'],popupEnabled:false,visible:true,opacity:.58,minScale:60000});line=new FeatureLayer({url:SERVICE+'/3',title:'配地規劃線／箭頭',outFields:['OBJECTID','Layer','Color','Linetype'],popupEnabled:false,visible:true,opacity:.78,minScale:45000});point=new FeatureLayer({url:SERVICE+'/4',title:'CAD 點位（方向／輔助點）',outFields:['OBJECTID','Layer','Color'],popupEnabled:false,visible:false,opacity:.9,minScale:14000});addr=new FeatureLayer({url:SERVICE+'/5',title:'門牌',outFields:['OBJECTID','村里','街_路段','地區','巷','弄','號','WGS84經度','WGS84緯度'],popupEnabled:false,visible:false,minScale:18000});
+annotation=new FeatureLayer({url:TEXT_SERVICE+'/0',title:'原始 Annotation',outFields:['OBJECTID','TextString','Layer','Color'],popupEnabled:false,visible:false});
+textPoint=new FeatureLayer({url:TEXT_SERVICE+'/1',title:'分區文字標註',outFields:['OBJECTID','Text','Layer','Color'],popupEnabled:false,visible:true,minScale:22000,renderer:{type:'simple',symbol:{type:'simple-marker',size:1,color:[0,0,0,0],outline:null}},labelingInfo:[{labelExpressionInfo:{expression:'$feature.Text'},symbol:{type:'text',color:[42,63,82,.92],haloColor:[255,255,255,.94],haloSize:1.2,font:{family:'Noto Sans TC, Microsoft JhengHei, sans-serif',size:10,weight:'bold'}},labelPlacement:'above-center'}]});
+modelAnchorLayer=new GraphicsLayer({title:'願景模型目標位置',visible:true});
+sceneModel=new SceneLayer({url:SCENE_SERVICE,title:'前竹地區願景模型 v3',visible:false,opacity:1,popupEnabled:false});
+qianzhuHighlight=new GraphicsLayer({title:'前竹地區亮顯',visible:true});
+urbanZones=new FeatureLayer({url:URBAN_SERVICE+'/2',title:'都市計畫使用分區（108 年 CAD）',outFields:['OBJECTID','Layer','Color','DocName'],popupEnabled:false,minScale:100000,maxScale:0});
+urbanLines=new FeatureLayer({url:URBAN_SERVICE+'/1',title:'都市計畫界線',visible:false,popupEnabled:false});
+urbanText=new FeatureLayer({url:URBAN_SERVICE+'/3',title:'都市計畫分區標註',outFields:['Text','Layer'],popupEnabled:false,minScale:18000,renderer:{type:'simple',symbol:{type:'simple-marker',size:0,color:[0,0,0,0]}},labelingInfo:[{labelExpressionInfo:{expression:'$feature.Text'},symbol:{type:'text',color:'#344259',haloColor:'white',haloSize:1,font:{size:10}},labelPlacement:'above-center'}]});
+urbanReady=configureUrbanZones();urbanReady.catch(e=>{console.error(e);toast('分區配色載入失敗，可重新整理重試')});
+map=new Map({basemap:'osm',ground:'world-elevation',layers:[qianzhuHighlight,sect,poly,urbanZones,land,line,urbanLines,point,addr,textPoint,urbanText,annotation,modelAnchorLayer,sceneModel]});
+view2d=new MapView({container:'map2d',map,center:QIANZHU.center,zoom:QIANZHU.zoom,constraints:{rotationEnabled:false}});
+view3d=new SceneView({container:'map3d',map,center:[120.6486,24.1030],scale:10000,tilt:48,heading:18,environment:{lighting:{type:'sun',date:new Date(new Date().toLocaleDateString('en-CA',{timeZone:'Asia/Taipei'})+'T10:00:00+08:00'),directShadowsEnabled:false,ambientOcclusionEnabled:false},atmosphereEnabled:true}});
+sceneModel.load().catch(e=>console.warn('模型預載未完成，切換時會重試',e));
+daylightExpand=new Expand({view:view3d,content:new Daylight({view:view3d,utcOffset:8,playSpeedMultiplier:1,visibleElements:{timezone:false}}),expandTooltip:'日照與陰影（臺灣時間）',expanded:false});
+view3d.ui.padding={top:60,right:8};view3d.ui.add(daylightExpand,'top-right');
+view2d.ui.add(new ScaleBar({view:view2d,unit:'metric'}),'bottom-left');
+view2d.when(async()=>{layerPanel();addMsg('', 'bot', aiWelcomeHtml());try{await focusQianzhu(true);}catch(e){console.warn('前竹預設載入失敗',e)}finally{document.getElementById('loading').style.display='none';}});
+[view2d,view3d].forEach(v=>v.on('click',e=>handleMapClick(v,e)));
+}catch(e){document.getElementById('loadErr').textContent='載入失敗：'+e.message}
+});
+document.querySelectorAll('.rail-btn[data-panel]').forEach(b=>b.onclick=()=>openDrawer(b.dataset.panel));
+document.getElementById('drawerClose').onclick=()=>drawer.classList.remove('open');
+
+const welcome=document.getElementById('welcome');
+const welcomeButtons=[...document.querySelectorAll('#welcomeGallery button')];
+let welcomeSlideIndex=0;
+function setWelcomeSlide(i){welcomeSlideIndex=i;const btn=welcomeButtons[i];welcome.style.setProperty('--welcome-image',`url("${btn.dataset.img}")`);welcomeButtons.forEach((b,j)=>b.classList.toggle('active',j===i))}
+welcomeButtons.forEach((b,i)=>b.onclick=()=>setWelcomeSlide(i));
+window.setInterval(()=>{if(!welcome.classList.contains('hide'))setWelcomeSlide((welcomeSlideIndex+1)%welcomeButtons.length)},5200);
+document.getElementById('lightboxClose').onclick=()=>document.getElementById('lightbox').classList.remove('open');
+document.getElementById('lightbox').onclick=e=>{if(e.target.id==='lightbox')e.currentTarget.classList.remove('open')};
+
+document.getElementById('enterMap').onclick=()=>document.getElementById('welcome').classList.add('hide');
+document.getElementById('enterQianzhu').onclick=async()=>{document.getElementById('welcome').classList.add('hide');await focusQianzhu()};
+document.getElementById('welcomeAi').onclick=()=>{document.getElementById('welcome').classList.add('hide');openAI()};
+
+document.getElementById('focusQianzhu').onclick=focusQianzhu;document.getElementById('railQianzhu').onclick=focusQianzhu;document.getElementById('heroQianzhu').onclick=focusQianzhu;document.getElementById('railTaichung').onclick=focusTaichung;
+document.getElementById('clearSel').onclick=()=>{selectionToken++;urbanQueryState='idle';lastClickedPoint=null;lastLandGraphic=null;lastCadGraphic=null;lastZoneInfo=null;if(highlightHandle){highlightHandle.remove();highlightHandle=null}closeSelection();document.getElementById('coordText').textContent='已清除選取';toast('已清除目前選取')};
+document.getElementById('presetButtons').innerHTML=SCENE_PRESETS.map(p=>`<button data-preset="${p.id}" aria-pressed="false">${p.name}<small>${p.note}</small></button>`).join('');
+document.querySelectorAll('[data-preset]').forEach(b=>b.onclick=()=>goScenePreset(b.dataset.preset));
+document.getElementById('sceneToolbarClose').onclick=()=>setSceneToolbarCollapsed(true);
+document.getElementById('sceneToolbarLauncher').onclick=()=>setSceneToolbarCollapsed(false);
+document.getElementById('modelToggle').onclick=()=>toggleScenePanel('model');document.getElementById('viewsToggle').onclick=()=>toggleScenePanel('views');
+document.getElementById('modelClose').onclick=()=>toggleScenePanel('model',false);document.getElementById('viewsClose').onclick=()=>toggleScenePanel('views',false);
+document.getElementById('presentationToggle').onclick=()=>setPresentation(!document.getElementById('app').classList.contains('presentation'));
+document.getElementById('playTour').onclick=playSceneTour;
+document.getElementById('tourStop').onclick=stopSceneTour;
+document.addEventListener('keydown',e=>{if(e.key==='Escape')stopSceneTour()});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){setPresentation(false);toggleScenePanel('model',false);toggleScenePanel('views',false)}});
+document.getElementById('saveCamera').onclick=()=>{savedSceneCamera=view3d.camera.toJSON();document.getElementById('recallCamera').disabled=false;try{localStorage.setItem(CAMERA_STORAGE_KEY,JSON.stringify(savedSceneCamera));document.getElementById('viewStatus').textContent='已儲存目前視角至此瀏覽器。'}catch(e){document.getElementById('viewStatus').textContent='已暫存視角；瀏覽器無法永久儲存。'}};
+document.getElementById('recallCamera').onclick=async()=>{if(!savedSceneCamera)return;presetRequest++;try{await view3d.goTo(savedSceneCamera,{duration:1000});document.getElementById('viewStatus').textContent='已回到儲存視角。'}catch(e){document.getElementById('viewStatus').textContent='視角移動未完成，請重試。'}};loadSavedCamera();
+document.getElementById('b2d').onclick=()=>switchMode('2d');document.getElementById('b3d').onclick=()=>switchMode('3d');
+document.getElementById('searchBtn').onclick=()=>searchAddress(document.getElementById('searchText').value);document.getElementById('searchText').onkeydown=e=>{if(e.key==='Enter')searchAddress(e.target.value)};
+chat.addEventListener('click',e=>{const b=e.target.closest('.candidate-btn');if(!b)return;const i=Number(b.dataset.candidateIndex);if(Number.isInteger(i))locateCandidate(i)});
+document.getElementById('selectionClose').onclick=closeSelection;document.getElementById('aiFab').onclick=openAI;document.getElementById('aiClose').onclick=closeAI;document.getElementById('heroAi').onclick=openAI;
+document.getElementById('send').onclick=()=>askAI(document.getElementById('ask').value);document.getElementById('ask').onkeydown=e=>{if(e.key==='Enter')askAI(e.target.value)};document.querySelectorAll('.qbtn').forEach(b=>b.onclick=()=>askAI(b.textContent));
+['groundToggle','sceneOverlayToggle','modelHeight'].forEach(id=>document.getElementById(id).addEventListener('input',updateModelPreview));
+document.getElementById('resetModelHeight').onclick=()=>{document.getElementById('modelHeight').value=0;updateModelPreview()};
+window.addEventListener('error',e=>{const box=document.getElementById('loadErr');if(box&&document.getElementById('loading').style.display!=='none')box.textContent='JavaScript 錯誤：'+e.message});
+</script>
+</body>
+</html>
