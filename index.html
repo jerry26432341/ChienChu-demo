@@ -242,8 +242,10 @@ function selectionSnapshot(){
 }
 function snapshotRows(x){const a=x.land||{},c=x.cad||{};const rows=[['分區',x.zone||'尚未辨識'],['判讀來源',x.zone?zoneSourceLabel({source:x.zoneSource}):'—'],['段／地號',[a.AA48,a.AA49].filter(Boolean).join(' ')||'—'],['地籍代碼',a.AA05||a.THEKEY||'—'],['配地圖層',c.Layer||'—']];return rows}
 function renderComparison(){const p=document.getElementById('comparePanel'),b=document.getElementById('compareBody'),s=document.getElementById('compareSummary');if(!compareA&&!compareB){p.classList.remove('open');return}const card=(x,l)=>`<div class="compare-card"><h4>${l}</h4>${x?`<div class="compare-grid">${snapshotRows(x).map(r=>`<span>${esc(r[0])}</span><span>${esc(r[1])}</span>`).join('')}</div>`:`<div class="info-note">尚未加入土地</div>`}</div>`;b.innerHTML=card(compareA,'土地 A')+card(compareB,'土地 B');p.classList.add('open');if(compareA&&compareB){const notes=[];if(compareA.zone||compareB.zone)notes.push(`分區：A ${compareA.zone||'未辨識'}；B ${compareB.zone||'未辨識'}`);s.textContent=notes.length?'比較摘要｜'+notes.join('；'):'已加入兩塊土地，可查看左右欄位差異。'}else s.textContent='再點另一塊地，按「加入比較 B」。'}
-window.addCurrentToCompare=()=>{const snap=selectionSnapshot();if(!snap.geometry&&!snap.land.AA05&&!snap.cad.OBJECTID){toast('請先點選一塊地');return}if(!compareA){compareA=snap;toast('已加入土地 A')}else if(!compareB){compareB=snap;toast('已加入土地 B')}else{compareA=snap;compareB=null;toast('已重新設定土地 A')}renderComparison()};
-window.clearComparison=()=>{compareA=compareB=null;renderComparison()};
+window.addCurrentToCompare=()=>{const snap=selectionSnapshot();if(!snap.geometry&&!snap.land.AA05&&!snap.cad.OBJECTID){toast('請先點選一塊地');return}if(!compareA){compareA=snap;toast('已加入土地 A')}else if(!compareB){compareB=snap;toast('已加入土地 B')}else{compareA=snap;compareB=null;toast('已重新設定土地 A')}renderComparison();syncCompareButtons()};
+window.clearComparison=()=>{compareA=compareB=null;renderComparison();syncCompareButtons()};
+function compareBtnLabel(){return !compareA?'加入比較 A':!compareB?'加入比較 B':'重新設定 A'}
+function syncCompareButtons(){document.querySelectorAll('.compare-add').forEach(b=>{b.textContent=compareBtnLabel()})}
 window.cycleModelFallback=()=>{const imgs=['taichung_demo/assets/qianzhu_03.png','taichung_demo/assets/qianzhu_01.png','taichung_demo/assets/qianzhu_02.png','taichung_demo/assets/qianzhu_04.png'];modelFallbackIndex=(modelFallbackIndex+1)%imgs.length;document.getElementById('modelFallbackImg').src=imgs[modelFallbackIndex]};
 function showModelFallback(show=true){document.getElementById('modelFallback').classList.remove('open')}
 window.closeModelView=function(){showModelFallback(false);if(sceneModel)sceneModel.visible=false;if(i3sProvider)i3sProvider.show=false;if(modelAnchorLayer)modelAnchorLayer.removeAll();const se=document.getElementById('sceneChk');if(se)se.checked=false;toast('已關閉前竹 3D 願景模型')}
@@ -261,7 +263,7 @@ function showSelectionInfo(cad, parcel, mapPoint){
     const c=zoningColor(lastZoneInfo.zone); const sw=`rgba(${c[0]},${c[1]},${c[2]},.85)`;
     zoneHtml=`<div class="info-kicker">都市計畫分區（${esc(zoneSourceLabel(lastZoneInfo))}）</div><div class="info-title"><span class="zone-inline"><i style="background:${sw}"></i>${esc(lastZoneInfo.zone)}</span></div><div class="info-grid"><span>判讀文字</span><span>${esc(lastZoneInfo.text||lastZoneInfo.zone)}</span></div><div class="info-note">判讀來源：${esc(zoneSourceLabel(lastZoneInfo))}。自動結果僅供輔助；正式用途仍以核定都市計畫圖為準。</div><div class="info-divider"></div>`;
   }
-  body.innerHTML=`<div class="info-kicker">QIANZHU LAND ALLOCATION</div><div class="info-title">${esc(type)}</div>${zoneHtml}${lastZoneInfo?.source==='urban'?`<div class="info-note">${lastZoneInfo.names.length>1?'此點命中多個分區，請放大確認重疊面或邊界。':''}來源為 108 年 CAD 成果；配色為展示分類，服務未提供建蔽率／容積率。</div>`:''}${cadRows?`<div class="info-grid">${cadRows}</div>`:''}${cadRows&&landRows?`<div class="info-divider"></div>`:''}${landRows?`<div class="info-kicker">對應地籍</div><div class="info-title" style="font-size:13px">${esc(parcelLabel(pa))}</div><div class="info-grid">${landRows}</div>`:`<div class="info-note">此位置尚未取得可對應的地籍屬性；仍可查看配地 CAD / 分區資訊。</div>`}<div class="zone-status-inline">${lastZoneInfo?`已辨識分區：${esc(lastZoneInfo.zone)}（${esc(zoneSourceLabel(lastZoneInfo))}）`:(urbanQueryState==='error'?'分區查詢失敗，請重新點選重試。':'此點未查到都市計畫分區面。')}</div><div class="info-actions"><button class="primary" onclick="explainSelectionWithAI()">AI 說明</button><button onclick="zoomSelection()">放大查看</button><button class="compare-add" onclick="addCurrentToCompare()">加入比較 ${compareA?'B':'A'}</button></div>`;
+  body.innerHTML=`<div class="info-kicker">QIANZHU LAND ALLOCATION</div><div class="info-title">${esc(type)}</div>${zoneHtml}${lastZoneInfo?.source==='urban'?`<div class="info-note">${lastZoneInfo.names.length>1?'此點命中多個分區，請放大確認重疊面或邊界。':''}來源為 108 年 CAD 成果；配色為展示分類，服務未提供建蔽率／容積率。</div>`:''}${cadRows?`<div class="info-grid">${cadRows}</div>`:''}${cadRows&&landRows?`<div class="info-divider"></div>`:''}${landRows?`<div class="info-kicker">對應地籍</div><div class="info-title" style="font-size:13px">${esc(parcelLabel(pa))}</div><div class="info-grid">${landRows}</div>`:`<div class="info-note">此位置尚未取得可對應的地籍屬性；仍可查看配地 CAD / 分區資訊。</div>`}<div class="zone-status-inline">${lastZoneInfo?`已辨識分區：${esc(lastZoneInfo.zone)}（${esc(zoneSourceLabel(lastZoneInfo))}）`:(urbanQueryState==='error'?'分區查詢失敗，請重新點選重試。':'此點未查到都市計畫分區面。')}</div><div class="info-actions"><button class="primary" onclick="explainSelectionWithAI()">AI 說明</button><button onclick="zoomSelection()">放大查看</button><button class="compare-add" onclick="addCurrentToCompare()">${compareBtnLabel()}</button></div>`;
   panel.classList.add('open');
 }
 window.zoomSelection=()=>{const g=lastCadGraphic||lastLandGraphic;if(g&&g.geometry){const target=g.geometry.extent||g.geometry;activeView().goTo(target.extent?target.extent.expand(2):target,{duration:350}).catch(()=>{})}};
@@ -725,14 +727,19 @@ async function configureUrbanZones(){
   urbanNames=[...new Set(r.features.map(f=>f.attributes.Layer).filter(Boolean))];
   urbanZones.renderer={type:'unique-value',field:'Layer',defaultLabel:'其他／未分類',defaultSymbol:{type:'simple-fill',color:[160,170,180,.4],outline:{color:'#74859a',width:.5}},uniqueValueInfos:urbanNames.map(n=>({value:n,label:n,symbol:{type:'simple-fill',color:zoningColor(n),outline:{color:[80,90,110,.65],width:.6}}}))};
 }
+// CAD 中「分區」圖層為全區通用框線（約 2.3 萬筆），不代表實際使用分區，判讀時排除
+const GENERIC_ZONE_NAMES=new Set(['分區','0','']);
+function isRealZone(n){return !GENERIC_ZONE_NAMES.has(String(n??'').trim())}
 async function queryUrbanPoint(point){
   await urbanZones.load();
   const q=urbanZones.createQuery();q.geometry=point;q.spatialRelationship='intersects';q.outFields=['OBJECTID','Layer','Color','DocName'];q.returnGeometry=true;q.num=100;
   const r=await urbanZones.queryFeatures(q);
   if(r.exceededTransferLimit)throw new Error('此位置重疊圖徵過多，請放大後重試');
   if(!r.features.length)return null;
-  const names=[...new Set(r.features.map(f=>f.attributes.Layer||'未分類'))];
-  return {zone:names.join('／'),names,text:names.length>1?'此點涉及多個分區／重疊面，請放大確認界線':r.features[0].attributes.Layer,source:'urban',graphic:r.features[0],records:r.features.map(f=>f.attributes)};
+  const real=r.features.filter(f=>isRealZone(f.attributes.Layer));
+  const use=real.length?real:r.features;
+  const names=[...new Set(use.map(f=>(real.length?f.attributes.Layer:'')||'未分類'))];
+  return {zone:names.join('／'),names,text:names.length>1?'此點涉及多個分區／重疊面，請放大確認界線':names[0],source:'urban',graphic:use[0],records:use.map(f=>f.attributes)};
 }
 function urbanSelectionHtml(){
   if(urbanQueryState==='loading')return '正在查詢目前位置的都市計畫分區，請稍候再詢問。';
@@ -751,7 +758,7 @@ async function answerUrbanQuestion(t){
     if(/建蔽|容積/.test(t)){addMsg('108 年都市計畫分區服務未提供建蔽率與容積率，無法由這份圖層確認。請依該地適用的核定計畫查證。');return true}
     if(/哪些|有什麼/.test(t)){
       const msg=addMsg('正在查詢範圍內的分區…');
-      try{await urbanReady;const q=urbanZones.createQuery();q.geometry=/前竹/.test(t)?await ensureQianzhuExtent():activeView().extent;q.spatialRelationship='intersects';q.outFields=['Layer'];q.returnDistinctValues=true;q.returnGeometry=false;q.num=2000;const r=await urbanZones.queryFeatures(q);const names=[...new Set(r.features.map(f=>f.attributes.Layer))];msg.textContent=(/前竹/.test(t)?'前竹概略範圍':'目前地圖範圍')+'內查到：'+(names.join('、')||'沒有分區面')+'。來源：108 年 CAD 成果。'+(r.exceededTransferLimit?'結果超過上限，請縮小查詢範圍。':'');}catch(e){msg.textContent='分區查詢失敗，請確認網路後重試。'}return true;
+      try{await urbanReady;const q=urbanZones.createQuery();q.geometry=/前竹/.test(t)?await ensureQianzhuExtent():activeView().extent;q.spatialRelationship='intersects';q.outFields=['Layer'];q.returnDistinctValues=true;q.returnGeometry=false;q.num=2000;const r=await urbanZones.queryFeatures(q);const names=[...new Set(r.features.map(f=>f.attributes.Layer))].filter(n=>isRealZone(n)&&!/^(有兩個以上的使用分區|無使用分區)$/.test(n));msg.textContent=(/前竹/.test(t)?'前竹概略範圍':'目前地圖範圍')+'內查到：'+(names.join('、')||'沒有分區面')+'。來源：108 年 CAD 成果。'+(r.exceededTransferLimit?'結果超過上限，請縮小查詢範圍。':'');}catch(e){msg.textContent='分區查詢失敗，請確認網路後重試。'}return true;
     }
     addMsg('已接入都市計畫使用分區。請先點選土地，再問「這裡是什麼分區？」；也可問「分區配色圖例」或「前竹有哪些使用分區？」。資料來源為 108 年 CAD 成果。');return true;
   }
