@@ -75,6 +75,21 @@ body{font-size:15px}
 #sceneToolbarLauncher{position:absolute;z-index:22;right:18px;top:174px;border:1px solid var(--line);border-radius:12px;padding:9px 12px;background:rgba(255,255,255,.96);color:#245889;box-shadow:var(--shadow);font:inherit;font-size:12px;cursor:pointer}
 #tourOverlay{position:absolute;inset:58px 0 0;z-index:40;pointer-events:none;color:white;background:linear-gradient(180deg,rgba(5,20,32,.28),transparent 24%,transparent 58%,rgba(5,20,32,.72));display:flex;align-items:flex-end;padding:clamp(24px,5vw,72px)}
 #tourOverlay .tour-copy{max-width:620px;text-shadow:0 2px 18px #102230}#tourOverlay small{letter-spacing:.22em;font-size:12px;color:#c7e5d7}#tourTitle{font-size:clamp(26px,4vw,52px);margin:10px 0;font-weight:700}#tourCaption{font-size:clamp(14px,1.5vw,19px);line-height:1.7;margin:0 0 22px}#tourProgress{height:3px;background:#ffffff35;overflow:hidden}#tourProgress span{display:block;height:100%;background:#a8ebcb;width:0;transition:width .8s ease}#tourStop{position:absolute;top:24px;right:24px;pointer-events:auto;border:1px solid #ffffff80;color:white;background:#102839b8;border-radius:24px;padding:10px 18px;cursor:pointer}#app.tour-playing #sceneToolbar,#app.tour-playing #sceneToolbarLauncher,#app.tour-playing .mode-switch{visibility:hidden}
+
+/* 兩塊地比較：放大字級 */
+.compare-panel{width:min(880px,calc(100vw - 40px))}
+.compare-head{padding:12px 16px}
+.compare-head b{font-size:17px}
+.compare-head small{font-size:12px;margin-left:4px}
+.compare-close{width:32px;height:32px;font-size:16px}
+.compare-body{gap:14px;padding:14px 16px}
+.compare-card{padding:14px}
+.compare-card h4{font-size:16px;margin-bottom:10px}
+.compare-grid{grid-template-columns:110px 1fr}
+.compare-grid span{padding:8px 10px;font-size:14px;line-height:1.45}
+.compare-grid span:nth-child(odd){color:#5d7690;background:#f6f9fd}
+.compare-summary{padding:0 16px 14px;font-size:14px}
+.compare-zone-source{font-size:12px}
 </style>
 <script>var dojoConfig={locale:"zh-tw"};</script>
 <script src="https://js.arcgis.com/4.32/"></script>
