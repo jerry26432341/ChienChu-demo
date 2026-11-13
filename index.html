@@ -188,7 +188,12 @@ body{font-size:15px}
 <div id="toast" class="toast"></div>
 </div>
 <script>
-const SERVICE='https://services6.arcgis.com/89UtaIS8RICl3XAp/arcgis/rest/services/Qianzhu_Publish_gdb/FeatureServer';
+const SERVICE='https://ge.4cgis.com/arcgis/rest/services/Hosted/Qianzhu_Publish_gdb/FeatureServer'
+// ge.4cgis.com 託管服務的圖層編號與欄位（欄位為小寫）：0 門牌、1 Point、2 Polyline、3 Land11505、4 Polygon、5 Sect11505
+const LYR={addr:0,point:1,line:2,land:3,poly:4,sect:5};
+const CANON_FIELDS=['OBJECTID','KCNT','AA45','AA46','AA48','AA49','AA05','AA06','AA08','AA09','AA10','AA11','AA12','AA16','AA17','THEKEY','TWD97E','TWD97N','Layer','Color','Linetype','DocName','WGS84經度','WGS84緯度','TWD97橫坐標','TWD97縱坐標'];
+function normAttrs(a){if(!a)return a;const low={};Object.keys(a).forEach(k=>{low[k.toLowerCase()]=k});CANON_FIELDS.forEach(c=>{if(a[c]===undefined){const k=low[c.toLowerCase()];if(k!==undefined)a[c]=a[k]}});return a}
+function normGraphic(g){if(g&&g.attributes)normAttrs(g.attributes);return g};
 const TEXT_SERVICE='https://services6.arcgis.com/89UtaIS8RICl3XAp/arcgis/rest/services/Qianzhu_Text_Publish_gdb/FeatureServer';
 const SCENE_SERVICE='https://tiles.arcgis.com/tiles/89UtaIS8RICl3XAp/arcgis/rest/services/ChienChu_20260930/SceneServer';
 const URBAN_SERVICE='https://services6.arcgis.com/89UtaIS8RICl3XAp/arcgis/rest/services/Taichung_UrbanPlan_gdb/FeatureServer';
@@ -274,9 +279,9 @@ ${layerRow('urbanLineChk','╱','都市計畫界線','原始 Polyline','','資�
 <div class="tool-card"><b>使用分區圖例</b><p>依分區名稱分類著色，非原 CAD 法定配色。來源：108 年都市計畫成果。</p><div id="urbanLegend">${urbanLegendHtml()}</div></div>
 ${layerRow('textChk','文','配地編號標註','配地 CAD 的街廓編號','','文字')}
 <div class="section-title">前竹規劃資料</div>
-${layerRow('polyChk','▱','配地規劃面','Polygon｜FeatureServer / 2','','CAD')}
-${layerRow('lineChk','╱','配地規劃線／箭頭','Polyline｜FeatureServer / 3','','CAD')}
-${layerRow('pointChk','•','CAD 點位（方向／輔助點）','Point｜FeatureServer / 4｜箭頭端點、方向點或其他 CAD 點','','CAD')}
+${layerRow('polyChk','▱','配地規劃面','Polygon｜FeatureServer / 4','','CAD')}
+${layerRow('lineChk','╱','配地規劃線／箭頭','Polyline｜FeatureServer / 2','','CAD')}
+${layerRow('pointChk','•','CAD 點位（方向／輔助點）','Point｜FeatureServer / 1｜箭頭端點、方向點或其他 CAD 點','','CAD')}
 ${layerRow('sceneChk','◈','前竹 3D 願景模型','ChienChu_20260924_v3','','3D')}
 <div class="section-title">分區判讀</div>
 <div id="zonePanelStatus" class="tool-card"><b>依都市計畫圖層查詢</b><p>分區直接讀取 Polygon 的 Layer 欄位；配地編號標註僅顯示街廓編號，不用來推估分區。</p></div>
@@ -528,7 +533,7 @@ function parseAddressQuery(raw){
   if(roadMatch)road=roadMatch[1];
   return {normalized,body,road,number};
 }
-function addressWhere(parsed){
+function addressWhere(parsed,broad=false){
   const clauses=[];
   const safe=v=>String(v||'').replace(/'/g,"''");
   if(parsed.road){
@@ -537,10 +542,15 @@ function addressWhere(parsed){
   }
   if(parsed.number){
     const n=safe(parsed.number);
-    clauses.push(`(號 LIKE '${n}' OR 號 LIKE '${n}號' OR 號 LIKE '${n}-%' OR 號 LIKE '%${n}%')`);
+    // 門牌資料的號碼為全形數字（例：８號、２之３號），同時比對半形與全形
+    const f=safe(toFullWidthNum(parsed.number).replace(/－/g,'之'));
+    clauses.push(broad
+      ?`(號 LIKE '%${n}%' OR 號 LIKE '%${f}%')`
+      :`(號 = '${n}' OR 號 = '${n}號' OR 號 LIKE '${n}-%' OR 號 = '${f}號' OR 號 LIKE '${f}之%')`);
   }
   return clauses.join(' AND ')||'1=0';
 }
+function toFullWidthNum(v){return String(v||'').replace(/[0-9-]/g,ch=>String.fromCharCode(ch.charCodeAt(0)+0xFEE0))}
 function candidateCardHtml(c,i){
   const subtitle=c.subtitle||'';
   return `<div class="candidate-item"><div class="candidate-no">${i+1}</div><div class="candidate-main"><b>${esc(c.label||'搜尋結果')}</b>${subtitle?`<small>${esc(subtitle)}</small>`:''}<div class="candidate-source">${esc(c.source||'')}</div></div><button class="candidate-btn" data-candidate-index="${i}">定位</button></div>`;
@@ -557,7 +567,9 @@ async function locateCandidate(index){
 async function searchAddressLayer(raw){
   const parsed=parseAddressQuery(raw), q=addr.createQuery();
   q.where=addressWhere(parsed);q.outFields=['*'];q.returnGeometry=true;q.num=12;
-  const r=await addr.queryFeatures(q);
+  let r=await addr.queryFeatures(q);
+  if(!r.features.length&&parsed.number){q.where=addressWhere(parsed,true);r=await addr.queryFeatures(q)}
+  r.features.forEach(normGraphic);
   return r.features.map((g,idx)=>({
     source:'門牌資料',geometry:g.geometry,attributes:g.attributes,zoom:18,
     label:buildAddress(g.attributes)||`門牌候選 ${idx+1}`,
@@ -625,7 +637,7 @@ async function searchAddress(text,{echo=true}={}){
   addMsg('', 'bot', html);
 }
 
-async function parcelAtPoint(mapPoint,{silent=false}={}){const q=land.createQuery();q.geometry=mapPoint;q.spatialRelationship='intersects';q.outFields=['OBJECTID','KCNT','AA48','AA49','AA05','AA10','AA17','THEKEY','TWD97E','TWD97N'];q.returnGeometry=true;q.num=1;try{const r=await land.queryFeatures(q);if(!r.features.length){if(!silent)addMsg('此位置沒有查到 Land11505 宗地資料。');return null}return r.features[0]}catch(e){console.warn('地籍查詢失敗',e);return null}}
+async function parcelAtPoint(mapPoint,{silent=false}={}){const q=land.createQuery();q.geometry=mapPoint;q.spatialRelationship='intersects';q.outFields=['objectid','kcnt','aa48','aa49','aa05','aa10','aa17','thekey','twd97e','twd97n'];q.returnGeometry=true;q.num=1;try{const r=await land.queryFeatures(q);if(!r.features.length){if(!silent)addMsg('此位置沒有查到 Land11505 宗地資料。');return null}return normGraphic(r.features[0])}catch(e){console.warn('地籍查詢失敗',e);return null}}
 async function highlightGraphic(view,graphic){try{if(highlightHandle){highlightHandle.remove();highlightHandle=null}if(!graphic?.layer)return;const lv=await view.whenLayerView(graphic.layer);highlightHandle=lv.highlight(graphic)}catch(e){console.warn('highlight failed',e)}}
 async function handleMapClick(view,e){
   if(!e.mapPoint)return;
@@ -633,7 +645,7 @@ async function handleMapClick(view,e){
   let results=[];try{const h=await view.hitTest(e,{include:[poly,line,point,land]});results=h.results.filter(r=>r.type==='graphic'&&[poly,line,point,land].includes(r.graphic?.layer))}catch(err){console.warn('hitTest failed',err)}
   if(token!==selectionToken)return;
   const cadHit=results.find(r=>[poly,line,point].includes(r.graphic.layer));const landHit=results.find(r=>r.graphic.layer===land);
-  lastCadGraphic=cadHit?.graphic||null;lastLandGraphic=landHit?.graphic||null;currentPolyOid=lastCadGraphic?.layer===poly?String(lastCadGraphic.attributes?.OBJECTID??''):null;
+  lastCadGraphic=normGraphic(cadHit?.graphic||null);lastLandGraphic=normGraphic(landHit?.graphic||null);currentPolyOid=lastCadGraphic?.layer===poly?String(lastCadGraphic.attributes?.OBJECTID??''):null;
   lastZoneInfo=null;showSelectionLoading();
   let urbanResult=null;try{urbanResult=await queryUrbanPoint(e.mapPoint);if(token!==selectionToken)return;urbanQueryState='ready';}catch(err){if(token!==selectionToken)return;urbanQueryState='error';console.warn(err)}
   lastZoneInfo=urbanResult;
@@ -751,9 +763,9 @@ require(['esri/Map','esri/views/MapView','esri/views/SceneView','esri/layers/Fea
 Graphic=GraphicClass;GeometryEngine=GeometryEngineModule;
 WebMercatorUtils=webMercatorUtils;
 try{
-land=new FeatureLayer({url:SERVICE+'/0',title:'地籍圖',outFields:['OBJECTID','KCNT','AA48','AA49','AA05','AA10','AA17','THEKEY','TWD97E','TWD97N'],popupEnabled:false,opacity:.48,visible:true,minScale:28000,renderer:{type:'simple',symbol:{type:'simple-fill',color:[255,255,255,.035],outline:{color:[235,167,30,.72],width:.75}}}});
-sect=new FeatureLayer({url:SERVICE+'/1',title:'地段範圍',outFields:['OBJECTID','KCNT','AA48','AA46'],popupEnabled:false,opacity:.66,visible:false,minScale:80000,renderer:{type:'simple',symbol:{type:'simple-fill',color:[255,255,255,0],outline:{color:[64,117,163,.62],width:1.2}}}});
-poly=new FeatureLayer({url:SERVICE+'/2',title:'配地規劃面',outFields:['OBJECTID','Layer','Color','Linetype'],popupEnabled:false,visible:true,opacity:.58,minScale:60000});line=new FeatureLayer({url:SERVICE+'/3',title:'配地規劃線／箭頭',outFields:['OBJECTID','Layer','Color','Linetype'],popupEnabled:false,visible:true,opacity:.78,minScale:45000});point=new FeatureLayer({url:SERVICE+'/4',title:'CAD 點位（方向／輔助點）',outFields:['OBJECTID','Layer','Color'],popupEnabled:false,visible:false,opacity:.9,minScale:14000});addr=new FeatureLayer({url:SERVICE+'/5',title:'門牌',outFields:['OBJECTID','村里','街_路段','地區','巷','弄','號','WGS84經度','WGS84緯度'],popupEnabled:false,visible:false,minScale:18000});
+land=new FeatureLayer({url:SERVICE+'/'+LYR.land,title:'地籍圖',outFields:['objectid','kcnt','aa48','aa49','aa05','aa10','aa17','thekey','twd97e','twd97n'],popupEnabled:false,opacity:.48,visible:true,minScale:28000,renderer:{type:'simple',symbol:{type:'simple-fill',color:[255,255,255,.035],outline:{color:[235,167,30,.72],width:.75}}}});
+sect=new FeatureLayer({url:SERVICE+'/'+LYR.sect,title:'地段範圍',outFields:['objectid','kcnt','aa48','aa46'],popupEnabled:false,opacity:.66,visible:false,minScale:80000,renderer:{type:'simple',symbol:{type:'simple-fill',color:[255,255,255,0],outline:{color:[64,117,163,.62],width:1.2}}}});
+poly=new FeatureLayer({url:SERVICE+'/'+LYR.poly,title:'配地規劃面',outFields:['objectid','layer','color','linetype'],popupEnabled:false,visible:true,opacity:.58,minScale:60000});line=new FeatureLayer({url:SERVICE+'/'+LYR.line,title:'配地規劃線／箭頭',outFields:['objectid','layer','color','linetype'],popupEnabled:false,visible:true,opacity:.78,minScale:45000});point=new FeatureLayer({url:SERVICE+'/'+LYR.point,title:'CAD 點位（方向／輔助點）',outFields:['objectid','layer','color'],popupEnabled:false,visible:false,opacity:.9,minScale:14000});addr=new FeatureLayer({url:SERVICE+'/'+LYR.addr,title:'門牌',outFields:['objectid','村里','街_路段','地區','巷','弄','號','wgs84經度','wgs84緯度'],popupEnabled:false,visible:false,minScale:18000});
 annotation=new FeatureLayer({url:TEXT_SERVICE+'/0',title:'原始 Annotation',outFields:['OBJECTID','TextString','Layer','Color'],popupEnabled:false,visible:false});
 textPoint=new FeatureLayer({url:TEXT_SERVICE+'/1',title:'分區文字標註',outFields:['OBJECTID','Text','Layer','Color'],popupEnabled:false,visible:true,minScale:22000,renderer:{type:'simple',symbol:{type:'simple-marker',size:1,color:[0,0,0,0],outline:null}},labelingInfo:[{labelExpressionInfo:{expression:'$feature.Text'},symbol:{type:'text',color:[42,63,82,.92],haloColor:[255,255,255,.94],haloSize:1.2,font:{family:'Noto Sans TC, Microsoft JhengHei, sans-serif',size:10,weight:'bold'}},labelPlacement:'above-center'}]});
 modelAnchorLayer=new GraphicsLayer({title:'願景模型目標位置',visible:true});
