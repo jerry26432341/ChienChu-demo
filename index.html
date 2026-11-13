@@ -90,10 +90,6 @@ body{font-size:15px}
 .compare-grid span:nth-child(odd){color:#5d7690;background:#f6f9fd}
 .compare-summary{padding:0 16px 14px;font-size:14px}
 .compare-zone-source{font-size:12px}
-.blk-head{display:flex;align-items:baseline;gap:8px;margin-bottom:8px}.blk-head .info-title{margin:0;font-size:22px}.blk-zone{display:inline-flex;align-items:center;gap:6px;padding:4px 10px;border-radius:999px;background:#f3f7fb;border:1px solid #dfe8f2;font-size:12px;font-weight:900;color:#29496b}.blk-zone i{width:12px;height:12px;border-radius:3px;display:inline-block}
-.blk-stats{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin:9px 0}.blk-stat{background:#f7fafd;border:1px solid #e3ebf4;border-radius:11px;padding:8px 10px}.blk-stat small{display:block;font-size:10px;color:#7d8fa3;font-weight:700}.blk-stat b{font-size:15px;color:#173b68}
-.parcel-list{border:1px solid #e1eaf4;border-radius:11px;max-height:170px;overflow:auto;background:#fff}.parcel-item{display:flex;justify-content:space-between;gap:8px;padding:6px 10px;font-size:12px;border-bottom:1px solid #eef3f8;cursor:pointer}.parcel-item:last-child{border-bottom:0}.parcel-item:hover,.parcel-item.here{background:#eef6ff}.parcel-item span{color:#7d8fa3;white-space:nowrap}.parcel-item .here-tag{color:#1572d8;font-weight:900}
-.adv-info{margin-top:10px;font-size:11px;color:#6d8197}.adv-info summary{cursor:pointer;font-weight:800;color:#5b7591}.adv-info .info-grid{margin-top:6px}
 </style>
 <script>var dojoConfig={locale:"zh-tw"};</script>
 <script src="https://js.arcgis.com/4.32/"></script>
@@ -224,7 +220,7 @@ const TAICHUNG={center:[120.6736,24.1477],zoom:11.4};
 // 前竹區段徵收重點範圍：先以固定 WGS84 範圍作展示定位，避免受服務 extent / CAD 座標影響。
 // 範圍依前竹區段徵收的道路邊界關係（環中路六段、柳川、環河東路一段及南區交界）概略框定；正式上線應改接主管機關精確徵收範圍圖層。
 const QIANZHU={center:[120.6518,24.1108],zoom:15.25,extent:{xmin:120.6428,ymin:24.1027,xmax:120.6608,ymax:24.1188,spatialReference:{wkid:4326}},ring:[[120.6430,24.1168],[120.6482,24.1184],[120.6560,24.1176],[120.6604,24.1136],[120.6588,24.1050],[120.6530,24.1029],[120.6460,24.1042],[120.6428,24.1094],[120.6430,24.1168]]};
-let lastBlockName=null,parcelHints=[],blockNameCache=new Map(),selectLayer=null,pinLayer=null,urbanClip=null,qianzhuBoundary=null,urbanClipKey=null;
+let selectLayer=null,pinLayer=null,urbanClip=null,qianzhuBoundary=null,urbanClipKey=null;
 let map,view2d,view3d,land,sect,poly,line,point,addr,textPoint,annotation,sceneModel,qianzhuHighlight,modelAnchorLayer,lastLandGraphic,lastClickedPoint,lastCadGraphic,lastZoneInfo,highlightHandle,cesiumViewer=null,i3sProvider=null,i3sTileset=null,i3sLoading=false,i3sReady=false,isCesiumMode=false,isQianzhuMode=false,qianzhuExtent=null,zoningField=null,zoningValues=[],sceneModelDiagnostic=null,WebMercatorUtils=null,compareA=null,compareB=null,selectionToken=0,modelFallbackIndex=0,currentPolyOid=null;
 let searchCandidates=[];
 const chat=document.getElementById('chat');
@@ -258,7 +254,7 @@ function parcelLabel(a){return (a&&(a.AA48||a.AA49||a.AA05||a.THEKEY)) ? [a.AA48
 function zoneSourceLabel(info){return info?.source==='urban'?'都市計畫 Polygon / Layer（108 年 CAD）':'未確認';}
 function selectionSnapshot(){
   const ca=lastCadGraphic?.attributes||{},pa=lastLandGraphic?.attributes||{};
-  return {block:lastBlockName||'',zone:lastZoneInfo?.zone||'',zoneText:lastZoneInfo?.text||'',zoneSource:lastZoneInfo?.source||'',cad:{OBJECTID:ca.OBJECTID,Layer:ca.Layer,Color:ca.Color,Linetype:ca.Linetype},land:{KCNT:pa.KCNT,AA48:pa.AA48,AA49:pa.AA49,AA05:pa.AA05,AA10:pa.AA10,AA17:pa.AA17,THEKEY:pa.THEKEY},geometry:(lastLandGraphic||lastCadGraphic)?.geometry||null};
+  return {zone:lastZoneInfo?.zone||'',zoneText:lastZoneInfo?.text||'',zoneSource:lastZoneInfo?.source||'',cad:{OBJECTID:ca.OBJECTID,Layer:ca.Layer,Color:ca.Color,Linetype:ca.Linetype},land:{KCNT:pa.KCNT,AA48:pa.AA48,AA49:pa.AA49,AA05:pa.AA05,AA10:pa.AA10,AA17:pa.AA17,THEKEY:pa.THEKEY},geometry:(lastLandGraphic||lastCadGraphic)?.geometry||null};
 }
 function snapshotRows(x){const a=x.land||{},c=x.cad||{};const rows=[['分區',x.zone||'尚未辨識'],['判讀來源',x.zone?zoneSourceLabel({source:x.zoneSource}):'—'],['段／地號',[a.AA48,a.AA49].filter(Boolean).join(' ')||'—'],['地籍代碼',a.AA05||a.THEKEY||'—'],['配地圖層',c.Layer||'—']];return rows}
 function renderComparison(){const p=document.getElementById('comparePanel'),b=document.getElementById('compareBody'),s=document.getElementById('compareSummary');if(!compareA&&!compareB){p.classList.remove('open');return}const card=(x,l)=>`<div class="compare-card"><h4>${l}</h4>${x?`<div class="compare-grid">${snapshotRows(x).map(r=>`<span>${esc(r[0])}</span><span>${esc(r[1])}</span>`).join('')}</div>`:`<div class="info-note">尚未加入土地</div>`}</div>`;b.innerHTML=card(compareA,'土地 A')+card(compareB,'土地 B');p.classList.add('open');if(compareA&&compareB){const notes=[];if(compareA.zone||compareB.zone)notes.push(`分區：A ${compareA.zone||'未辨識'}；B ${compareB.zone||'未辨識'}`);s.textContent=notes.length?'比較摘要｜'+notes.join('；'):'已加入兩塊土地，可查看左右欄位差異。'}else s.textContent='再點另一塊地，按「加入比較 B」。'}
@@ -292,7 +288,7 @@ window.zoomLastLand=()=>{if(lastLandGraphic)activeView().goTo(lastLandGraphic.ge
 function buildAddress(a){return [a['村里'],a['街_路段'],a['地區'],a['巷'],a['弄'],a['號']].filter(Boolean).join('')}
 function layerPanel(){drawerTitle.textContent='圖層控制';drawerBody.innerHTML=`
 <div class="section-title">常用圖層</div>
-${layerRow('landChk','▰','原地籍圖（現況地號）','Land11505｜前竹預設關閉','','正式')}
+${layerRow('landChk','▰','地籍圖','Land11505','','正式')}
 ${layerRow('sectChk','◇','地段範圍','Sect11505','','正式')}
 ${layerRow('addrChk','⌖','門牌','臺中市門牌點位','','正式')}
 ${layerRow('urbanChk','▦','都市計畫使用分區','108 年 CAD 成果｜分類配色','','資料')}
@@ -307,7 +303,7 @@ ${layerRow('pointChk','•','CAD 點位（方向／輔助點）','Point｜Featur
 ${layerRow('sceneChk','◈','前竹 3D 願景模型','ChienChu_20260924_v3','','3D')}
 <div class="section-title">分區判讀</div>
 <div id="zonePanelStatus" class="tool-card"><b>依都市計畫圖層查詢</b><p>分區直接讀取 Polygon 的 Layer 欄位；配地編號標註僅顯示街廓編號，不用來推估分區。</p></div>
-<div class="tool-card"><b>預設顯示原則</b><p>進入前竹後以「配地街廓」為主體，搭配淡化的都市計畫分區；原地籍線（現況地號）預設關閉，點選街廓即可在資訊面板看到涉及的原地號，需要時再由此開啟圖層。</p></div>`;bindLayerChecks()}
+<div class="tool-card"><b>預設顯示原則</b><p>參考政府 GIS 圖台的做法：地籍圖預設開啟，但設定比例尺門檻，臺中全市總覽時不大量繪製；進入前竹後即可直接看到宗地線，其他圖層按需開啟。</p></div>`;bindLayerChecks()}
 function layerRow(id,ico,name,sub,checked,tag){return `<label class="layer-row"><input id="${id}" type="checkbox" ${checked}><span class="layer-ico">${ico}</span><span><div class="layer-name">${name}</div><div class="layer-sub">${sub}</div></span>${tag?`<span class="tag">${tag}</span>`:''}</label>`}
 function toolsPanel(){drawerTitle.textContent='選地工具';drawerBody.innerHTML=`<div class="section-title">配地・選地條件</div>
 <div class="tool-card"><b>① 地籍條件</b><p>點選地圖宗地，取得地號、地籍屬性與位置。</p></div>
@@ -530,8 +526,7 @@ window.focusQianzhu=async function(silent=false){
   isQianzhuMode=true;
   qianzhuHighlight.visible=true;
   // 這三層就是前竹配地 CAD 的主體資料，預設全部顯示。
-  // 預設以配地街廓為主體；原地籍線（現況地號）預設關閉，需要時於圖層面板開啟
-  land.visible=false; poly.visible=true; line.visible=true; point.visible=false; textPoint.visible=true;
+  land.visible=true; poly.visible=true; line.visible=true; point.visible=false; textPoint.visible=true;
   sect.visible=false; addr.visible=false;
   urbanZones.visible=false; urbanText.visible=false;
   document.getElementById('areaText').textContent='烏日前竹地區';
@@ -691,46 +686,6 @@ async function searchAddress(text,{echo=true}={}){
 }
 
 async function parcelAtPoint(mapPoint,{silent=false}={}){const q=land.createQuery();q.geometry=mapPoint;q.spatialRelationship='intersects';q.outFields=['objectid','kcnt','aa48','aa49','aa05','aa10','aa17','thekey','twd97e','twd97n'];q.returnGeometry=true;q.num=1;try{const r=await land.queryFeatures(q);if(!r.features.length){if(!silent)addMsg('此位置沒有查到 Land11505 宗地資料。');return null}return normGraphic(r.features[0])}catch(e){console.warn('地籍查詢失敗',e);return null}}
-// ===== 點選街廓（前竹） =====
-function fmtLandNo(v){const t=String(v??'').trim();if(/^\d{8}$/.test(t)){const m=parseInt(t.slice(0,4),10),sub=parseInt(t.slice(4),10);return sub?`${m}-${sub}`:`${m}`}return t}
-function geoArea(g){try{return Math.abs(GeometryEngine.geodesicArea(g,'square-meters'))}catch(e){try{return Math.abs(GeometryEngine.planarArea(g,'square-meters'))}catch(_){return 0}}}
-async function blockNameOf(g){const id=String(g.attributes?.OBJECTID??'');if(blockNameCache.has(id))return blockNameCache.get(id);
-  let name='';try{const q=textPoint.createQuery();q.geometry=g.geometry;q.spatialRelationship='contains';q.where="Layer LIKE '街廓編號%'";q.outFields=['Text'];q.returnGeometry=false;const r=await textPoint.queryFeatures(q);name=r.features.map(f=>f.attributes.Text).filter(Boolean).join('、')}catch(e){console.warn('街廓編號查詢失敗',e)}
-  blockNameCache.set(id,name);return name}
-async function blockAtPoint(mapPoint){const q=poly.createQuery();q.geometry=mapPoint;q.spatialRelationship='intersects';q.outFields=['*'];q.returnGeometry=true;q.num=5;
-  const r=await poly.queryFeatures(q);if(!r.features.length)return null;
-  const g=normGraphic(r.features.sort((a,b)=>geoArea(a.geometry)-geoArea(b.geometry))[0]);g.layer=poly;
-  return {graphic:g,name:await blockNameOf(g),area:geoArea(g.geometry)}}
-window.hintParcel=function(i){if(!selectLayer)return;selectLayer.graphics.filter(x=>x.attributes?.role==='hint').forEach(x=>selectLayer.remove(x));
-  const p=parcelHints[i];if(!p)return;
-  selectLayer.add(new Graphic({geometry:p.geometry,attributes:{role:'hint'},symbol:{type:'simple-fill',color:[255,153,0,.18],outline:{color:[230,110,0,1],width:2,style:'dash'}}}))}
-function blockPanelHtml(block,parcelHtml){
-  const z=lastZoneInfo;const c=z?zoningColor(z.zone):null;const sw=c?`rgba(${c[0]},${c[1]},${c[2]},.9)`:'#ccd6e0';
-  const a=block.graphic.attributes||{};const ping=block.area*0.3025;
-  return `<div class="info-kicker">前竹配地街廓</div>
-  <div class="blk-head"><div class="info-title">${esc(block.name?('街廓 '+block.name):'配地街廓')}</div></div>
-  <span class="blk-zone"><i style="background:${sw}"></i>${esc(z?z.zone:(urbanQueryState==='loading'?'分區查詢中…':'未查到分區'))}</span>
-  <div class="blk-stats"><div class="blk-stat"><small>街廓面積</small><b>${Math.round(block.area).toLocaleString()} ㎡</b></div><div class="blk-stat"><small>約合</small><b>${Math.round(ping).toLocaleString()} 坪</b></div></div>
-  <div class="info-kicker" style="margin-top:4px">涉及原地號（現況地籍）</div>${parcelHtml}
-  <div class="info-note">將滑鼠移到地號上，可在地圖上以橘色虛線查看該筆原地號位置。分區依 108 年都市計畫 CAD，僅供參考，以最新公告為準。</div>
-  <div class="info-actions"><button class="primary" onclick="explainSelectionWithAI()">AI 說明</button><button onclick="zoomSelection()">放大查看</button><button class="compare-add" onclick="addCurrentToCompare()">${compareBtnLabel()}</button></div>
-  <details class="adv-info"><summary>進階資訊（CAD 原始欄位）</summary><div class="info-grid">${compactRows(a,['OBJECTID','Layer','Color','Linetype','DocName'])}</div></details>`}
-async function showBlockInfo(block,mapPoint,token){
-  const panel=document.getElementById('selectionPanel'),body=document.getElementById('selectionBody');
-  parcelHints=[];body.innerHTML=blockPanelHtml(block,'<div class="map-busy"><i class="mini-spin"></i>正在比對原地號…</div>');panel.classList.add('open');
-  let html='';
-  try{
-    const q=land.createQuery();q.geometry=block.graphic.geometry;q.spatialRelationship='intersects';q.outFields=['objectid','kcnt','aa48','aa49','aa10'];q.returnGeometry=true;q.outSpatialReference=block.graphic.geometry.spatialReference;q.num=500;
-    const r=await land.queryFeatures(q);if(token!==selectionToken)return;
-    const list=[];
-    for(const f of r.features){normGraphic(f);let ov=0;try{const x=GeometryEngine.intersect(f.geometry,block.graphic.geometry);ov=x?geoArea(x):0}catch(e){}
-      if(ov<1)continue;const here=mapPoint&&GeometryEngine.contains(f.geometry,mapPoint);list.push({f,ov,here})}
-    list.sort((x,y)=>(y.here-x.here)||(y.ov-x.ov));parcelHints=list.map(o=>o.f);
-    html=list.length?`<div class="parcel-list">${list.map((o,i)=>{const at=o.f.attributes;return `<div class="parcel-item${o.here?' here':''}" onmouseenter="hintParcel(${i})" onmouseleave="hintParcel(-1)" onclick="hintParcel(${i})"><b>${esc(at.KCNT||'')} ${esc(fmtLandNo(at.AA49))} 地號${o.here?' <em class="here-tag">← 點選處</em>':''}</b><span>重疊 ${Math.round(o.ov).toLocaleString()} ㎡</span></div>`}).join('')}</div><div class="info-note">共 ${list.length} 筆原地號與此街廓重疊。</div>`
-      :'<div class="info-note">此街廓範圍內未查到原地號資料。</div>';
-  }catch(e){console.warn(e);html='<div class="info-note">原地號比對失敗，請重新點選。</div>'}
-  if(token!==selectionToken)return;body.innerHTML=blockPanelHtml(block,html);
-}
 // 點選亮顯：在獨立圖層畫出選取範圍（粗框＋半透明填色），不受原圖層開關影響
 function showSelectOutline(geom){if(!selectLayer)return;selectLayer.removeAll();if(!geom)return;
   const isPoly=geom.type==='polygon'||geom.type==='extent';
@@ -758,27 +713,13 @@ async function handleMapClick(view,e){
   lastZoneInfo=null;showSelectionLoading();
   let urbanResult=null;try{urbanResult=await queryUrbanPoint(e.mapPoint);if(token!==selectionToken)return;urbanQueryState='ready';}catch(err){if(token!==selectionToken)return;urbanQueryState='error';console.warn(err)}
   lastZoneInfo=urbanResult;
-  if(highlightHandle){highlightHandle.remove();highlightHandle=null}
-  // 前竹範圍內：以「配地街廓」為點選主角
-  let block=null;if(isQianzhuMode){try{block=await blockAtPoint(e.mapPoint)}catch(err){console.warn('街廓查詢失敗',err)}if(token!==selectionToken)return}
-  if(block){
-    lastCadGraphic=block.graphic;currentPolyOid=String(block.graphic.attributes?.OBJECTID??'');lastBlockName=block.name||null;
-    showSelectOutline(block.graphic.geometry);
-    document.getElementById('coordText').textContent=`${block.name?'街廓 '+block.name:'配地街廓'}${lastZoneInfo?'・'+lastZoneInfo.zone:''}`;
-    showBlockInfo(block,e.mapPoint,token);
-    if(!lastLandGraphic){const parcel=await parcelAtPoint(e.mapPoint,{silent:true});if(token!==selectionToken)return;if(parcel)lastLandGraphic=parcel}
-    return;
-  }
-  lastBlockName=null;
-  const primary=urbanResult?{graphic:urbanResult.graphic}:cadHit||landHit||null;
-  // 非街廓位置：框選分區（前竹模式下依外框裁切），沒有分區才框地籍
-  let zoneGeom=urbanResult?.graphic?.geometry||null;if(zoneGeom&&isQianzhuMode&&qianzhuBoundary){try{zoneGeom=GeometryEngine.intersect(zoneGeom,qianzhuBoundary)||zoneGeom}catch(err){}}
-  showSelectOutline(zoneGeom||(lastLandGraphic||lastCadGraphic)?.geometry||null);
+  const primary=urbanResult?{graphic:urbanResult.graphic}:cadHit||landHit||null;if(highlightHandle){highlightHandle.remove();highlightHandle=null}
+  showSelectOutline((lastLandGraphic||lastCadGraphic||urbanResult?.graphic)?.geometry||null);
   if(token!==selectionToken)return;
   // 先用 hitTest 立即顯示，避免每次點擊都等待網路查詢。
   showSelectionInfo(primary,lastLandGraphic,e.mapPoint);document.getElementById('coordText').textContent=`${e.mapPoint.longitude.toFixed(6)}, ${e.mapPoint.latitude.toFixed(6)}｜已選取${lastZoneInfo?'・'+lastZoneInfo.zone:''}`;
   // 若畫面沒有命中地籍，再背景補查，不阻塞 UI。
-  if(!lastLandGraphic){const parcel=await parcelAtPoint(e.mapPoint,{silent:true});if(token!==selectionToken)return;if(parcel){lastLandGraphic=parcel;if(!zoneGeom)showSelectOutline(parcel.geometry);showSelectionInfo(primary,parcel,e.mapPoint)}}
+  if(!lastLandGraphic){const parcel=await parcelAtPoint(e.mapPoint,{silent:true});if(token!==selectionToken)return;if(parcel){lastLandGraphic=parcel;showSelectOutline(parcel.geometry);showSelectionInfo(primary,parcel,e.mapPoint)}}
 }
 function openAI(){document.getElementById('aiPanel').classList.add('open');document.getElementById('aiFab').style.opacity='.25';document.getElementById('selectionPanel').classList.remove('open')}function closeAI(){document.getElementById('aiPanel').classList.remove('open');document.getElementById('aiFab').style.opacity='1';if(lastCadGraphic||lastLandGraphic)document.getElementById('selectionPanel').classList.add('open')}
 function chatLocationIntent(raw){
@@ -900,7 +841,7 @@ textPoint=new FeatureLayer({url:TEXT_SERVICE+'/1',title:'分區文字標註',out
 modelAnchorLayer=new GraphicsLayer({title:'願景模型目標位置',visible:true});
 sceneModel=new SceneLayer({url:SCENE_SERVICE,title:'前竹地區願景模型 v3',visible:false,opacity:1,popupEnabled:false});
 qianzhuHighlight=new GraphicsLayer({title:'前竹地區亮顯',visible:true});
-urbanClip=new GraphicsLayer({title:'前竹都市計畫使用分區',visible:false,opacity:.6});
+urbanClip=new GraphicsLayer({title:'前竹都市計畫使用分區',visible:false});
 selectLayer=new GraphicsLayer({title:'點選亮顯',listMode:'hide'});
 pinLayer=new GraphicsLayer({title:'搜尋定位點',listMode:'hide'});
 urbanZones=new FeatureLayer({url:URBAN_SERVICE+'/2',title:'都市計畫使用分區（108 年 CAD）',outFields:['OBJECTID','Layer','Color','DocName'],popupEnabled:false,minScale:100000,maxScale:0});
