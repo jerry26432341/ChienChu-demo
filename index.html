@@ -90,6 +90,54 @@ body{font-size:15px}
 .compare-grid span:nth-child(odd){color:#5d7690;background:#f6f9fd}
 .compare-summary{padding:0 16px 14px;font-size:14px}
 .compare-zone-source{font-size:12px}
+.blk-head{display:flex;align-items:baseline;gap:8px;margin-bottom:8px}.blk-head .info-title{margin:0;font-size:22px}.blk-zone{display:inline-flex;align-items:center;gap:6px;padding:4px 10px;border-radius:999px;background:#f3f7fb;border:1px solid #dfe8f2;font-size:12px;font-weight:900;color:#29496b}.blk-zone i{width:12px;height:12px;border-radius:3px;display:inline-block}
+.blk-stats{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin:9px 0}.blk-stat{background:#f7fafd;border:1px solid #e3ebf4;border-radius:11px;padding:8px 10px}.blk-stat small{display:block;font-size:10px;color:#7d8fa3;font-weight:700}.blk-stat b{font-size:15px;color:#173b68}
+.parcel-list{border:1px solid #e1eaf4;border-radius:11px;max-height:170px;overflow:auto;background:#fff}.parcel-item{display:flex;justify-content:space-between;gap:8px;padding:6px 10px;font-size:12px;border-bottom:1px solid #eef3f8;cursor:pointer}.parcel-item:last-child{border-bottom:0}.parcel-item:hover,.parcel-item.here{background:#eef6ff}.parcel-item span{color:#7d8fa3;white-space:nowrap}.parcel-item .here-tag{color:#1572d8;font-weight:900}
+.adv-info{margin-top:10px;font-size:11px;color:#6d8197}.adv-info summary{cursor:pointer;font-weight:800;color:#5b7591}.adv-info .info-grid{margin-top:6px}
+/* ===== 試配地功能模組 ===== */
+.lam-panel{position:absolute;z-index:22;left:70px;top:72px;width:400px;max-height:calc(100% - 94px);display:flex;flex-direction:column;background:var(--panel);border:1px solid #dbe6f2;border-radius:16px;box-shadow:var(--shadow);overflow:hidden;transform:translateX(-15px);opacity:0;pointer-events:none;transition:.22s ease}
+.lam-panel.open{transform:none;opacity:1;pointer-events:auto}
+.lam-head{display:flex;justify-content:space-between;align-items:center;padding:12px 14px;border-bottom:1px solid var(--line);font-weight:900;color:var(--navy)}
+.lam-head button{border:0;background:transparent;font-size:18px;cursor:pointer;color:#6e8198}
+.lam-body{padding:10px 14px 14px;overflow:auto;font-size:12px;color:var(--text);line-height:1.7}
+.lam-user{background:#f4f8fd;border:1px solid #e0e9f3;border-radius:12px;padding:8px 10px;position:relative}
+.lam-user .lam-reset{position:absolute;right:8px;top:0}
+.lam-remain{color:#1267e8}
+.lam-row{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+.lam-row .mini-btn{margin-top:4px}
+.lam-in{border:1px solid #cfdceb;border-radius:8px;padding:5px 8px;font-size:12px;min-width:0;flex:1}
+.lam-need{margin:6px 0;padding:6px 8px;border-radius:8px;background:#eef6ff;border:1px solid #cfe0f1}
+.lam-need.short{background:#fdecea;border-color:#f5a3a3;color:#b71c1c}
+.lam-in.xs{width:54px;flex:none;padding:2px 4px}
+.lam-build .lam-table td{padding:3px}
+.lam-in.sm{width:96px;flex:none;padding:3px 6px}
+.lam-table-wrap{max-height:190px;overflow:auto;border:1px solid #e0e9f3;border-radius:10px;margin-top:6px}
+.lam-table{width:100%;border-collapse:collapse;font-size:11px}
+.lam-table th{position:sticky;top:0;background:#eef4fb;color:#4b6584;font-weight:800;padding:5px 4px;text-align:left}
+.lam-table td{padding:4px;border-top:1px solid #eef2f7;white-space:nowrap}
+.lam-table tr.sel td{background:#e3f0ff}
+.lam-pick{border:0;border-radius:6px;background:#ff5722;color:#fff;font-size:11px;padding:2px 7px;cursor:pointer}
+.lam-empty{color:#9aa9b8}
+.lam-auto{color:#e53935;font-weight:900;cursor:help}
+.lam-sel{margin-top:10px;border-top:1px solid var(--line);padding-top:8px}
+.lam-sel-title{font-weight:900;font-size:14px;color:var(--navy)}
+.lam-warn{color:#d32f2f;font-weight:800}
+.lam-modes{display:flex;gap:8px;margin:8px 0}
+.lam-modes fieldset{border:2px dashed #33475b;border-radius:6px;padding:4px 8px 8px;margin:0}
+.lam-modes fieldset:first-child{flex:1}
+.lam-modes legend{font-weight:900;padding:0 4px}
+.lam-modes label{display:block;white-space:nowrap}
+.lam-hint{font-size:11px;color:#6e8198}
+.lam-rules{margin-top:8px;font-size:11px}
+.lam-rules label{display:flex;justify-content:space-between;align-items:center;margin:3px 0}
+.lam-danger{color:#c62828!important}
+.focus-btn[disabled],.mini-btn[disabled]{opacity:.45;cursor:not-allowed}
+.lam-modal{position:absolute;inset:0;z-index:60;background:rgba(20,35,55,.35);display:none;place-items:center}
+.lam-modal.open{display:grid}
+.lam-modal-box{background:#fff;border-radius:14px;padding:18px 20px;width:min(420px,90vw);box-shadow:var(--shadow);font-size:13px;line-height:1.7}
+.lam-modal-box .lam-row{justify-content:flex-end;margin-top:12px}
+@media(max-width:600px){.lam-panel{left:8px;right:8px;width:auto;top:64px}}
+
 </style>
 <script>var dojoConfig={locale:"zh-tw"};</script>
 <script src="https://js.arcgis.com/4.32/"></script>
@@ -137,6 +185,7 @@ body{font-size:15px}
     <button class="rail-btn active" data-tip="圖層" data-panel="layers">▱</button>
     <button class="rail-btn" data-tip="選地條件" data-panel="tools">⌘</button>
     <button class="rail-btn" data-tip="願景圖集" data-panel="gallery">▣</button>
+<button class="rail-btn" data-tip="試配地" id="railLam" onclick="LAM_toggle()">⊞</button>
     <button class="rail-btn" data-tip="定位前竹" id="railQianzhu">◎</button>
     <button class="rail-btn" data-tip="回臺中全區" id="railTaichung">⌂</button>
     <div class="rail-sep"></div>
@@ -200,6 +249,8 @@ body{font-size:15px}
 <input id="modelHeight" type="range" min="-100" max="150" step="1" value="0">
 <button id="resetModelHeight" class="mini-btn">恢復原始高程</button>
 <p>預設隱藏 Esri 地表以完整展示模型。高度偏移僅供預覽；原始高程待校正，陰影不作正式分析。</p></section>
+<section id="lamPanel" class="lam-panel" aria-label="試配地功能模組"><div class="lam-head"><span>試配地功能模組</span><button onclick="LAM_toggle(false)" aria-label="關閉">×</button></div><div class="lam-body" id="lamBody"></div></section>
+<div id="lamModal" class="lam-modal"><div class="lam-modal-box"><b>提示</b><div class="lam-modal-text"></div><div class="lam-row"><button class="mini-btn lam-cancel">否</button><button class="focus-btn lam-ok">確定</button></div></div></div>
 <div id="toast" class="toast"></div>
 </div>
 <script>
@@ -220,7 +271,7 @@ const TAICHUNG={center:[120.6736,24.1477],zoom:11.4};
 // 前竹區段徵收重點範圍：先以固定 WGS84 範圍作展示定位，避免受服務 extent / CAD 座標影響。
 // 範圍依前竹區段徵收的道路邊界關係（環中路六段、柳川、環河東路一段及南區交界）概略框定；正式上線應改接主管機關精確徵收範圍圖層。
 const QIANZHU={center:[120.6518,24.1108],zoom:15.25,extent:{xmin:120.6428,ymin:24.1027,xmax:120.6608,ymax:24.1188,spatialReference:{wkid:4326}},ring:[[120.6430,24.1168],[120.6482,24.1184],[120.6560,24.1176],[120.6604,24.1136],[120.6588,24.1050],[120.6530,24.1029],[120.6460,24.1042],[120.6428,24.1094],[120.6430,24.1168]]};
-let selectLayer=null,pinLayer=null,urbanClip=null,qianzhuBoundary=null,urbanClipKey=null;
+let lastBlockName=null,parcelHints=[],blockNameCache=new Map(),selectLayer=null,pinLayer=null,urbanClip=null,qianzhuBoundary=null,urbanClipKey=null;
 let map,view2d,view3d,land,sect,poly,line,point,addr,textPoint,annotation,sceneModel,qianzhuHighlight,modelAnchorLayer,lastLandGraphic,lastClickedPoint,lastCadGraphic,lastZoneInfo,highlightHandle,cesiumViewer=null,i3sProvider=null,i3sTileset=null,i3sLoading=false,i3sReady=false,isCesiumMode=false,isQianzhuMode=false,qianzhuExtent=null,zoningField=null,zoningValues=[],sceneModelDiagnostic=null,WebMercatorUtils=null,compareA=null,compareB=null,selectionToken=0,modelFallbackIndex=0,currentPolyOid=null;
 let searchCandidates=[];
 const chat=document.getElementById('chat');
@@ -254,7 +305,7 @@ function parcelLabel(a){return (a&&(a.AA48||a.AA49||a.AA05||a.THEKEY)) ? [a.AA48
 function zoneSourceLabel(info){return info?.source==='urban'?'都市計畫 Polygon / Layer（108 年 CAD）':'未確認';}
 function selectionSnapshot(){
   const ca=lastCadGraphic?.attributes||{},pa=lastLandGraphic?.attributes||{};
-  return {zone:lastZoneInfo?.zone||'',zoneText:lastZoneInfo?.text||'',zoneSource:lastZoneInfo?.source||'',cad:{OBJECTID:ca.OBJECTID,Layer:ca.Layer,Color:ca.Color,Linetype:ca.Linetype},land:{KCNT:pa.KCNT,AA48:pa.AA48,AA49:pa.AA49,AA05:pa.AA05,AA10:pa.AA10,AA17:pa.AA17,THEKEY:pa.THEKEY},geometry:(lastLandGraphic||lastCadGraphic)?.geometry||null};
+  return {block:lastBlockName||'',zone:lastZoneInfo?.zone||'',zoneText:lastZoneInfo?.text||'',zoneSource:lastZoneInfo?.source||'',cad:{OBJECTID:ca.OBJECTID,Layer:ca.Layer,Color:ca.Color,Linetype:ca.Linetype},land:{KCNT:pa.KCNT,AA48:pa.AA48,AA49:pa.AA49,AA05:pa.AA05,AA10:pa.AA10,AA17:pa.AA17,THEKEY:pa.THEKEY},geometry:(lastLandGraphic||lastCadGraphic)?.geometry||null};
 }
 function snapshotRows(x){const a=x.land||{},c=x.cad||{};const rows=[['分區',x.zone||'尚未辨識'],['判讀來源',x.zone?zoneSourceLabel({source:x.zoneSource}):'—'],['段／地號',[a.AA48,a.AA49].filter(Boolean).join(' ')||'—'],['地籍代碼',a.AA05||a.THEKEY||'—'],['配地圖層',c.Layer||'—']];return rows}
 function renderComparison(){const p=document.getElementById('comparePanel'),b=document.getElementById('compareBody'),s=document.getElementById('compareSummary');if(!compareA&&!compareB){p.classList.remove('open');return}const card=(x,l)=>`<div class="compare-card"><h4>${l}</h4>${x?`<div class="compare-grid">${snapshotRows(x).map(r=>`<span>${esc(r[0])}</span><span>${esc(r[1])}</span>`).join('')}</div>`:`<div class="info-note">尚未加入土地</div>`}</div>`;b.innerHTML=card(compareA,'土地 A')+card(compareB,'土地 B');p.classList.add('open');if(compareA&&compareB){const notes=[];if(compareA.zone||compareB.zone)notes.push(`分區：A ${compareA.zone||'未辨識'}；B ${compareB.zone||'未辨識'}`);s.textContent=notes.length?'比較摘要｜'+notes.join('；'):'已加入兩塊土地，可查看左右欄位差異。'}else s.textContent='再點另一塊地，按「加入比較 B」。'}
@@ -288,7 +339,7 @@ window.zoomLastLand=()=>{if(lastLandGraphic)activeView().goTo(lastLandGraphic.ge
 function buildAddress(a){return [a['村里'],a['街_路段'],a['地區'],a['巷'],a['弄'],a['號']].filter(Boolean).join('')}
 function layerPanel(){drawerTitle.textContent='圖層控制';drawerBody.innerHTML=`
 <div class="section-title">常用圖層</div>
-${layerRow('landChk','▰','地籍圖','Land11505','','正式')}
+${layerRow('landChk','▰','原地籍圖（現況地號）','Land11505｜前竹預設關閉','','正式')}
 ${layerRow('sectChk','◇','地段範圍','Sect11505','','正式')}
 ${layerRow('addrChk','⌖','門牌','臺中市門牌點位','','正式')}
 ${layerRow('urbanChk','▦','都市計畫使用分區','108 年 CAD 成果｜分類配色','','資料')}
@@ -298,12 +349,12 @@ ${layerRow('urbanLineChk','╱','都市計畫界線','原始 Polyline','','資�
 ${layerRow('textChk','文','配地編號標註','配地 CAD 的街廓編號','','文字')}
 <div class="section-title">前竹規劃資料</div>
 ${layerRow('polyChk','▱','配地規劃面','Polygon｜FeatureServer / 4','','CAD')}
-${layerRow('lineChk','╱','配地規劃線／箭頭','Polyline｜FeatureServer / 2','','CAD')}
+${layerRow('lineChk','╱','配地規劃線／箭頭','Polyline｜FeatureServer / 2｜分配方向以紅色箭頭顯示','','CAD')}
 ${layerRow('pointChk','•','CAD 點位（方向／輔助點）','Point｜FeatureServer / 1｜箭頭端點、方向點或其他 CAD 點','','CAD')}
 ${layerRow('sceneChk','◈','前竹 3D 願景模型','ChienChu_20260924_v3','','3D')}
 <div class="section-title">分區判讀</div>
 <div id="zonePanelStatus" class="tool-card"><b>依都市計畫圖層查詢</b><p>分區直接讀取 Polygon 的 Layer 欄位；配地編號標註僅顯示街廓編號，不用來推估分區。</p></div>
-<div class="tool-card"><b>預設顯示原則</b><p>參考政府 GIS 圖台的做法：地籍圖預設開啟，但設定比例尺門檻，臺中全市總覽時不大量繪製；進入前竹後即可直接看到宗地線，其他圖層按需開啟。</p></div>`;bindLayerChecks()}
+<div class="tool-card"><b>預設顯示原則</b><p>進入前竹後以「配地街廓」為主體，搭配淡化的都市計畫分區；原地籍線（現況地號）預設關閉，點選街廓即可在資訊面板看到涉及的原地號，需要時再由此開啟圖層。</p></div>`;bindLayerChecks()}
 function layerRow(id,ico,name,sub,checked,tag){return `<label class="layer-row"><input id="${id}" type="checkbox" ${checked}><span class="layer-ico">${ico}</span><span><div class="layer-name">${name}</div><div class="layer-sub">${sub}</div></span>${tag?`<span class="tag">${tag}</span>`:''}</label>`}
 function toolsPanel(){drawerTitle.textContent='選地工具';drawerBody.innerHTML=`<div class="section-title">配地・選地條件</div>
 <div class="tool-card"><b>① 地籍條件</b><p>點選地圖宗地，取得地號、地籍屬性與位置。</p></div>
@@ -317,7 +368,7 @@ function bindLayerChecks(){
   [['urbanChk',zoneLayer()],['urbanLineChk',urbanLines],['urbanTextChk',urbanText],['landChk',land],['sectChk',sect],['polyChk',poly],['lineChk',line],['pointChk',point],['addrChk',addr],['textChk',textPoint]].forEach(([id,l])=>{const el=document.getElementById(id);if(el&&l){el.checked=l.visible;el.onchange=e=>{l.visible=e.target.checked;}}});
   const se=document.getElementById('sceneChk');if(se){se.checked=sceneModel.visible;se.onchange=async e=>{if(e.target.checked)await switchMode('3d');else sceneModel.visible=false}}
 }
-function openDrawer(type){if(activeView()===view3d)setSceneToolbarCollapsed(true);drawer.classList.add('open');document.querySelectorAll('.rail-btn[data-panel]').forEach(b=>b.classList.toggle('active',b.dataset.panel===type));type==='tools'?toolsPanel():type==='gallery'?galleryPanel():layerPanel()}
+function openDrawer(type){if(window.LAM&&LAM.open)LAM_toggle(false);if(activeView()===view3d)setSceneToolbarCollapsed(true);drawer.classList.add('open');document.querySelectorAll('.rail-btn[data-panel]').forEach(b=>b.classList.toggle('active',b.dataset.panel===type));type==='tools'?toolsPanel():type==='gallery'?galleryPanel():layerPanel()}
 async function ensureQianzhuExtent(){
   if(qianzhuExtent) return qianzhuExtent;
   // 優先讀取前竹 CAD Polygon 的真正範圍；失敗時直接使用固定前竹範圍，不再讓定位流程中斷。
@@ -526,7 +577,8 @@ window.focusQianzhu=async function(silent=false){
   isQianzhuMode=true;
   qianzhuHighlight.visible=true;
   // 這三層就是前竹配地 CAD 的主體資料，預設全部顯示。
-  land.visible=true; poly.visible=true; line.visible=true; point.visible=false; textPoint.visible=true;
+  // 預設以配地街廓為主體；原地籍線（現況地號）預設關閉，需要時於圖層面板開啟
+  land.visible=false; poly.visible=true; line.visible=true; point.visible=false; textPoint.visible=true;
   sect.visible=false; addr.visible=false;
   urbanZones.visible=false; urbanText.visible=false;
   document.getElementById('areaText').textContent='烏日前竹地區';
@@ -686,6 +738,46 @@ async function searchAddress(text,{echo=true}={}){
 }
 
 async function parcelAtPoint(mapPoint,{silent=false}={}){const q=land.createQuery();q.geometry=mapPoint;q.spatialRelationship='intersects';q.outFields=['objectid','kcnt','aa48','aa49','aa05','aa10','aa17','thekey','twd97e','twd97n'];q.returnGeometry=true;q.num=1;try{const r=await land.queryFeatures(q);if(!r.features.length){if(!silent)addMsg('此位置沒有查到 Land11505 宗地資料。');return null}return normGraphic(r.features[0])}catch(e){console.warn('地籍查詢失敗',e);return null}}
+// ===== 點選街廓（前竹） =====
+function fmtLandNo(v){const t=String(v??'').trim();if(/^\d{8}$/.test(t)){const m=parseInt(t.slice(0,4),10),sub=parseInt(t.slice(4),10);return sub?`${m}-${sub}`:`${m}`}return t}
+function geoArea(g){try{return Math.abs(GeometryEngine.geodesicArea(g,'square-meters'))}catch(e){try{return Math.abs(GeometryEngine.planarArea(g,'square-meters'))}catch(_){return 0}}}
+async function blockNameOf(g){const id=String(g.attributes?.OBJECTID??'');if(blockNameCache.has(id))return blockNameCache.get(id);
+  let name='';try{const q=textPoint.createQuery();q.geometry=g.geometry;q.spatialRelationship='contains';q.where="Layer LIKE '街廓編號%'";q.outFields=['Text'];q.returnGeometry=false;const r=await textPoint.queryFeatures(q);name=r.features.map(f=>f.attributes.Text).filter(Boolean).join('、')}catch(e){console.warn('街廓編號查詢失敗',e)}
+  blockNameCache.set(id,name);return name}
+async function blockAtPoint(mapPoint){const q=poly.createQuery();q.geometry=mapPoint;q.spatialRelationship='intersects';q.outFields=['*'];q.returnGeometry=true;q.num=5;
+  const r=await poly.queryFeatures(q);if(!r.features.length)return null;
+  const g=normGraphic(r.features.sort((a,b)=>geoArea(a.geometry)-geoArea(b.geometry))[0]);g.layer=poly;
+  return {graphic:g,name:await blockNameOf(g),area:geoArea(g.geometry)}}
+window.hintParcel=function(i){if(!selectLayer)return;selectLayer.graphics.filter(x=>x.attributes?.role==='hint').forEach(x=>selectLayer.remove(x));
+  const p=parcelHints[i];if(!p)return;
+  selectLayer.add(new Graphic({geometry:p.geometry,attributes:{role:'hint'},symbol:{type:'simple-fill',color:[255,153,0,.18],outline:{color:[230,110,0,1],width:2,style:'dash'}}}))}
+function blockPanelHtml(block,parcelHtml){
+  const z=lastZoneInfo;const c=z?zoningColor(z.zone):null;const sw=c?`rgba(${c[0]},${c[1]},${c[2]},.9)`:'#ccd6e0';
+  const a=block.graphic.attributes||{};const ping=block.area*0.3025;
+  return `<div class="info-kicker">前竹配地街廓</div>
+  <div class="blk-head"><div class="info-title">${esc(block.name?('街廓 '+block.name):'配地街廓')}</div></div>
+  <span class="blk-zone"><i style="background:${sw}"></i>${esc(z?z.zone:(urbanQueryState==='loading'?'分區查詢中…':'未查到分區'))}</span>
+  <div class="blk-stats"><div class="blk-stat"><small>街廓面積</small><b>${Math.round(block.area).toLocaleString()} ㎡</b></div><div class="blk-stat"><small>約合</small><b>${Math.round(ping).toLocaleString()} 坪</b></div></div>
+  <div class="info-kicker" style="margin-top:4px">涉及原地號（現況地籍）</div>${parcelHtml}
+  <div class="info-note">將滑鼠移到地號上，可在地圖上以橘色虛線查看該筆原地號位置。分區依 108 年都市計畫 CAD，僅供參考，以最新公告為準。</div>
+  <div class="info-actions"><button class="primary" onclick="explainSelectionWithAI()">AI 說明</button><button onclick="zoomSelection()">放大查看</button><button class="compare-add" onclick="addCurrentToCompare()">${compareBtnLabel()}</button></div>
+  <details class="adv-info"><summary>進階資訊（CAD 原始欄位）</summary><div class="info-grid">${compactRows(a,['OBJECTID','Layer','Color','Linetype','DocName'])}</div></details>`}
+async function showBlockInfo(block,mapPoint,token){
+  const panel=document.getElementById('selectionPanel'),body=document.getElementById('selectionBody');
+  parcelHints=[];body.innerHTML=blockPanelHtml(block,'<div class="map-busy"><i class="mini-spin"></i>正在比對原地號…</div>');panel.classList.add('open');
+  let html='';
+  try{
+    const q=land.createQuery();q.geometry=block.graphic.geometry;q.spatialRelationship='intersects';q.outFields=['objectid','kcnt','aa48','aa49','aa10'];q.returnGeometry=true;q.outSpatialReference=block.graphic.geometry.spatialReference;q.num=500;
+    const r=await land.queryFeatures(q);if(token!==selectionToken)return;
+    const list=[];
+    for(const f of r.features){normGraphic(f);let ov=0;try{const x=GeometryEngine.intersect(f.geometry,block.graphic.geometry);ov=x?geoArea(x):0}catch(e){}
+      if(ov<1)continue;const here=mapPoint&&GeometryEngine.contains(f.geometry,mapPoint);list.push({f,ov,here})}
+    list.sort((x,y)=>(y.here-x.here)||(y.ov-x.ov));parcelHints=list.map(o=>o.f);
+    html=list.length?`<div class="parcel-list">${list.map((o,i)=>{const at=o.f.attributes;return `<div class="parcel-item${o.here?' here':''}" onmouseenter="hintParcel(${i})" onmouseleave="hintParcel(-1)" onclick="hintParcel(${i})"><b>${esc(at.KCNT||'')} ${esc(fmtLandNo(at.AA49))} 地號${o.here?' <em class="here-tag">← 點選處</em>':''}</b><span>重疊 ${Math.round(o.ov).toLocaleString()} ㎡</span></div>`}).join('')}</div><div class="info-note">共 ${list.length} 筆原地號與此街廓重疊。</div>`
+      :'<div class="info-note">此街廓範圍內未查到原地號資料。</div>';
+  }catch(e){console.warn(e);html='<div class="info-note">原地號比對失敗，請重新點選。</div>'}
+  if(token!==selectionToken)return;body.innerHTML=blockPanelHtml(block,html);
+}
 // 點選亮顯：在獨立圖層畫出選取範圍（粗框＋半透明填色），不受原圖層開關影響
 function showSelectOutline(geom){if(!selectLayer)return;selectLayer.removeAll();if(!geom)return;
   const isPoly=geom.type==='polygon'||geom.type==='extent';
@@ -705,6 +797,7 @@ function clearSearchPin(){if(pinLayer)pinLayer.removeAll()}
 async function highlightGraphic(view,graphic){try{if(highlightHandle){highlightHandle.remove();highlightHandle=null}if(!graphic?.layer)return;const lv=await view.whenLayerView(graphic.layer);highlightHandle=lv.highlight(graphic)}catch(e){console.warn('highlight failed',e)}}
 async function handleMapClick(view,e){
   if(!e.mapPoint)return;
+  if(window.LAM&&LAM.open){try{if(await LAM_onMapClick(e.mapPoint))return}catch(err){console.warn(err)}}
   const token=++selectionToken;urbanQueryState='loading';lastZoneInfo=null;lastClickedPoint=e.mapPoint;document.getElementById('coordText').textContent=`${e.mapPoint.longitude.toFixed(6)}, ${e.mapPoint.latitude.toFixed(6)}｜辨識中`;
   let results=[];try{const h=await view.hitTest(e,{include:[poly,line,point,land]});results=h.results.filter(r=>r.type==='graphic'&&[poly,line,point,land].includes(r.graphic?.layer))}catch(err){console.warn('hitTest failed',err)}
   if(token!==selectionToken)return;
@@ -713,13 +806,27 @@ async function handleMapClick(view,e){
   lastZoneInfo=null;showSelectionLoading();
   let urbanResult=null;try{urbanResult=await queryUrbanPoint(e.mapPoint);if(token!==selectionToken)return;urbanQueryState='ready';}catch(err){if(token!==selectionToken)return;urbanQueryState='error';console.warn(err)}
   lastZoneInfo=urbanResult;
-  const primary=urbanResult?{graphic:urbanResult.graphic}:cadHit||landHit||null;if(highlightHandle){highlightHandle.remove();highlightHandle=null}
-  showSelectOutline((lastLandGraphic||lastCadGraphic||urbanResult?.graphic)?.geometry||null);
+  if(highlightHandle){highlightHandle.remove();highlightHandle=null}
+  // 前竹範圍內：以「配地街廓」為點選主角
+  let block=null;if(isQianzhuMode){try{block=await blockAtPoint(e.mapPoint)}catch(err){console.warn('街廓查詢失敗',err)}if(token!==selectionToken)return}
+  if(block){
+    lastCadGraphic=block.graphic;currentPolyOid=String(block.graphic.attributes?.OBJECTID??'');lastBlockName=block.name||null;
+    showSelectOutline(block.graphic.geometry);
+    document.getElementById('coordText').textContent=`${block.name?'街廓 '+block.name:'配地街廓'}${lastZoneInfo?'・'+lastZoneInfo.zone:''}`;
+    showBlockInfo(block,e.mapPoint,token);
+    if(!lastLandGraphic){const parcel=await parcelAtPoint(e.mapPoint,{silent:true});if(token!==selectionToken)return;if(parcel)lastLandGraphic=parcel}
+    return;
+  }
+  lastBlockName=null;
+  const primary=urbanResult?{graphic:urbanResult.graphic}:cadHit||landHit||null;
+  // 非街廓位置：框選分區（前竹模式下依外框裁切），沒有分區才框地籍
+  let zoneGeom=urbanResult?.graphic?.geometry||null;if(zoneGeom&&isQianzhuMode&&qianzhuBoundary){try{zoneGeom=GeometryEngine.intersect(zoneGeom,qianzhuBoundary)||zoneGeom}catch(err){}}
+  showSelectOutline(zoneGeom||(lastLandGraphic||lastCadGraphic)?.geometry||null);
   if(token!==selectionToken)return;
   // 先用 hitTest 立即顯示，避免每次點擊都等待網路查詢。
   showSelectionInfo(primary,lastLandGraphic,e.mapPoint);document.getElementById('coordText').textContent=`${e.mapPoint.longitude.toFixed(6)}, ${e.mapPoint.latitude.toFixed(6)}｜已選取${lastZoneInfo?'・'+lastZoneInfo.zone:''}`;
   // 若畫面沒有命中地籍，再背景補查，不阻塞 UI。
-  if(!lastLandGraphic){const parcel=await parcelAtPoint(e.mapPoint,{silent:true});if(token!==selectionToken)return;if(parcel){lastLandGraphic=parcel;showSelectOutline(parcel.geometry);showSelectionInfo(primary,parcel,e.mapPoint)}}
+  if(!lastLandGraphic){const parcel=await parcelAtPoint(e.mapPoint,{silent:true});if(token!==selectionToken)return;if(parcel){lastLandGraphic=parcel;if(!zoneGeom)showSelectOutline(parcel.geometry);showSelectionInfo(primary,parcel,e.mapPoint)}}
 }
 function openAI(){document.getElementById('aiPanel').classList.add('open');document.getElementById('aiFab').style.opacity='.25';document.getElementById('selectionPanel').classList.remove('open')}function closeAI(){document.getElementById('aiPanel').classList.remove('open');document.getElementById('aiFab').style.opacity='1';if(lastCadGraphic||lastLandGraphic)document.getElementById('selectionPanel').classList.add('open')}
 function chatLocationIntent(raw){
@@ -841,7 +948,7 @@ textPoint=new FeatureLayer({url:TEXT_SERVICE+'/1',title:'分區文字標註',out
 modelAnchorLayer=new GraphicsLayer({title:'願景模型目標位置',visible:true});
 sceneModel=new SceneLayer({url:SCENE_SERVICE,title:'前竹地區願景模型 v3',visible:false,opacity:1,popupEnabled:false});
 qianzhuHighlight=new GraphicsLayer({title:'前竹地區亮顯',visible:true});
-urbanClip=new GraphicsLayer({title:'前竹都市計畫使用分區',visible:false});
+urbanClip=new GraphicsLayer({title:'前竹都市計畫使用分區',visible:false,opacity:.6});
 selectLayer=new GraphicsLayer({title:'點選亮顯',listMode:'hide'});
 pinLayer=new GraphicsLayer({title:'搜尋定位點',listMode:'hide'});
 urbanZones=new FeatureLayer({url:URBAN_SERVICE+'/2',title:'都市計畫使用分區（108 年 CAD）',outFields:['OBJECTID','Layer','Color','DocName'],popupEnabled:false,minScale:100000,maxScale:0});
@@ -855,6 +962,7 @@ sceneModel.load().catch(e=>console.warn('模型預載未完成，切換時會重
 daylightExpand=new Expand({view:view3d,content:new Daylight({view:view3d,utcOffset:8,playSpeedMultiplier:1,visibleElements:{timezone:false}}),expandTooltip:'日照與陰影（臺灣時間）',expanded:false});
 view3d.ui.padding={top:60,right:8};view3d.ui.add(daylightExpand,'top-right');
 view2d.ui.add(new ScaleBar({view:view2d,unit:'metric'}),'bottom-left');
+try{LAM_setup(FeatureLayer,GraphicsLayer)}catch(e){console.warn('試配地模組初始化失敗',e)}
 view2d.when(async()=>{layerPanel();addMsg('', 'bot', aiWelcomeHtml());try{hideThemeLayers();layerPanel();}catch(e){console.warn('初始圖層設定失敗',e)}finally{document.getElementById('loading').style.display='none';}});
 [view2d,view3d].forEach(v=>v.on('click',e=>handleMapClick(v,e)));
 }catch(e){document.getElementById('loadErr').textContent='載入失敗：'+e.message}
@@ -899,5 +1007,708 @@ document.getElementById('send').onclick=()=>askAI(document.getElementById('ask')
 document.getElementById('resetModelHeight').onclick=()=>{document.getElementById('modelHeight').value=0;updateModelPreview()};
 window.addEventListener('error',e=>{const box=document.getElementById('loadErr');if(box&&document.getElementById('loading').style.display!=='none')box.textContent='JavaScript 錯誤：'+e.message});
 </script>
+<script>
+/**
+ * 試配地計算核心 (allocation-core.js)
+ * 比照「臺中市政府地政局試配地功能模組」LandAllocationModule.js 的計算邏輯改寫，
+ * 不依賴任何地圖套件（ArcGIS / Leaflet / OpenLayers 皆可接）。
+ *
+ * 座標必須是「平面公尺座標」（建議 TWD97 / EPSG:3826）。
+ * 若地圖是 WGS84，請先轉 TWD97 再丟進來，算完再轉回去。
+ * （EPSG:3857 在台中約有 9% 的長度誤差，面積誤差約 19%，不可直接用）
+ *
+ * ── 參考網站的計算方式 ──
+ * 1. 每個街廓有一支紅色方向箭頭，箭頭尾端那個點最靠近的那條邊 = 「基準線」。
+ * 2. 切割線永遠平行於基準線，從基準線往箭頭方向平移。
+ * 3. 平移距離用迭代逼近，直到切下來（含基準線那一側）的面積 = 目標面積。
+ *    目標面積：面積切割 = 輸入面積；價格切割 = 輸入權利價值 ÷ 評定單價。
+ * 4. 切下的部分歸給目前使用者，剩下的部分留在原街廓編號，可再給下一位。
+ * 5. 分配金額 = 切割面積 × 評定單價，從使用者剩餘可分配權利價值扣除。
+ */
+(function (root, factory) {
+  if (typeof module === 'object' && module.exports) module.exports = factory();
+  else root.AllocationCore = factory();
+})(typeof self !== 'undefined' ? self : this, function () {
+  'use strict';
+
+  // ───────── 基本幾何 ─────────
+  const sub = (a, b) => [a[0] - b[0], a[1] - b[1]];
+  const add = (a, b) => [a[0] + b[0], a[1] + b[1]];
+  const mul = (a, k) => [a[0] * k, a[1] * k];
+  const dot = (a, b) => a[0] * b[0] + a[1] * b[1];
+  const len = (a) => Math.hypot(a[0], a[1]);
+  const unit = (a) => { const l = len(a); return l ? [a[0] / l, a[1] / l] : [0, 0]; };
+
+  /** 去掉重複的封閉點 */
+  function openRing(ring) {
+    const r = ring.slice();
+    if (r.length > 1) {
+      const f = r[0], l = r[r.length - 1];
+      if (f[0] === l[0] && f[1] === l[1]) r.pop();
+    }
+    return r;
+  }
+
+  /** 面積（平方公尺，取絕對值） */
+  function area(ring) {
+    const r = openRing(ring);
+    let s = 0;
+    for (let i = 0; i < r.length; i++) {
+      const p = r[i], q = r[(i + 1) % r.length];
+      s += p[0] * q[1] - q[0] * p[1];
+    }
+    return Math.abs(s) / 2;
+  }
+
+  function centroid(ring) {
+    // 以第一點為原點計算，避免 Web Mercator 大座標（~10^7）造成浮點誤差
+    const r0 = openRing(ring), o = r0[0], r = r0.map((p) => [p[0] - o[0], p[1] - o[1]]);
+    let a = 0, cx = 0, cy = 0;
+    for (let i = 0; i < r.length; i++) {
+      const p = r[i], q = r[(i + 1) % r.length];
+      const c = p[0] * q[1] - q[0] * p[1];
+      a += c; cx += (p[0] + q[0]) * c; cy += (p[1] + q[1]) * c;
+    }
+    if (!a) return o.slice();
+    return [o[0] + cx / (3 * a), o[1] + cy / (3 * a)];
+  }
+
+  function pointSegDist(p, a, b) {
+    const ab = sub(b, a), t = Math.max(0, Math.min(1, dot(sub(p, a), ab) / (dot(ab, ab) || 1)));
+    return len(sub(p, add(a, mul(ab, t))));
+  }
+
+  function edges(ring) {
+    const r = openRing(ring);
+    return r.map((p, i) => ({ index: i, a: p, b: r[(i + 1) % r.length], length: len(sub(r[(i + 1) % r.length], p)) }));
+  }
+
+  /**
+   * 半平面裁切（Sutherland–Hodgman）：保留 dot(p - origin, n) <= t 的部分
+   */
+  function clipHalfPlane(ring, origin, n, t, keepLess = true) {
+    const r = openRing(ring);
+    const f = (p) => { const v = dot(sub(p, origin), n) - t; return keepLess ? v : -v; };
+    const out = [];
+    for (let i = 0; i < r.length; i++) {
+      const P = r[i], Q = r[(i + 1) % r.length];
+      const fp = f(P), fq = f(Q);
+      if (fp <= 0) out.push(P);
+      if ((fp < 0 && fq > 0) || (fp > 0 && fq < 0)) {
+        const k = fp / (fp - fq);
+        out.push(add(P, mul(sub(Q, P), k)));
+      }
+    }
+    return out;
+  }
+
+  // ───────── 基準線與方向箭頭 ─────────
+
+  /**
+   * 找基準線：與箭頭尾端距離最近的邊（同參考網站 Choose_Value = 距離最近的線段）
+   * 只考慮長度 >= 1m 的邊
+   */
+  function findBaseEdge(ring, tailPoint, headPoint) {
+    // 基準線：往街廓內部的方向與紅色箭頭一致（夾角 < 約 45°）的邊中，離箭頭尾端最近者；無箭頭方向時取最近邊
+    const es = edges(ring).filter((e) => e.length >= 1);
+    es.forEach((e) => (e.dist = pointSegDist(tailPoint, e.a, e.b)));
+    es.sort((x, y) => x.dist - y.dist);
+    if (headPoint) {
+      const dir = unit(sub(headPoint, tailPoint));
+      const good = es.filter((e) => dot(inwardNormal(ring, e), dir) > 0.7);
+      if (good.length) return good[0];
+    }
+    return es[0];
+  }
+
+  /**
+   * 由基準線算出「往街廓內部」的單位法向量
+   */
+  function inwardNormal(ring, edge) {
+    // 依多邊形環繞方向判斷內側（不規則街廓也正確）
+    const d = unit(sub(edge.b, edge.a));
+    const r = openRing(ring); let s = 0;
+    for (let i = 0; i < r.length; i++) { const p = r[i], q = r[(i + 1) % r.length]; s += (p[0] - r[0][0]) * (q[1] - r[0][1]) - (q[0] - r[0][0]) * (p[1] - r[0][1]); }
+    return s > 0 ? [-d[1], d[0]] : [d[1], -d[0]];
+  }
+
+  /**
+   * 自動產生方向箭頭（給沒有在圖上畫箭頭的街廓用）
+   * @param ring 街廓多邊形
+   * @param edgeIndex 臨路/起始那條邊的索引（不給就取最長邊）
+   * @param arrowLen 箭頭長度（公尺），預設取街廓深度的 1/3，最大 20m
+   * @returns {tail:[x,y], head:[x,y], wings:[[x,y],[x,y]], baseEdgeIndex}
+   */
+  function makeArrow(ring, edgeIndex, arrowLen) {
+    const es = edges(ring);
+    const e = edgeIndex == null ? es.slice().sort((x, y) => y.length - x.length)[0] : es[edgeIndex];
+    const n = inwardNormal(ring, e);
+    const depth = Math.max(...openRing(ring).map((p) => dot(sub(p, e.a), n)));
+    const L = arrowLen || Math.min(20, depth / 3);
+    const mid = mul(add(e.a, e.b), 0.5);
+    const tail = add(mid, mul(n, Math.min(2, depth * 0.05))); // 稍微往內縮，避免壓在邊線上
+    const head = add(tail, mul(n, L));
+    return { tail, head, wings: arrowWings(tail, head), baseEdgeIndex: e.index };
+  }
+
+  /** 箭頭兩翼（畫箭頭頭用） */
+  function arrowWings(tail, head, size) {
+    const d = unit(sub(head, tail));
+    const s = size || Math.max(1.5, len(sub(head, tail)) * 0.25);
+    const back = sub(head, mul(d, s));
+    const p = [-d[1], d[0]];
+    return [add(back, mul(p, s * 0.5)), add(back, mul(p, -s * 0.5))];
+  }
+
+  // ───────── 切割 ─────────
+
+  /**
+   * 從基準線平移 t 公尺切開，回傳 { cut, remain, cutArea, remainArea, cutLineLength }
+   */
+  function cutAtOffset(ring, edge, n, t) {
+    const cut = clipHalfPlane(ring, edge.a, n, t, true);
+    const remain = clipHalfPlane(ring, edge.a, n, t, false);
+    // 切割線長度 = 新地塊沿切線的面寬
+    const pts = cut.filter((p) => Math.abs(dot(sub(p, edge.a), n) - t) < 1e-6);
+    let w = 0;
+    if (pts.length >= 2) {
+      const d = [n[1], -n[0]];
+      const proj = pts.map((p) => dot(p, d));
+      w = Math.max(...proj) - Math.min(...proj);
+    }
+    return { cut, remain, cutArea: area(cut), remainArea: area(remain), cutLineLength: w };
+  }
+
+  /**
+   * 依目標面積切割（二分法，單調遞增所以一定收斂；參考網站用內插迭代，精度 0.001㎡）
+   * @returns {cut, remain, cutArea, remainArea, offset, iterations, baseEdge}
+   */
+  function cutByArea(ring, tailPoint, targetArea, tol = 0.001, headPoint) {
+    const total = area(ring);
+    if (targetArea <= 0) throw new Error('切割面積必須大於 0');
+    if (targetArea > total + tol) throw new Error('切割面積大於土地面積');
+    const edge = findBaseEdge(ring, tailPoint, headPoint);
+    const n = inwardNormal(ring, edge);
+    if (targetArea >= total - tol) {
+      return { cut: openRing(ring), remain: [], cutArea: total, remainArea: 0, offset: Infinity, iterations: 0, baseEdge: edge, normal: n };
+    }
+    const ds = openRing(ring).map((p) => dot(sub(p, edge.a), n));
+    let lo = Math.min(...ds), hi = Math.max(...ds), it = 0, res;
+    while (it++ < 200) {
+      const mid = (lo + hi) / 2;
+      res = cutAtOffset(ring, edge, n, mid);
+      const diff = res.cutArea - targetArea;
+      if (Math.abs(diff) <= tol) break;
+      if (diff > 0) hi = mid; else lo = mid;
+    }
+    return Object.assign(res, { offset: (lo + hi) / 2, iterations: it, baseEdge: edge, normal: n, minDs: Math.min(...ds), maxDs: Math.max(...ds) });
+  }
+
+  // ───────── 試配地規則（比照參考網站 CalPreview 的檢核） ─────────
+
+  /**
+   * block 欄位（與參考網站 CSV 欄位同名）：
+   *   街廓編號, 評定單價, 第一宗土地_面積, 最小分配土地_面積, 最後一宗土地_面積,
+   *   土地使用管制相關規定_各宗基地最小面寬
+   *   ring: 目前（剩餘）多邊形, arrow: {tail, head}, allocatedCount: 此街廓已分配人數
+   * user: { budgetRemaining }
+   * opts: { mode: '面積切割'|'價格切割'|'整筆土地', value }
+   * @returns { ok, error?, warning?, result? }
+   */
+  function allocate(block, user, opts) {
+    const unitPrice = Number(block['評定單價']) || 0;
+    const landArea = round2(area(block.ring));
+    const totalPrice = Math.round(unitPrice * landArea);
+    const budget = Number(user.budgetRemaining) || 0;
+    const firstMin = Number(block['第一宗土地_面積']) || 0;
+    const minArea = Number(block['最小分配土地_面積']) || 0;
+    const lastMin = Number(block['最後一宗土地_面積']) || 0;
+    const minWidth = Number(block['土地使用管制相關規定_各宗基地最小面寬']) || 0;
+    const fail = (error) => ({ ok: false, error });
+
+    if (landArea < 10) return fail('無法選擇（面積小於 10㎡）');
+
+    let target;
+    if (opts.mode === '面積切割') {
+      target = parseNum(opts.value);
+      if (isNaN(target)) return fail('請填入面積');
+      if (target > landArea) return fail('切割面積大於土地面積');
+      if (landArea - target < lastMin) return fail('切割後[最後一宗土地_面積]不足');
+      if (target * unitPrice > budget) return fail('可分配權利價值不足：切割 ' + target.toLocaleString() + ' ㎡ 需 ' + Math.round(target * unitPrice).toLocaleString() + ' 元，您剩餘 ' + Math.round(budget).toLocaleString() + ' 元（最多約可切 ' + Math.floor(budget / unitPrice).toLocaleString() + ' ㎡）');
+    } else if (opts.mode === '價格切割') {
+      const price = parseNum(opts.value);
+      if (isNaN(price)) return fail('請填入價格');
+      if (price > totalPrice) return fail('切割總價大於土地總價');
+      target = price / unitPrice;
+      if (landArea - target < lastMin) return fail('切割後[最後一宗土地_面積]不足');
+      if (price > budget) return fail('可分配權利價值不足：輸入 ' + Math.round(price).toLocaleString() + ' 元，您剩餘 ' + Math.round(budget).toLocaleString() + ' 元');
+    } else if (opts.mode === '整筆土地') {
+      if (totalPrice > budget) return fail('可分配權利價值不足：整筆土地需 ' + totalPrice.toLocaleString() + ' 元，您剩餘 ' + Math.round(budget).toLocaleString() + ' 元');
+      target = landArea;
+    } else return fail('請選擇類型');
+
+    const isWhole = opts.mode === '整筆土地' || target >= landArea - 0.001;
+    if (!isWhole) {
+      if (!block.allocatedCount && target < firstMin) return fail('第一宗土地分配 不可以小於:' + firstMin + '平方公尺');
+      if (minArea && target < minArea) return fail('切割面積 ' + target.toFixed(2) + ' ㎡ 小於最小分配面積 ' + minArea + ' ㎡（至少需權利價值 ' + Math.ceil(minArea * unitPrice).toLocaleString() + ' 元）' + (budget < minArea * unitPrice ? '。您的權利價值不足以單獨分配一宗土地，實務上可與其他地主合併分配，或申請領取現金補償' : ''));
+    }
+
+    const r = isWhole
+      ? { cut: openRing(block.ring), remain: [], cutArea: landArea, remainArea: 0, cutLineLength: 0 }
+      : cutByArea(block.ring, block.arrow.tail, target, 0.001, block.arrow.head);
+
+    if (!isWhole && minArea && r.remainArea < minArea) return fail('切割後剩餘 ' + r.remainArea.toFixed(2) + ' ㎡，小於最小分配面積 ' + minArea + ' ㎡，會形成畸零地。請改選「整筆土地」，或切割不超過 ' + Math.floor(landArea - minArea).toLocaleString() + ' ㎡');
+    if (!isWhole && minWidth && r.baseEdge) {
+      const w = r.offset - r.minDs, rw = r.maxDs - r.offset;
+      if (w < minWidth - 0.01) {
+        const need = cutAtOffset(block.ring, r.baseEdge, r.normal, r.minDs + minWidth).cutArea;
+        return fail('切割後面寬僅 ' + w.toFixed(2) + 'm，小於最小面寬 ' + minWidth + 'm。此位置至少需分配約 ' + Math.ceil(need).toLocaleString() + ' ㎡（權利價值約 ' + (Math.ceil(need) * unitPrice).toLocaleString() + ' 元）');
+      }
+      if (r.remainArea > 0.5 && rw < minWidth - 0.01) {
+        const maxA = cutAtOffset(block.ring, r.baseEdge, r.normal, r.maxDs - minWidth).cutArea;
+        return fail('切割後剩餘土地面寬僅 ' + rw.toFixed(2) + 'm，會形成無法建築的畸零地。請改選「整筆土地」，或切割面積不超過約 ' + Math.floor(maxA).toLocaleString() + ' ㎡');
+      }
+    }
+
+    const cutArea = round2(r.cutArea);
+    const price = round2(cutArea * unitPrice);
+    if (price > budget + 1) return fail('可分配餘額不足 請減少切割權利價值');
+
+    const budgetAfter = round2(budget - price);
+    return {
+      ok: true,
+      warning: budgetAfter < 4000000 ? '剩餘權利價值已經不足再分配其他土地，請確認將餘額用完後完成個人分配' : null,
+      result: {
+        cutRing: r.cut, remainRing: r.remain,
+        cutArea, remainArea: round2(r.remainArea),
+        unitPrice, price, budgetAfter,
+        sideLengths: edges(r.cut).filter((e) => e.length >= 0.1).map((e) => ({ mid: mul(add(e.a, e.b), 0.5), length: round2(e.length) })),
+      },
+    };
+  }
+
+  /** 「帶入可分配權利價值」按鈕：預算夠買整筆就整筆，否則以預算做價格切割 */
+  function fullAmount(block, user) {
+    const total = Math.round((Number(block['評定單價']) || 0) * round2(area(block.ring)));
+    return total <= user.budgetRemaining ? { mode: '整筆土地' } : { mode: '價格切割', value: user.budgetRemaining };
+  }
+
+  function parseNum(v) { return typeof v === 'number' ? v : parseFloat(String(v || '').replace(/,/g, '')); }
+  function round2(x) { return Math.round(x * 100) / 100; }
+
+  /** 此街廓下一宗土地的最小分配面積：max(最小分配面積, 達到最小面寬所需面積)，整筆不足時回傳整筆面積 */
+  function minCut(ring, tailPoint, minArea, minWidth, headPoint) {
+    const total = area(ring); let need = minArea || 0;
+    if (minWidth) { const edge = findBaseEdge(ring, tailPoint, headPoint); const n = inwardNormal(ring, edge); const ds = openRing(ring).map((p) => dot(sub(p, edge.a), n)); need = Math.max(need, cutAtOffset(ring, edge, n, Math.min(...ds) + minWidth).cutArea); }
+    return Math.min(need, total);
+  }
+  return { area, centroid, edges, findBaseEdge, inwardNormal, makeArrow, arrowWings, cutByArea, allocate, fullAmount, clipHalfPlane, minCut };
+});
+
+/* ================= 試配地功能模組（比照臺中市地政局 LandAllocationModule） ================= */
+const LAM_CFG={
+  defaultBudget:100000000,          // 預設權利價值
+  defaultUnitPrice:50000,           // 模擬評定單價（元/㎡），非正式評定單價
+  unitPriceOverride:{'C2-1':70000,'C2-2':70000,'C2-3':70000,'C2-4':70000},
+  lowBalance:4000000,               // 剩餘權利價值低於此值提示
+  storageKey:'lam_state_v1',
+  colors:[[76,175,80],[33,150,243],[156,39,176],[255,193,7],[0,188,212],[233,30,99],[121,85,72],[63,81,181],[205,220,57],[255,87,34]]
+};
+const LAM={open:false,ready:false,loading:null,blocks:[],byName:new Map(),users:[],cur:null,sel:null,arrowLayer:null,allocLayer:null,autoArrowLayer:null};
+window.LAM=LAM;
+
+// Web Mercator ↔ 局部公尺座標：以街廓中心為原點，依 WGS84 橢球分別修正東西(kx)、南北(ky)尺度，
+// 面積與 geodesicArea / TWD97 誤差 < 0.02%（A2-1 = 1,787.83㎡，與地政局模組相同）
+const LAM_R=6378137,LAM_E2=0.00669437999014;
+function lamFrame(ring){const c=AllocationCore.centroid(ring);const phi=2*Math.atan(Math.exp(c[1]/LAM_R))-Math.PI/2;const w=1-LAM_E2*Math.sin(phi)**2,cp=Math.cos(phi);const kx=Math.sqrt(w)/cp,ky=Math.pow(w,1.5)/((1-LAM_E2)*cp);return {o:c,to:p=>[(p[0]-c[0])/kx,(p[1]-c[1])/ky],from:p=>[c[0]+p[0]*kx,c[1]+p[1]*ky]}}
+function lamFmt(n,d=0){return Number(n||0).toLocaleString('zh-TW',{maximumFractionDigits:d,minimumFractionDigits:d})}
+function lamColor(uid){return LAM_CFG.colors[(uid-1)%LAM_CFG.colors.length]}
+
+function LAM_setup(FeatureLayer,GraphicsLayer){
+  // 1) 紅色方向箭頭：分配方向 從「配地規劃線」獨立出來，比照參考網站以紅色顯示
+  line.definitionExpression="layer <> '分配方向'";
+  LAM.arrowLayer=new FeatureLayer({url:SERVICE+'/'+LYR.line,title:'配地分配方向（紅色箭頭）',definitionExpression:"layer = '分配方向'",outFields:['objectid','layer'],popupEnabled:false,visible:line.visible,minScale:45000,
+    renderer:{type:'simple',symbol:{type:'simple-line',color:[230,20,20,1],width:2.2,cap:'round',join:'round'}}});
+  LAM.autoArrowLayer=new GraphicsLayer({title:'自動方向箭頭（CAD 無箭頭之街廓）',listMode:'hide',visible:false});
+  LAM.allocLayer=new GraphicsLayer({title:'試配地結果',listMode:'hide'});
+  LAM.buildLayer=new GraphicsLayer({title:'建物積木模型（模擬）',listMode:'hide',elevationInfo:{mode:'absolute-height'}});   // 每棟以單一基準高程放置，避免零件隨地形起伏錯位
+  LAM.siteLayer=new GraphicsLayer({title:'基地外部空間（模擬）',listMode:'hide',elevationInfo:{mode:'on-the-ground'}});
+  const idx=map.layers.indexOf(line);map.add(LAM.arrowLayer,idx+1);map.add(LAM.autoArrowLayer,idx+2);
+  map.add(LAM.allocLayer,map.layers.indexOf(selectLayer));map.add(LAM.siteLayer);map.add(LAM.buildLayer);
+  line.watch('visible',v=>{LAM.arrowLayer.visible=v});
+}
+
+async function LAM_loadBlocks(){
+  if(LAM.ready)return;if(LAM.loading)return LAM.loading;
+  LAM.loading=(async()=>{
+    const sr={wkid:3857};
+    const qp=poly.createQuery();qp.where='1=1';qp.outFields=['objectid'];qp.returnGeometry=true;qp.outSpatialReference=sr;qp.num=2000;
+    const qt=textPoint.createQuery();qt.where="Layer LIKE '街廓編號%'";qt.outFields=['Text'];qt.returnGeometry=true;qt.outSpatialReference=sr;qt.num=2000;
+    const qa=LAM.arrowLayer.createQuery();qa.where="layer = '分配方向'";qa.outFields=['objectid'];qa.returnGeometry=true;qa.outSpatialReference=sr;qa.num=2000;
+    const qpt=point.createQuery();qpt.where="layer = '分配方向'";qpt.outFields=['objectid'];qpt.returnGeometry=true;qpt.outSpatialReference=sr;qpt.num=2000;
+    const [P,T,A,PT]=await Promise.all([poly.queryFeatures(qp),textPoint.queryFeatures(qt),LAM.arrowLayer.queryFeatures(qa),point.queryFeatures(qpt)]);
+    const inside=(pt,ring)=>{let c=false;for(let i=0,j=ring.length-1;i<ring.length;j=i++){const a=ring[i],b=ring[j];if((a[1]>pt[1])!==(b[1]>pt[1])&&pt[0]<(b[0]-a[0])*(pt[1]-a[1])/(b[1]-a[1])+a[0])c=!c}return c};
+    const arrows=A.features.map(f=>{const p=f.geometry.paths[0];return {head:p[0],tail:p[p.length-1]}});
+    const dirPts=PT.features.map(f=>[f.geometry.x,f.geometry.y]);
+    const texts=T.features.map(f=>({t:String(f.attributes.Text||'').trim(),p:[f.geometry.x,f.geometry.y]})).filter(x=>x.t);
+    const blocks=[];
+    for(const f of P.features){
+      const rings=f.geometry.rings||[];if(!rings.length)continue;
+      const ring=rings.slice().sort((a,b)=>AllocationCore.area(b)-AllocationCore.area(a))[0];
+      const name=(texts.find(x=>inside(x.p,ring))||{}).t;if(!name)continue;
+      let arrow=arrows.find(a=>inside(a.tail,ring))||arrows.find(a=>inside(a.head,ring)),src='CAD 箭頭';
+      if(!arrow){const dp=dirPts.find(p=>inside(p,ring));if(dp){const fr=lamFrame(ring);const lr=ring.map(fr.to);const e=AllocationCore.findBaseEdge(lr,fr.to(dp));const n=AllocationCore.inwardNormal(lr,e);arrow={tail:dp,head:fr.from([fr.to(dp)[0]+n[0]*8,fr.to(dp)[1]+n[1]*8])};src='CAD 方向點'}}
+      if(!arrow){const fr=lamFrame(ring);const a=AllocationCore.makeArrow(ring.map(fr.to));arrow={tail:fr.from(a.tail),head:fr.from(a.head),wings:a.wings.map(fr.from)};src='自動（最長邊）'}
+      blocks.push({name,oid:f.attributes.objectid??f.attributes.OBJECTID,origRing:ring,ring,history:[],arrow,arrowSrc:src,allocs:[],rules:{}});
+    }
+    blocks.sort((a,b)=>a.name.localeCompare(b.name,'zh-Hant',{numeric:true}));
+    LAM.blocks=blocks;LAM.byName=new Map(blocks.map(b=>[b.name,b]));
+    LAM_drawAutoArrows();LAM_restore();LAM.ready=true;
+  })();
+  try{await LAM.loading}finally{LAM.loading=null}
+}
+
+function LAM_drawAutoArrows(){
+  LAM.autoArrowLayer.removeAll();
+  for(const b of LAM.blocks){if(b.arrowSrc==='CAD 箭頭')continue;
+    const fr=lamFrame(b.origRing);const t=fr.to(b.arrow.tail),h=fr.to(b.arrow.head);const w=AllocationCore.arrowWings(t,h).map(fr.from);
+    LAM.autoArrowLayer.add(new Graphic({geometry:{type:'polyline',paths:[[b.arrow.tail,b.arrow.head],[w[0],b.arrow.head,w[1]]],spatialReference:{wkid:3857}},symbol:{type:'simple-line',color:[230,20,20,.9],width:2,style:'dash'},attributes:{block:b.name}}));}
+}
+
+function LAM_rules(b){const o=b.rules||{};return {
+  '評定單價':o['評定單價']??LAM_CFG.unitPriceOverride[b.name]??LAM_CFG.defaultUnitPrice,
+  '第一宗土地_面積':o['第一宗土地_面積']??0,'最小分配土地_面積':o['最小分配土地_面積']??140,
+  '最後一宗土地_面積':o['最後一宗土地_面積']??0,'土地使用管制相關規定_各宗基地最小面寬':o['土地使用管制相關規定_各宗基地最小面寬']??7}}
+function LAM_remainArea(b){if(!b.ring||b.ring.length<3)return 0;const fr=lamFrame(b.ring);return Math.round(AllocationCore.area(b.ring.map(fr.to))*100)/100}
+
+/* ---------- 使用者 ---------- */
+function LAM_goRing(ring){const g=new Graphic({geometry:{type:'polygon',rings:[ring],spatialReference:{wkid:3857}}});activeView().goTo({target:g.geometry.extent.clone().expand(1.8)},{duration:600}).catch(e=>console.warn(e))}
+function LAM_curUser(){return LAM.users.find(u=>u.id===LAM.cur)||null}
+function LAM_setBudget(){
+  const v=parseFloat(String(document.getElementById('lamBudget').value).replace(/,/g,''));
+  if(!(v>0)){toast('請輸入權利價值');return}
+  let u=LAM_curUser();
+  if(u&&u.allocs.length){toast('此序號已有分配，請先「重設權利價值」');return}
+  if(!u){u={id:(LAM.users.reduce((m,x)=>Math.max(m,x.id),0)+1),allocs:[],done:false};LAM.users.push(u);LAM.cur=u.id}
+  u.budget=v;u.remaining=v;LAM_save();LAM_render();toast('已設定權利價值 '+lamFmt(v));
+  const cheap=LAM.blocks.filter(b=>LAM_remainArea(b)>=10).map(b=>({b,need:LAM_minNeed(b)})).sort((x,y)=>x.need.price-y.need.price)[0];
+  if(cheap&&v<cheap.need.price)LAM_alert(`您的權利價值 <b>${lamFmt(v)}</b> 元，<b style="color:#c62828">不足以單獨分配任何一宗土地</b>。<br>目前最低需約 <b>${lamFmt(cheap.need.price)}</b> 元（街廓 ${esc(cheap.b.name)}，至少 ${lamFmt(cheap.need.area,2)} ㎡）。<br><br>實務上可與其他地主<b>合併分配</b>，或申請<b>領取現金補償</b>；模擬時也可調整權利價值或「街廓參數」。`);
+}
+function LAM_resetBudget(){
+  const u=LAM_curUser();if(!u)return;
+  LAM_confirm('重設權利價值會取消此序號（ID '+u.id+'）已切割的所有土地，確定嗎？',()=>{
+    for(let i=u.allocs.length-1;i>=0;i--){const a=u.allocs[i];const b=LAM.byName.get(a.block);if(b&&b.history.length){b.ring=b.history.pop();b.allocs.pop()}}
+    u.allocs=[];u.remaining=u.budget;u.budget=null;u.remaining=null;LAM_save();LAM_drawResults();LAM_render();if(LAM.sel)LAM_select(LAM.sel.name,false);
+  });
+}
+function LAM_finishUser(){
+  const u=LAM_curUser();if(!u||!u.budget){toast('尚未設定權利價值');return}
+  const go=()=>{u.done=true;const n={id:u.id+1,allocs:[],done:false,budget:null,remaining:null};LAM.users.push(n);LAM.cur=n.id;LAM.sel=null;showSelectOutline(null);LAM_save();LAM_render();toast('已完成 ID '+u.id+' 的分配，接續序號 '+n.id)};
+  if(u.remaining>=LAM_CFG.lowBalance)LAM_confirm('權利價值尚未分配完（剩 '+lamFmt(u.remaining)+'），是否結束分配？',go);else go();
+}
+
+/* ---------- 街廓選擇 ---------- */
+function LAM_select(name,zoom=true){
+  const b=LAM.byName.get(name);if(!b)return;
+  if(LAM_remainArea(b)<10){toast('此街廓已分配完畢，無法選擇');return}
+  LAM.sel=b;showSelectOutline({type:'polygon',rings:[b.ring],spatialReference:{wkid:3857}});
+  if(zoom)LAM_goRing(b.ring);
+  LAM_render();
+}
+async function LAM_onMapClick(mapPoint){
+  if(!LAM.ready)return false;
+  const p=[mapPoint.x,mapPoint.y];if(mapPoint.spatialReference&&mapPoint.spatialReference.wkid!==3857&&mapPoint.spatialReference.wkid!==102100){const m=WebMercatorUtils.geographicToWebMercator(mapPoint);p[0]=m.x;p[1]=m.y}
+  const inside=(pt,ring)=>{let c=false;for(let i=0,j=ring.length-1;i<ring.length;j=i++){const a=ring[i],b=ring[j];if((a[1]>pt[1])!==(b[1]>pt[1])&&pt[0]<(b[0]-a[0])*(pt[1]-a[1])/(b[1]-a[1])+a[0])c=!c}return c};
+  const b=LAM.blocks.find(x=>inside(p,x.origRing));if(!b)return false;
+  LAM_select(b.name,false);return true;
+}
+
+/* ---------- 切割 ---------- */
+function LAM_fullAmount(){
+  const u=LAM_curUser(),b=LAM.sel;if(!u||!u.remaining||!b)return;
+  const r=LAM_rules(b);const total=Math.round(r['評定單價']*LAM_remainArea(b));
+  if(total<=u.remaining){document.querySelector('input[name=lamMode][value=整筆土地]').checked=true}
+  else{document.querySelector('input[name=lamMode][value=價格切割]').checked=true;document.getElementById('lamPrice').value=lamFmt(u.remaining)}
+}
+function LAM_confirmCut(){
+  const u=LAM_curUser(),b=LAM.sel;
+  if(!u||!u.remaining){toast('請先設定權利價值');return}
+  if(!b){toast('請先選擇街廓');return}
+  const mode=(document.querySelector('input[name=lamMode]:checked')||{}).value;
+  if(!mode){toast('請選擇類型');return}
+  const value=mode==='面積切割'?document.getElementById('lamArea').value:mode==='價格切割'?document.getElementById('lamPrice').value:null;
+  LAM_confirm('<b style="color:#d32f2f">試分配僅供參考，分配街廓之單價、分配方向、角度、形狀、面積</b>仍應以後續抽籤配地作業說明會提供資料為準。',()=>LAM_doCut(u,b,mode,value));
+}
+function LAM_doCut(u,b,mode,value){
+  const fr=lamFrame(b.ring);
+  const block=Object.assign({},LAM_rules(b),{ring:b.ring.map(fr.to),arrow:{tail:fr.to(b.arrow.tail),head:fr.to(b.arrow.head)},allocatedCount:b.allocs.length});
+  let res;try{res=AllocationCore.allocate(block,{budgetRemaining:u.remaining},{mode,value})}catch(e){toast(e.message);return}
+  if(!res.ok){LAM_alert(res.error);return}
+  const r=res.result;
+  b.history.push(b.ring);b.ring=r.remainRing.length>=3?r.remainRing.map(fr.from):[];
+  const alloc={block:b.name,userId:u.id,area:r.cutArea,unitPrice:r.unitPrice,price:r.price,ring:r.cutRing.map(fr.from),sides:r.sideLengths.map(s=>({p:fr.from(s.mid),len:s.length}))};
+  b.allocs.push({userId:u.id,area:r.cutArea});u.allocs.push(alloc);u.remaining=r.budgetAfter;
+  LAM_save();LAM_drawResults(alloc);
+  if(b.ring.length)LAM_select(b.name,false);else{LAM.sel=null;showSelectOutline(null);LAM_render()}
+  toast(`已分配 ${b.name}：${lamFmt(r.cutArea,2)} ㎡，權利價值 ${lamFmt(r.price)}`);
+  if(res.warning)setTimeout(()=>toast(res.warning),1900);
+}
+
+/* ---------- 圖面 ---------- */
+function LAM_drawResults(latest){
+  if(!LAM.allocLayer)return;LAM.allocLayer.removeAll();
+  for(const u of LAM.users)for(const a of u.allocs){
+    const c=lamColor(u.id);const geom={type:'polygon',rings:[a.ring],spatialReference:{wkid:3857}};
+    LAM.allocLayer.add(new Graphic({geometry:geom,symbol:{type:'simple-fill',color:[...c,.72],outline:{color:[255,255,255,1],width:1.6}},attributes:{block:a.block,userId:u.id}}));
+    const ct=AllocationCore.centroid(a.ring);
+    LAM.allocLayer.add(new Graphic({geometry:{type:'point',x:ct[0],y:ct[1],spatialReference:{wkid:3857}},symbol:{type:'text',text:`ID ${u.id}\n${lamFmt(a.area,2)}㎡`,color:[20,30,45],haloColor:[255,255,255],haloSize:1.4,font:{size:10,weight:'bold'}}}));
+    if(latest===a||(!latest&&u.id===LAM.cur&&a===u.allocs[u.allocs.length-1]))for(const s of a.sides)LAM.allocLayer.add(new Graphic({geometry:{type:'point',x:s.p[0],y:s.p[1],spatialReference:{wkid:3857}},symbol:{type:'text',text:lamFmt(s.len,2)+'m',color:[255,255,255],haloColor:[0,0,0],haloSize:1,font:{size:10}}}));
+  }
+}
+
+/* ---------- 面板 ---------- */
+function LAM_toggle(force){
+  const p=document.getElementById('lamPanel');LAM.open=force??!LAM.open;p.classList.toggle('open',LAM.open);
+  document.getElementById('railLam').classList.toggle('active',LAM.open);
+  if(LAM.autoArrowLayer)LAM.autoArrowLayer.visible=LAM.open;
+  if(!LAM.open)return;
+  drawer.classList.remove('open');document.getElementById('selectionPanel').classList.remove('open');
+  if(!isQianzhuMode&&typeof focusQianzhu==='function')focusQianzhu();
+  if(!LAM.ready){document.getElementById('lamBody').innerHTML='<div class="map-busy"><i class="mini-spin"></i>正在載入街廓、方向箭頭…</div>';
+    LAM_loadBlocks().then(LAM_render).catch(e=>{console.error(e);document.getElementById('lamBody').innerHTML='<div class="info-note">街廓資料載入失敗：'+esc(e.message)+'</div>'})}
+  else LAM_render();
+}
+function LAM_render(){
+  if(!LAM.open||!LAM.ready)return;
+  const u=LAM_curUser();const b=LAM.sel;const f=(document.getElementById('lamFilter')||{}).value||'';
+  const hasBudget=u&&u.budget;
+  let h=`<div class="lam-user"><div>目前分配人：<b>第 ${u?u.id:(LAM.users.length+1)} 位</b> <span class="lam-hint" title="模擬多位土地所有權人依序選配。每位輸入自己的權利價值，分完按「完成個人分配」換下一位；地圖與紀錄表上的 ID 就是這個序號。">（ⓘ 多位地主依序選配的序號）</span></div>`;
+  if(hasBudget)h+=`<div>您的權利價值：<b>${lamFmt(u.budget)}</b></div><div>剩餘可分配權利價值：<b class="lam-remain">${lamFmt(u.remaining)}</b></div><button class="mini-btn lam-reset" onclick="LAM_resetBudget()">重設權利價值</button>`;
+  else h+=`<div class="lam-row">權利價值 <input id="lamBudget" class="lam-in" value="" placeholder="請輸入您的權利價值（元）" inputmode="numeric" onfocus="this.value=this.value.replace(/,/g,'')" onkeydown="if(event.key==='Enter')LAM_setBudget()"><button class="mini-btn" onclick="LAM_setBudget()">確定</button></div>`;
+  h+=`</div>`;
+  h+=`<div class="lam-row" style="margin-top:6px"><input id="lamFilter" class="lam-in" placeholder="編號過濾，例如 B4" value="${esc(f)}" oninput="LAM_renderTable()"></div><div class="lam-table-wrap" id="lamTable"></div>`;
+  if(b){const r=LAM_rules(b);const ar=LAM_remainArea(b);
+    h+=`<div class="lam-sel"><div class="lam-sel-title">目前選擇區塊為：${esc(b.name)}</div>
+    <div>面積：${lamFmt(ar,2)}（平方公尺）</div><div>評定單價：${lamFmt(r['評定單價'])}（元/平方公尺）</div><div>土地總價：${lamFmt(Math.round(r['評定單價']*ar))}（元）</div>
+    <div>分配方向：${esc(b.arrowSrc)}</div>
+    ${(()=>{const nd=LAM_minNeed(b);const u2=LAM_curUser();const short=u2&&u2.remaining!=null&&u2.remaining<nd.price;return `<div class="lam-need${short?' short':''}">此街廓最少需分配 <b>${lamFmt(nd.area,2)} ㎡</b>（權利價值 <b>${lamFmt(nd.price)}</b> 元）${u2&&u2.remaining!=null?`<br>${short?'⚠ 您目前剩餘的權利價值不足，無法在此街廓分配':`您目前可在此分配約 <b>${lamFmt(Math.min(ar,u2.remaining/r['評定單價']),2)} ㎡</b>`}`:''}</div>`})()}
+    <div class="lam-warn">此為模擬配地設定單價，並非正式評定單價</div>
+    <div class="lam-modes"><fieldset><legend>自行輸入</legend>
+      <label><input type="radio" name="lamMode" value="面積切割">以 <input id="lamArea" class="lam-in sm" onfocus="this.closest('label').querySelector('input').checked=true"> 平方公尺做切割</label>
+      <label><input type="radio" name="lamMode" value="價格切割">以 <input id="lamPrice" class="lam-in sm" onfocus="this.closest('label').querySelector('input').checked=true"> 權利價值做切割</label>
+      <label><input type="radio" name="lamMode" value="整筆土地">選擇整筆土地</label></fieldset>
+      <fieldset><legend>系統分配</legend><button class="mini-btn" ${hasBudget?'':'disabled'} onclick="LAM_fullAmount()">帶入可分配權利價值</button></fieldset></div>
+    <div class="lam-row"><button class="focus-btn" ${hasBudget?'':'disabled'} onclick="LAM_confirmCut()">確認切割分配</button><span class="lam-hint">如有分配餘額，可再選擇街廓做分割</span></div>
+    <details class="lam-rules"><summary>街廓參數（模擬用，可修改）</summary>
+      ${['評定單價','第一宗土地_面積','最小分配土地_面積','最後一宗土地_面積','土地使用管制相關規定_各宗基地最小面寬'].map(k=>`<label>${k.replace('土地使用管制相關規定_各宗基地','')}<input class="lam-in sm" data-k="${k}" value="${r[k]}" onchange="LAM_setRule('${esc(b.name)}',this)"></label>`).join('')}
+    </details></div>`}
+  else h+=`<div class="info-note">在列表按「選擇」或直接點地圖上的街廓。切割會從紅色箭頭尾端的臨路邊開始，沿箭頭方向切出平行於該邊的地塊。</div>`;
+  if(hasBudget)h+=`<div class="lam-row" style="margin-top:8px"><button class="mini-btn" onclick="LAM_finishUser()">完成個人分配</button><span class="lam-hint">完成後可接續下一序號</span></div>`;
+  const rows=LAM.users.flatMap(x=>x.allocs.map(a=>({u:x.id,...a})));
+  h+=`<div class="section-title">分配紀錄表</div><div class="lam-row"><button class="mini-btn" onclick="LAM_export()">匯出 CSV</button><button class="mini-btn" onclick="LAM_print()">列印</button><button class="mini-btn lam-danger" onclick="LAM_clearAll()">全部清除</button></div>
+  <div class="lam-table-wrap"><table class="lam-table"><thead><tr><th>分配人ID</th><th>街廓編號</th><th>土地面積</th><th>評定單價</th><th>權利價值</th></tr></thead><tbody>${rows.length?rows.map(r=>`<tr><td>${r.u}</td><td><a href="javascript:void 0" onclick="LAM_zoomAlloc(${r.u},'${esc(r.block)}')">${esc(r.block)}</a></td><td>${lamFmt(r.area,2)}</td><td>${lamFmt(r.unitPrice)}</td><td>${lamFmt(r.price)}</td></tr>`).join(''):'<tr><td colspan="5" class="lam-empty">尚無分配</td></tr>'}</tbody></table></div>
+  <div class="info-note" style="color:#c62828;font-weight:700">以上項目呈現數據僅作為模擬配地使用</div>`+LAM_buildHtml();
+  document.getElementById('lamBody').innerHTML=h;LAM_renderTable();
+}
+function LAM_renderTable(){
+  const el=document.getElementById('lamTable');if(!el)return;const f=(document.getElementById('lamFilter').value||'').trim().toUpperCase();
+  const list=LAM.blocks.filter(b=>!f||b.name.toUpperCase().includes(f));
+  el.innerHTML=`<table class="lam-table"><thead><tr><th>目標</th><th>街廓編號</th><th>已分配人ID</th><th>已分配面積</th><th>剩餘面積</th></tr></thead><tbody>${list.map(b=>{const ra=LAM_remainArea(b);const ids=[...new Set(b.allocs.map(a=>a.userId))].join(',');const aa=b.allocs.reduce((s,a)=>s+a.area,0);
+    return `<tr class="${LAM.sel===b?'sel':''}"><td>${ra>=10?`<button class="lam-pick" onclick="LAM_select('${esc(b.name)}')">選擇</button>`:'<span class="lam-empty">完</span>'}</td><td>${esc(b.name)}${b.arrowSrc==='CAD 箭頭'?'':' <span title="CAD 無箭頭，'+esc(b.arrowSrc)+'" class="lam-auto">*</span>'}</td><td>${ids}</td><td>${lamFmt(aa,2)}</td><td>${lamFmt(ra,2)}</td></tr>`}).join('')}</tbody></table>`;
+  const s=el.querySelector('tr.sel');if(s)s.scrollIntoView({block:'nearest'});
+}
+function LAM_setRule(name,inp){const b=LAM.byName.get(name);const v=parseFloat(String(inp.value).replace(/,/g,''));b.rules=b.rules||{};if(isNaN(v))delete b.rules[inp.dataset.k];else b.rules[inp.dataset.k]=v;LAM_save();LAM_render()}
+function LAM_zoomAlloc(uid,name){const u=LAM.users.find(x=>x.id===uid);const a=u&&u.allocs.find(x=>x.block===name);if(a)LAM_goRing(a.ring)}
+function LAM_rows(){return LAM.users.flatMap(x=>x.allocs.map(a=>[x.id,a.block,a.area.toFixed(2),a.unitPrice,Math.round(a.price)]))}
+function LAM_export(){
+  const head=['分配人ID','街廓編號','土地面積(㎡)','評定單價(元/㎡)','權利價值(元)'];
+  const csv='﻿'+[head,...LAM_rows()].map(r=>r.map(c=>`"${String(c).replace(/"/g,'""')}"`).join(',')).join('\r\n');
+  const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8'}));a.download='試配地分配紀錄_'+new Date().toISOString().slice(0,10)+'.csv';a.click();setTimeout(()=>URL.revokeObjectURL(a.href),2000);
+}
+function LAM_print(){
+  const w=window.open('','_blank');if(!w){toast('請允許彈出視窗');return}
+  w.document.write(`<html><head><meta charset="utf-8"><title>試配地分配紀錄</title><style>body{font-family:"Microsoft JhengHei",sans-serif;padding:20px}table{border-collapse:collapse;width:100%}td,th{border:1px solid #999;padding:6px;text-align:right}th{background:#eee}<\/style><\/head><body><h3>試配地分配紀錄（僅供模擬參考）</h3><table><tr><th>分配人ID</th><th>街廓編號</th><th>土地面積(㎡)</th><th>評定單價</th><th>權利價值</th></tr>${LAM_rows().map(r=>`<tr>${r.map((c,i)=>`<td>${i>=3?lamFmt(c):esc(c)}</td>`).join('')}</tr>`).join('')}</table><\/body><\/html>`);w.document.close();w.focus();w.print();
+}
+function LAM_clearAll(){LAM_confirm('清除所有序號的分配紀錄，街廓恢復原狀？',()=>{for(const b of LAM.blocks){b.ring=b.origRing;b.history=[];b.allocs=[]}LAM.users=[];LAM.cur=null;LAM.sel=null;LAM_clearBuildings();showSelectOutline(null);LAM_save();LAM_drawResults();LAM_render()})}
+function LAM_minNeed(b){const r=LAM_rules(b);const fr=lamFrame(b.ring);const a=AllocationCore.minCut(b.ring.map(fr.to),fr.to(b.arrow.tail),r['最小分配土地_面積'],r['土地使用管制相關規定_各宗基地最小面寬'],fr.to(b.arrow.head));return {area:a,price:Math.ceil(a*r['評定單價'])}}
+function LAM_alert(html){const m=document.getElementById('lamModal');m.querySelector('.lam-modal-text').innerHTML=html;m.querySelector('.lam-cancel').style.display='none';m.classList.add('open');m.querySelector('.lam-ok').onclick=()=>{m.classList.remove('open');m.querySelector('.lam-cancel').style.display=''}}
+function LAM_confirm(html,ok){document.getElementById('lamModal').querySelector('.lam-cancel').style.display='';
+  const m=document.getElementById('lamModal');m.querySelector('.lam-modal-text').innerHTML=html;m.classList.add('open');
+  m.querySelector('.lam-ok').onclick=()=>{m.classList.remove('open');ok()};m.querySelector('.lam-cancel').onclick=()=>m.classList.remove('open');
+}
+
+
+/* ---------- 建物積木模型（依配地結果 + 土地使用管制 / 退縮參數，模擬用） ---------- */
+// 示範參數：非前竹正式管制值，請依土地使用管制要點修改（面板上可改，會記住）
+// 依「變更臺中市烏日地區都市計畫細部計畫（配合前竹地區區段徵收開發）第二次專案變更」表3 及退縮建築規定
+//  住宅區：建蔽率 60%（住4 為 50%），容積率依細分區；臨 8m 以上道路退縮 5m（其中 3m 無遮簷人行道），角地側院退縮 3m
+//  商業區：建蔽率 80%、容積率 320%；退縮 6m，角地兩側各 6m
+//  宗教專用區：60% / 160%，比照住宅區退縮；乙種工業區：60% / 210%（退縮暫比照住宅區）
+//  前竹細部計畫未訂後院深度、最小面寬、最小基地面積（依臺中市畸零地使用自治條例）
+const LAM_RES_SUB=[{name:'第一之一種住宅區',cov:60,far:120},{name:'第一種住宅區',cov:60,far:165},{name:'第二種住宅區',cov:60,far:180},{name:'第三種住宅區',cov:60,far:200},{name:'第四種住宅區',cov:50,far:280}];
+const LAM_BUILD_DEFAULT=[
+  {match:/商/,   name:'商業區',    cov:80,far:320,setback:6,side:6,rear:0},
+  {match:/住/,   name:'住宅區',    sub:'第三種住宅區',cov:60,far:200,setback:5,side:3,rear:0},
+  {match:/宗教/, name:'宗教專用區',cov:60,far:160,setback:5,side:3,rear:0},
+  {match:/工業/, name:'乙種工業區',cov:60,far:210,setback:5,side:3,rear:0},
+  {match:/.*/,   name:'其他',      cov:60,far:200,setback:5,side:3,rear:0}
+];
+LAM.build={floorH:3.3,maxFloors:30,params:null,hideVision:true,list:[]};
+function LAM_buildParams(){if(!LAM.build.params){try{LAM.build.params=JSON.parse(localStorage.getItem('lam_build_params_v2')||'null')}catch(e){}if(!LAM.build.params||LAM.build.params.length!==LAM_BUILD_DEFAULT.length)LAM.build.params=LAM_BUILD_DEFAULT.map(({match,...p})=>({...p}))}return LAM.build.params}
+function LAM_paramFor(zone){const ps=LAM_buildParams();const i=LAM_BUILD_DEFAULT.findIndex(d=>d.match.test(zone||''));return ps[i<0?ps.length-1:i]}
+function LAM_saveBuildParams(){try{localStorage.setItem('lam_build_params_v2',JSON.stringify(LAM_buildParams()))}catch(e){}}
+function LAM_setBuildParam(i,k,v){const ps=LAM_buildParams();const n=parseFloat(v);if(!isNaN(n))ps[i][k]=n;LAM_saveBuildParams()}
+function LAM_setResSub(i,name){const ps=LAM_buildParams();const s=LAM_RES_SUB.find(x=>x.name===name);if(!s)return;Object.assign(ps[i],{sub:s.name,cov:s.cov,far:s.far});LAM_saveBuildParams();LAM_render()}
+
+function lamSegDist(p,a,b){const abx=b[0]-a[0],aby=b[1]-a[1];const t=Math.max(0,Math.min(1,((p[0]-a[0])*abx+(p[1]-a[1])*aby)/((abx*abx+aby*aby)||1)));return Math.hypot(p[0]-a[0]-abx*t,p[1]-a[1]-aby*t)}
+/**
+ * 計算單一地塊的建物量體
+ *  1. 臨路退縮：地塊邊線若落在原街廓外框上（＝臨道路），往內退 setback 公尺；分割產生的地界線不退縮（連棟）
+ *  2. 建蔽率：退縮後面積若超過 基地面積×建蔽率，以形心等比例縮小
+ *  3. 容積率：樓層數 = floor(基地面積×容積率 ÷ 建築面積)，上限 maxFloors
+ */
+function LAM_massing(block,alloc,param){
+  // 依一般細部計畫土地使用管制（臺中市常見）：
+  //  正面（地塊面寬側臨路）退前院 front m；後面留後院 rear m；
+  //  側面若也臨計畫道路（角地）退 side m；與鄰地相接之地界線不退（連棟）；
+  //  建蔽率不足時再由後方縮減；樓層數 = floor(基地 × 容積率 ÷ 建築面積)
+  const fr=lamFrame(block.origRing);const outer=block.origRing.map(fr.to);const ring=alloc.ring.map(fr.to);
+  const land=AllocationCore.area(ring);const c=AllocationCore.centroid(ring);const notes=[];
+  const edges=AllocationCore.edges(ring).filter(e=>e.length>=0.5);
+  const isRoad=e=>{const mid=[(e.a[0]+e.b[0])/2,(e.a[1]+e.b[1])/2];return AllocationCore.edges(outer).some(o=>lamSegDist(mid,o.a,o.b)<0.05)};
+  const road=edges.filter(isRoad);
+  const at=fr.to(block.arrow.tail),ah=fr.to(block.arrow.head),al=Math.hypot(ah[0]-at[0],ah[1]-at[1])||1,adir=[(ah[0]-at[0])/al,(ah[1]-at[1])/al];
+  const par=e=>Math.abs(((e.b[0]-e.a[0])*adir[0]+(e.b[1]-e.a[1])*adir[1])/e.length);
+  const front=(road.filter(e=>e.length>=6&&par(e)>0.7).sort((x,y)=>y.length-x.length)[0])   // 沿分配方向的臨路邊（街廓切出地塊的面寬側）
+    ||(road.filter(e=>e.length>=6).sort((x,y)=>x.length-y.length)[0])                         // 其次：最短的臨路邊（排除截角）
+    ||(road.slice().sort((x,y)=>y.length-x.length)[0])||edges.slice().sort((x,y)=>y.length-x.length)[0];
+  const d=[(front.b[0]-front.a[0])/front.length,(front.b[1]-front.a[1])/front.length];let n=[-d[1],d[0]];if((c[0]-front.a[0])*n[0]+(c[1]-front.a[1])*n[1]<0)n=[-n[0],-n[1]];
+  const ds=ring.map(p=>(p[0]-front.a[0])*n[0]+(p[1]-front.a[1])*n[1]);const depth=Math.max(...ds);
+  const proj=ring.map(p=>(p[0]-front.a[0])*d[0]+(p[1]-front.a[1])*d[1]);const frontage=Math.max(...proj)-Math.min(...proj);
+  const fSb=road.includes(front)?param.setback:0,rSb=param.rear??3,sSb=param.side??2;
+  const sides=road.filter(e=>e!==front&&Math.abs(((e.b[0]-e.a[0])*d[0]+(e.b[1]-e.a[1])*d[1])/e.length)<0.6); // 與正面約垂直的臨路側邊（角地）
+  const build=(side)=>{let fp=AllocationCore.clipHalfPlane(ring,front.a,n,fSb,false);fp=AllocationCore.clipHalfPlane(fp,front.a,n,depth-rSb,true);
+    for(const e of sides){if(!side)break;const u=[(e.b[0]-e.a[0])/e.length,(e.b[1]-e.a[1])/e.length];let m=[-u[1],u[0]];if((c[0]-e.a[0])*m[0]+(c[1]-e.a[1])*m[1]<0)m=[-m[0],-m[1]];fp=AllocationCore.clipHalfPlane(fp,e.a,m,side,false);if(fp.length<3)return []}
+    return fp};
+  let fp=build(sSb);
+  const widthOf=r=>{if(r.length<3)return 0;const pr=r.map(p=>p[0]*d[0]+p[1]*d[1]);return Math.max(...pr)-Math.min(...pr)};
+  if(sides.length&&widthOf(fp)<4){fp=build(0);notes.push('角地側面退縮後過窄，側面暫不退縮')}
+  if(fp.length<3||AllocationCore.area(fp)<1){fp=ring.slice();notes.push('基地過小無法依規定退縮，以不退縮示意')}
+  if(frontage<(Number(block.rules&&block.rules['土地使用管制相關規定_各宗基地最小面寬'])||7)-0.01)notes.push(`基地面寬 ${frontage.toFixed(1)}m，小於最小面寬`);
+  const maxFp=land*param.cov/100;
+  if(AllocationCore.area(fp)>maxFp){let lo=0,hi=depth;for(let i=0;i<60;i++){const t=(lo+hi)/2;const a=AllocationCore.area(AllocationCore.clipHalfPlane(fp,front.a,n,t,true));if(a>maxFp)hi=t;else lo=t}fp=AllocationCore.clipHalfPlane(fp,front.a,n,lo,true)}
+  const fpArea=AllocationCore.area(fp);
+  if(fp.length<3||fpArea<1)return {ok:false,land,reason:'無可建築面積'};
+  const floors=Math.max(1,Math.min(LAM.build.maxFloors,Math.floor(land*param.far/100/fpArea+1e-9)));
+  return {ok:true,land,footprint:fp.map(fr.from),fpArea,floors,gfa:fpArea*floors,height:floors*LAM.build.floorH,cov:fpArea/land*100,far:fpArea*floors/land*100,roadEdges:road.length,frontage,depth,bWidth:widthOf(fp),axis:{d,n},roadL:road.map(e=>({a:e.a,b:e.b,length:e.length,isFront:e===front})),sbFront:fSb,sbSide:sSb,note:notes.join('；')};
+}
+// 房屋外觀（台灣透天／公寓）：外牆材質隨機（白／米／灰／二丁掛磚）、窗框＋玻璃、正面陽台＋玻璃欄杆、一樓店面、
+// 平屋頂女兒牆＋樓梯間＋水塔
+const LAM_FACADES=[{wall:[240,237,230],base:[196,188,176]},{wall:[228,219,200],base:[170,150,128]},{wall:[214,215,212],base:[150,150,148]},{wall:[184,120,96],base:[150,140,130]},{wall:[232,226,214],base:[120,108,98]}];
+function lamSigned(r){let s=0;for(let i=0;i<r.length;i++){const p=r[i],q=r[(i+1)%r.length];s+=p[0]*q[1]-q[0]*p[1]}return s/2}
+function lamInset(ring,d){const c=AllocationCore.centroid(ring);let fp=ring.slice();for(const e of AllocationCore.edges(ring)){if(e.length<0.05)continue;const dd=[(e.b[0]-e.a[0])/e.length,(e.b[1]-e.a[1])/e.length];let n=[-dd[1],dd[0]];if((c[0]-e.a[0])*n[0]+(c[1]-e.a[1])*n[1]<0)n=[-n[0],-n[1]];fp=AllocationCore.clipHalfPlane(fp,e.a,n,d,false);if(fp.length<3)return null}return fp}
+function lamHash(s){let h=0;for(const ch of String(s))h=(h*31+ch.charCodeAt(0))|0;return Math.abs(h)}
+function lamObj(fr,p,z,prim,w,h,color){const m=fr.from(p);z+=LAM.build.z0||0;return new Graphic({geometry:{type:'point',x:m[0],y:m[1],z,spatialReference:{wkid:3857}},symbol:{type:'point-3d',symbolLayers:[{type:'object',resource:{primitive:prim},width:w,depth:w,height:h,anchor:'bottom',material:{color}}]}})}
+function LAM_houseGraphics(fpLocal,fr,floors,H,col,attrs,axis,seed){
+  const out=[];const F=LAM_FACADES[lamHash(seed)%LAM_FACADES.length];
+  const WALL=F.wall,STONE=F.base,ROOF=[200,198,192],WIN=[70,92,108],FRAME=[248,248,245],SHOP=[58,76,90],RAIL=[190,215,228,.45],SLAB=[226,222,214],EDGE=[120,116,110,.45];
+  const cw=r=>lamSigned(r)>0?r.slice().reverse():r, ccw=r=>lamSigned(r)<0?r.slice().reverse():r;
+  const add=(p,v,k)=>[p[0]+v[0]*k,p[1]+v[1]*k];
+  const box=(rings,z,h,color,edge)=>{out.push(new Graphic({geometry:{type:'polygon',hasZ:true,spatialReference:{wkid:3857},rings:rings.map(r=>r.map(p=>{const m=fr.from(p);return [m[0],m[1],z+(LAM.build.z0||0)]}))},attributes:attrs,
+    symbol:{type:'polygon-3d',symbolLayers:[{type:'extrude',size:h,material:{color},edges:edge?{type:'solid',color:edge,size:.4}:null}]}}))};
+  const fp=cw(fpLocal);const c=AllocationCore.centroid(fpLocal);
+  const facades=AllocationCore.edges(fpLocal).filter(e=>e.length>=1).map(e=>{const u=[(e.b[0]-e.a[0])/e.length,(e.b[1]-e.a[1])/e.length];let o=[u[1],-u[0]];const mid=add(e.a,u,e.length/2);if((mid[0]-c[0])*o[0]+(mid[1]-c[1])*o[1]<0)o=[-o[0],-o[1]];return {...e,u,o,mid}});
+  const front=axis?facades.slice().sort((x,y)=>((x.mid[0]*axis.n[0]+x.mid[1]*axis.n[1])-(y.mid[0]*axis.n[0]+y.mid[1]*axis.n[1])))[0]:null;
+  const rect=(e,s0,s1,o0,o1)=>[add(add(e.a,e.u,s0),e.o,o0),add(add(e.a,e.u,s1),e.o,o0),add(add(e.a,e.u,s1),e.o,o1),add(add(e.a,e.u,s0),e.o,o1)];
+  const windows=(e,z,w,h,sill)=>{const n=Math.max(e.length>=w+0.8?1:0,Math.floor((e.length-0.6)/2.8));if(!n)return;const step=e.length/n;for(let k=0;k<n;k++){const s=step*(k+.5);
+    box([cw(rect(e,s-w/2-0.12,s+w/2+0.12,0,0.05))],z+sill-0.12,h+0.24,FRAME);box([cw(rect(e,s-w/2,s+w/2,0,0.08))],z+sill,h,WIN)}};
+  for(let i=0;i<floors;i++){const z=i*H;
+    box([fp],z,H,i===0?STONE:WALL,EDGE);
+    for(const e of facades){
+      if(i===0&&e===front){box([cw(rect(e,0.5,e.length-0.5,0,0.08))],z+0.15,H-0.75,SHOP);continue}
+      windows(e,z,1.4,1.5,0.9)}
+    if(i>0&&front&&front.length>=2.5){box([cw(rect(front,0.3,front.length-0.3,0,1.1))],z-0.15,0.15,SLAB,EDGE);box([cw(rect(front,0.3,front.length-0.3,1.03,1.1))],z,1.05,RAIL)}}
+  const top=floors*H;box([fp],top,0.2,ROOF);
+  const inner=lamInset(fpLocal,0.22);if(inner)box([fp,ccw(inner)],top,1.1,WALL,EDGE);
+  if(axis){const pd=fpLocal.map(p=>p[0]*axis.d[0]+p[1]*axis.d[1]),pn=fpLocal.map(p=>p[0]*axis.n[0]+p[1]*axis.n[1]);
+    const W=Math.max(...pd)-Math.min(...pd),D=Math.max(...pn)-Math.min(...pn);const sw=Math.min(3.2,W-0.8),sd=Math.min(4.5,D*0.45);
+    if(sw>1.2&&sd>1.5){const cd=(Math.max(...pd)+Math.min(...pd))/2,cn=Math.max(...pn)-0.4-sd/2;
+      const P=(a,b)=>[axis.d[0]*a+axis.n[0]*b,axis.d[1]*a+axis.n[1]*b];
+      const st=cw([P(cd-sw/2,cn-sd/2),P(cd+sw/2,cn-sd/2),P(cd+sw/2,cn+sd/2),P(cd-sw/2,cn+sd/2)]);
+      box([st],top+0.2,2.8,WALL,EDGE);box([st],top+3.0,0.25,col);
+      out.push(lamObj(fr,P(cd,cn),top+3.25,'cylinder',1.3,1.5,[192,198,204]));   // 水塔
+      out.push(lamObj(fr,P(cd,cn),top+4.75,'cylinder',1.35,0.12,[150,156,162]))}}
+  return out;
+}
+// 基地外部空間：依前竹規定退縮空地臨建築線 3m 為無遮簷人行道（鋪面），其餘植栽綠化（草地＋喬木）
+function LAM_siteGraphics(fr,lotLocal,m,col){
+  const out=[];const lot=lamSigned(lotLocal)>0?lotLocal.slice().reverse():lotLocal;const c=AllocationCore.centroid(lotLocal);
+  const flat=(ring,z,color,outline)=>LAM.siteLayer.add(new Graphic({geometry:{type:'polygon',hasZ:true,spatialReference:{wkid:3857},rings:[ring.map(p=>{const q=fr.from(p);return [q[0],q[1],z]})]},symbol:{type:'polygon-3d',symbolLayers:[{type:'fill',material:{color},outline:outline||null}]}}));
+  flat(lot,0.04,[150,186,118,.95],{color:[...col,1],size:2.5});                     // 草地＋分配人顏色邊界
+  for(const e of (m.roadL||[])){if(e.length<2)continue;const u=[(e.b[0]-e.a[0])/e.length,(e.b[1]-e.a[1])/e.length];let n=[-u[1],u[0]];if((c[0]-e.a[0])*n[0]+(c[1]-e.a[1])*n[1]<0)n=[-n[0],-n[1]];
+    const walk=AllocationCore.clipHalfPlane(lotLocal,e.a,n,3,true);if(walk.length>=3)flat(lamSigned(walk)>0?walk.slice().reverse():walk,0.07,[206,200,188,1]);   // 無遮簷人行道 3m
+    const sb=e.isFront?m.sbFront:m.sbSide;if(sb>=4.5&&e.length>=5){const k=Math.max(1,Math.floor(e.length/7));for(let i=0;i<k;i++){const s=e.length*(i+.5)/k;const p=[e.a[0]+u[0]*s+n[0]*4,e.a[1]+u[1]*s+n[1]*4];
+      out.push(lamObj(fr,p,0,'cylinder',0.35,2.4,[112,86,62]));out.push(lamObj(fr,p,2.0,'sphere',3.0,3.4,[88+i*7%20,142,76]))}}}   // 行道樹
+  return out;
+}
+async function LAM_generateBuildings(){
+  if(LAM.build.prev==null)LAM.build.prev={mode:activeView()===view3d?'3d':'2d',vision:sceneModel?sceneModel.visible:false};
+  const allocs=LAM.users.flatMap(u=>u.allocs.map(a=>({u,a})));
+  if(!allocs.length){toast('尚無配地結果，請先完成切割分配');return}
+  const btn=document.getElementById('lamBuildBtn');if(btn){btn.disabled=true;btn.textContent='生成中…'}
+  LAM.buildLayer.removeAll();LAM.siteLayer.removeAll();LAM.build.list=[];LAM.sel=null;showSelectOutline(null);
+  // 前竹 CAD 配地面／分區面等圖層的高程皆為 0m，而 Esri 地形在此約 35～38m；顯示建物時暫時關閉地形高程（平地），
+  // 讓底圖、CAD 圖層與建物都對齊在 0m，清除模型後再恢復
+  if(map.ground&&LAM.build.elevWas==null){LAM.build.elevWas=map.ground.layers.toArray().map(l=>[l,l.visible]);map.ground.layers.forEach(l=>{l.visible=false})}
+  for(const {u,a} of allocs){
+    const b=LAM.byName.get(a.block);let zone='';
+    try{const ct=AllocationCore.centroid(a.ring);const z=await queryUrbanPoint({type:'point',x:ct[0],y:ct[1],spatialReference:{wkid:3857}});zone=z?z.zone:''}catch(e){}
+    const p=LAM_paramFor(zone);const m=LAM_massing(b,a,p);
+    LAM.build.list.push({userId:u.id,block:a.block,zone:zone||'未查到',param:p,...m});
+    if(!m.ok)continue;
+    const col=lamColor(u.id),H=LAM.build.floorH;const fr=lamFrame(b.origRing);
+    LAM.build.z0=0;   // 與 CAD 圖層同一基準（0m）
+    LAM.buildLayer.addMany(LAM_siteGraphics(fr,a.ring.map(fr.to),m,col));
+    LAM.buildLayer.addMany(LAM_houseGraphics(m.footprint.map(fr.to),fr,m.floors,H,col,{block:a.block,userId:u.id},m.axis,a.block+'|'+u.id+'|'+a.area));
+    // 基地範圍改由 LAM_siteGraphics 繪製（草地、人行道、行道樹）
+  }
+  if(btn){btn.disabled=false;btn.textContent='生成建物模型'}
+  LAM.buildLayer.visible=true;LAM_render();
+  if(activeView()!==view3d)await switchMode('3d');
+  {const ov=document.getElementById('sceneOverlayToggle');if(ov){if(LAM.build.overlayWas==null)LAM.build.overlayWas=ov.checked;ov.checked=true;setSceneOverlay(true)}}
+  if(LAM.build.hideVision){if(sceneModel)sceneModel.visible=false;if(map.ground&&LAM.build.groundOpacity==null){LAM.build.groundOpacity=map.ground.opacity;map.ground.opacity=1}}
+  const pts=allocs.flatMap(x=>x.a.ring);const xs=pts.map(p=>p[0]),ys=pts.map(p=>p[1]);
+  const cx=(Math.min(...xs)+Math.max(...xs))/2,cy=(Math.min(...ys)+Math.max(...ys))/2,span=Math.max(Math.max(...xs)-Math.min(...xs),Math.max(...ys)-Math.min(...ys),80);
+  await new Promise(r=>setTimeout(r,300));view3d.goTo({target:new Graphic({geometry:{type:'point',x:cx,y:cy,z:0,spatialReference:{wkid:3857}}}).geometry,scale:Math.max(700,span*8),tilt:62,heading:20},{duration:900}).catch(e=>console.warn(e));
+  setCesiumStatus('建物積木模型（模擬）｜依前竹細部計畫建蔽率、容積率與退縮規定生成；地形暫以平地顯示，與配地 CAD 圖層對齊');
+  const ok=LAM.build.list.filter(x=>x.ok).length,warn=LAM.build.list.filter(x=>x.note).length;toast(ok?`已生成 ${ok} 棟建物積木模型（模擬）${warn?`，其中 ${warn} 棟退縮已放寬，見下方表格`:''}`:'沒有可生成的建物，請看下方表格原因');
+}
+function LAM_clearBuildings(){
+  // 清除模型＝回到「生成模型之前」的畫面：原本在 2D 就回 2D；原本在 3D 就還原願景模型、地表與疊加設定
+  LAM.buildLayer.removeAll();LAM.siteLayer.removeAll();LAM.build.list=[];
+  if(LAM.build.elevWas){for(const [l,v] of LAM.build.elevWas)l.visible=v;LAM.build.elevWas=null}
+  const ov=document.getElementById('sceneOverlayToggle');if(ov&&LAM.build.overlayWas!=null){ov.checked=LAM.build.overlayWas;LAM.build.overlayWas=null}
+  if(LAM.build.groundOpacity!=null&&map.ground){map.ground.opacity=LAM.build.groundOpacity;LAM.build.groundOpacity=null}
+  const prev=LAM.build.prev;LAM.build.prev=null;
+  if(prev&&prev.mode==='2d'){if(activeView()===view3d)switchMode('2d')}
+  else if(activeView()===view3d){if(ov)setSceneOverlay(ov.checked);if(sceneModel)sceneModel.visible=prev?prev.vision:true}
+  LAM_render();toast('已清除建物模型');
+}
+function LAM_buildHtml(){
+  const ps=LAM_buildParams();const has=LAM.users.some(u=>u.allocs.length);
+  let h=`<div class="section-title">建物積木模型（模擬）</div><div class="lam-build">
+  <table class="lam-table"><thead><tr><th>分區</th><th>建蔽率%</th><th>容積率%</th><th>臨路退縮m</th><th>角地側面m</th><th>後院m</th></tr></thead><tbody>${ps.map((p,i)=>`<tr><td>${p.sub?`<select class="lam-in xs" style="width:118px" onchange="LAM_setResSub(${i},this.value)">${LAM_RES_SUB.map(x=>`<option ${x.name===p.sub?'selected':''}>${x.name}</option>`).join('')}</select>`:esc(p.name)}</td>${['cov','far','setback','side','rear'].map(k=>`<td><input class="lam-in xs" value="${p[k]}" onchange="LAM_setBuildParam(${i},'${k}',this.value)"></td>`).join('')}</tr>`).join('')}</tbody></table>
+  <div class="lam-row" style="margin-top:4px">樓層高度 <input class="lam-in xs" value="${LAM.build.floorH}" onchange="LAM.build.floorH=parseFloat(this.value)||3.3"> m　<label><input type="checkbox" ${LAM.build.hideVision?'checked':''} onchange="LAM.build.hideVision=this.checked"> 隱藏願景模型</label></div>
+  <div class="lam-row"><button id="lamBuildBtn" class="focus-btn" ${has?'':'disabled'} onclick="LAM_generateBuildings()">生成建物模型</button><button class="mini-btn" onclick="LAM_clearBuildings()">清除模型</button><button class="mini-btn" onclick="switchMode('2d')">回 2D</button></div>`;
+  if(LAM.build.list.length)h+=`<div class="lam-table-wrap"><table class="lam-table"><thead><tr><th>ID</th><th>街廓</th><th>分區</th><th>基地㎡</th><th>建築㎡</th><th>樓層</th><th>樓高m</th><th>樓地板㎡</th></tr></thead><tbody>${LAM.build.list.map(x=>x.ok?`<tr><td>${x.userId}</td><td>${esc(x.block)}</td><td>${esc(x.zone)}</td><td>${lamFmt(x.land,1)}</td><td>${lamFmt(x.fpArea,1)}</td><td>${x.floors}F</td><td>${lamFmt(x.height,1)}</td><td>${lamFmt(x.gfa,0)}</td></tr>${x.note?`<tr><td></td><td colspan="7" style="color:#b45309">↑ ${esc(x.note)}</td></tr>`:''}`:`<tr><td>${x.userId}</td><td>${esc(x.block)}</td><td colspan="6" class="lam-warn">${esc(x.reason)}</td></tr>`).join('')}</tbody></table></div>`;
+  h+=`<div class="info-note">建蔽率、容積率、退縮依《變更臺中市烏日地區都市計畫細部計畫（配合前竹地區區段徵收開發）第二次專案變更》：住宅區臨路退縮 5m、角地側院 3m，商業區退縮 6m（角地兩側），退縮空地臨建築線 3m 為無遮簷人行道、其餘植栽。系統圖資只標示「住宅區」，請選擇細分區。前竹細計未訂後院；配地最小面寬 7m／最小面積 140㎡ 為參考臺中市其他細部計畫之暫定值（前竹依臺中市畸零地使用自治條例）。<b style="color:#c62828">參數為示範值，非前竹正式土地使用管制。</b></div></div>`;
+  return h;
+}
+
+/* ---------- 保存（瀏覽器 localStorage） ---------- */
+function LAM_save(){try{localStorage.setItem(LAM_CFG.storageKey,JSON.stringify({users:LAM.users,cur:LAM.cur,blocks:LAM.blocks.filter(b=>b.allocs.length||Object.keys(b.rules||{}).length).map(b=>({name:b.name,ring:b.ring,history:b.history,allocs:b.allocs,rules:b.rules}))}))}catch(e){}}
+function LAM_restore(){try{const s=JSON.parse(localStorage.getItem(LAM_CFG.storageKey)||'null');if(!s)return;LAM.users=s.users||[];LAM.cur=s.cur;for(const x of s.blocks||[]){const b=LAM.byName.get(x.name);if(b)Object.assign(b,{ring:x.ring,history:x.history||[],allocs:x.allocs||[],rules:x.rules||{}})}LAM_drawResults()}catch(e){console.warn('試配地紀錄讀取失敗',e)}}
+</script>
+
 </body>
 </html>
