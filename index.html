@@ -108,6 +108,21 @@ body{font-size:15px}
 .lam-in{border:1px solid #cfdceb;border-radius:8px;padding:5px 8px;font-size:12px;min-width:0;flex:1}
 .lam-need{margin:6px 0;padding:6px 8px;border-radius:8px;background:#eef6ff;border:1px solid #cfe0f1}
 .lam-need.short{background:#fdecea;border-color:#f5a3a3;color:#b71c1c}
+.lam-ai-btns{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.lam-ai-btns button{border:1px solid #cfe0f1;background:#fff;color:#1c6ec9;border-radius:14px;padding:4px 10px;font-size:12px;cursor:pointer}
+.lam-ai-btns button:hover{background:#eef6ff}
+.qbtn.qbtn-lam{background:#fff4ec;border-color:#ffd2b5;color:#c2410c}
+.quick .qgrid{flex-wrap:nowrap;overflow-x:auto;overflow-y:hidden;padding-bottom:4px;scrollbar-width:thin}
+.quick .qbtn{flex:none;white-space:nowrap}
+.quick.expanded .qgrid{flex-wrap:wrap;max-height:150px;overflow-y:auto}
+.quick-title{display:flex;justify-content:space-between;cursor:pointer;user-select:none}
+.quick-title .qt-more,.quick-title .qt-less{color:#1c6ec9;font-weight:700}
+.quick .qt-less,.quick.expanded .qt-more{display:none}
+.quick.expanded .qt-less{display:inline}
+.lam-ai-item{display:flex;align-items:center;justify-content:space-between;gap:6px;padding:2px 0}
+.lam-ai-item b{white-space:nowrap}
+.lam-loc{flex:none;border:1px solid #cfe0f1;background:#fff;color:#1c6ec9;border-radius:12px;padding:1px 8px;font-size:11px;cursor:pointer;margin-left:4px}
+.lam-loc:hover{background:#eef6ff}
 .lam-in.xs{width:54px;flex:none;padding:2px 4px}
 .lam-build .lam-table td{padding:3px}
 .lam-in.sm{width:96px;flex:none;padding:3px 6px}
@@ -227,7 +242,7 @@ body{font-size:15px}
   <section class="ai-panel" id="aiPanel">
     <div class="ai-head"><div class="ai-avatar"><svg class="aimark" viewBox="0 0 40 40" aria-hidden="true"><rect x="5" y="7" width="30" height="26" rx="10" fill="none" stroke="currentColor" stroke-width="2.4"/><path d="M20 3v4" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/><circle cx="20" cy="3" r="2" fill="currentColor"/><circle cx="15" cy="18" r="2.2" fill="currentColor"/><circle cx="25" cy="18" r="2.2" fill="currentColor"/><path d="M15 25c3.2 2.6 6.8 2.6 10 0" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/><path d="M31 10l4-4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M33.5 6H36v2.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div><b>智選地 AI 助理</b><span class="online">● ONLINE</span><small>配地選址・地籍・門牌・地圖操作</small></div><button id="aiClose" class="ai-close">×</button></div>
     <div class="chat" id="chat"></div>
-    <div class="quick"><div class="quick-title">快速查詢</div><div class="qgrid"><button class="qbtn">查這裡的地籍資料</button><button class="qbtn">查看目前配地資訊</button><button class="qbtn">定位前竹地區</button><button class="qbtn">如何用門牌查地號？</button><button class="qbtn">前竹有哪些使用分區？</button><button class="qbtn">這裡是什麼分區？</button><button class="qbtn">分區配色圖例</button><button class="qbtn">開啟日照陰影</button><button class="qbtn">比較這兩塊地</button><button class="qbtn">使用說明</button></div></div>
+    <div class="quick" id="aiQuick"><div class="quick-title" onclick="this.parentNode.classList.toggle('expanded')"><span>快速查詢</span><span class="qt-more">展開全部 ▾</span><span class="qt-less">收合 ▴</span></div><div class="qgrid"><button class="qbtn qbtn-lam">怎麼用說的試配地？</button><button class="qbtn qbtn-lam">我有1億權利價值，在A2-1切300平方公尺</button><button class="qbtn qbtn-lam">我的配地結果</button><button class="qbtn qbtn-lam">全部重來（從第1位開始）</button><button class="qbtn">查這裡的地籍資料</button><button class="qbtn">查看目前配地資訊</button><button class="qbtn">定位前竹地區</button><button class="qbtn">如何用門牌查地號？</button><button class="qbtn">前竹有哪些使用分區？</button><button class="qbtn">這裡是什麼分區？</button><button class="qbtn">分區配色圖例</button><button class="qbtn">開啟日照陰影</button><button class="qbtn">比較這兩塊地</button><button class="qbtn">使用說明</button></div></div>
     <div class="inputbar"><input id="ask" placeholder="輸入地址、道路、地標，或詢問選地資訊…"><button id="send">➤</button></div>
     <div class="disclaimer">AI 查詢結果僅供輔助判讀，正式資料以權責機關發布為準。</div>
   </section>
@@ -283,7 +298,7 @@ function toast(t){const el=document.getElementById('toast');el.textContent=t;el.
 function activeView(){if(isCesiumMode)return view2d;return document.getElementById('map3d').classList.contains('hidden')?view2d:view3d}
 function addMsg(text,who='bot',html=''){const d=document.createElement('div');d.className='msg '+(who==='user'?'user':'botmsg');if(html)d.innerHTML=html;else d.textContent=text;chat.appendChild(d);chat.scrollTop=chat.scrollHeight;return d}
 
-function aiWelcomeHtml(){return `<b>您好！我是「智選地 AI 助理」</b><br>目前可協助查詢 <b>烏日前竹地區</b> 的地籍、配地規劃、門牌與108 年都市計畫分區資訊，並可直接操作地圖。<br><br><b>1. 土地與地籍查詢</b><br>・點選宗地查看地號、地籍屬性與位置。<br><span style="color:#6f8296">例：「查這裡的地籍資料」、「這塊土地是哪個地號？」</span><br><br><b>2. 配地規劃查詢</b><br>・查看配地規劃面、分割／箭頭線與 CAD 輔助點位。<br><span style="color:#6f8296">例：「查看目前配地資訊」、「把配地規劃線關掉」</span><br><br><b>3. 108 年都市計畫分區查詢</b><br>・查詢位置的分區名稱、分類配色與資料來源；新服務未提供建蔽率、容積率。<br><span style="color:#6f8296">例：「前竹有哪些使用分區？」、「這裡是什麼分區？」</span><br><br><b>4. 門牌與位置搜尋</b><br>・輸入道路或門牌關鍵字協助定位。<br><span style="color:#6f8296">例：「台中市烏日區站區二路8號」、「台中高鐵站」</span><br><br><b>5. 圖台操作</b><br>・定位前竹、開關圖層、切換 2D／3D、查看願景圖，也可把兩塊地加入比較。<br><span style="color:#6f8296">例：「定位前竹地區」、「開啟地籍圖」、「切換 3D」</span><br><br><span style="color:#6f8296">已介接都市計畫分區面與文字。點選地圖後可詢問分區、配色及來源；資料為 108 年 CAD 成果，未包含現行建蔽率／容積率。3D 模式可檢視模型與日照陰影。</span>`}
+function aiWelcomeHtml(){return `<b>您好！我是「智選地 AI 助理」</b><br>目前可協助查詢 <b>烏日前竹地區</b> 的地籍、配地規劃、門牌與108 年都市計畫分區資訊，並可直接操作地圖。<br><br><b>1. 土地與地籍查詢</b><br>・點選宗地查看地號、地籍屬性與位置。<br><span style="color:#6f8296">例：「查這裡的地籍資料」、「這塊土地是哪個地號？」</span><br><br><b>2. 配地規劃查詢</b><br>・查看配地規劃面、分割／箭頭線與 CAD 輔助點位。<br><span style="color:#6f8296">例：「查看目前配地資訊」、「把配地規劃線關掉」</span><br><br><b>3. 108 年都市計畫分區查詢</b><br>・查詢位置的分區名稱、分類配色與資料來源；新服務未提供建蔽率、容積率。<br><span style="color:#6f8296">例：「前竹有哪些使用分區？」、「這裡是什麼分區？」</span><br><br><b>4. 門牌與位置搜尋</b><br>・輸入道路或門牌關鍵字協助定位。<br><span style="color:#6f8296">例：「台中市烏日區站區二路8號」、「台中高鐵站」</span><br><br><b>5. AI 試配地＋建物模型</b><br>・告訴我權利價值與切割方式，我會沿紅色分配方向線完成配地，並依前竹土地使用管制與退縮生成建物模型。<br><span style="color:#6f8296">例：「我有 1 億權利價值，在 A2-1 切 300 平方公尺」、「權值 8000 萬，B1-3 整筆」</span><br><br><b>6. 圖台操作</b><br>・定位前竹、開關圖層、切換 2D／3D、查看願景圖，也可把兩塊地加入比較。<br><span style="color:#6f8296">例：「定位前竹地區」、「開啟地籍圖」、「切換 3D」</span><br><br><span style="color:#6f8296">已介接都市計畫分區面與文字。點選地圖後可詢問分區、配色及來源；資料為 108 年 CAD 成果，未包含現行建蔽率／容積率。3D 模式可檢視模型與日照陰影。</span>`}
 function currentSelectionSummary(){
   const ca=lastCadGraphic?.attributes||{}, pa=lastLandGraphic?.attributes||{};
   const rows=[];
@@ -810,7 +825,7 @@ async function handleMapClick(view,e){
   // 前竹範圍內：以「配地街廓」為點選主角
   let block=null;if(isQianzhuMode){try{block=await blockAtPoint(e.mapPoint)}catch(err){console.warn('街廓查詢失敗',err)}if(token!==selectionToken)return}
   if(block){
-    lastCadGraphic=block.graphic;currentPolyOid=String(block.graphic.attributes?.OBJECTID??'');lastBlockName=block.name||null;
+    lastCadGraphic=block.graphic;currentPolyOid=String(block.graphic.attributes?.OBJECTID??'');lastBlockName=block.name||null;if(window.LAM&&LAM.ai&&block.name)LAM.ai.picked=block.name;
     showSelectOutline(block.graphic.geometry);
     document.getElementById('coordText').textContent=`${block.name?'街廓 '+block.name:'配地街廓'}${lastZoneInfo?'・'+lastZoneInfo.zone:''}`;
     showBlockInfo(block,e.mapPoint,token);
@@ -846,9 +861,13 @@ function chatLocationIntent(raw){
 }
 
 async function askAI(t){
-  t=(t||'').trim();if(!t)return;openAI();addMsg(t,'user');document.getElementById('ask').value='';const s=t.toLowerCase();
+  t=(t||'').trim();if(!t)return;if(t==='__LAM_CONTINUE__'){openAI();addMsg('繼續配地','user');LAM_aiContinue();return}openAI();addMsg(t,'user');document.getElementById('ask').value='';const s=t.toLowerCase();
+  try{if(window.LAM&&typeof LAM_aiHandle==='function'&&await LAM_aiHandle(t))return}catch(e){console.error(e);addMsg('試配地處理發生錯誤：'+e.message);return}
   if(/如何|怎麼|怎樣/.test(t)&&/門牌|地址|地號|定位|道路|地標/.test(t)){addMsg('可直接在這裡輸入地址、道路或地標，例如「台中市烏日區站區二路8號」、「站區二路」、「台中高鐵站」，也可輸入「幫我定位台中高鐵站」。找到候選後可按「定位」；若要查地號，再點選地圖上的宗地。');return}
-  const locationIntent=chatLocationIntent(t);if(locationIntent){if(locationIntent.query)await searchAddress(locationIntent.query,{echo:false});else addMsg('請輸入要定位的地址、道路或地標名稱。');return}
+  const locationIntent=chatLocationIntent(t);
+  if(locationIntent&&locationIntent.query&&typeof LAM_aiActive==='function'&&LAM_aiActive()&&!/^(?:請\s*|幫我\s*|請幫我\s*)?(?:搜尋|搜索|查詢|查找|找一下|找|查|定位到|定位|前往|帶我去|帶我到|我要去)/.test(t)&&!/(在哪裡|在哪|的位置)[?？]?$/.test(t)){
+    const q=locationIntent.query;addMsg('', 'bot', `您目前正在<b>試配地</b>。「${esc(q)}」看起來不是配地指令，要幫您<b>搜尋並定位</b>到這個地點嗎？`+lamAiBtns([[`是，搜尋「${q}」`,'搜尋'+q],['不是，繼續配地','__LAM_CONTINUE__']]));return}
+  if(locationIntent){if(locationIntent.query)await searchAddress(locationIntent.query,{echo:false});else addMsg('請輸入要定位的地址、道路或地標名稱。');return}
   if(await answerUrbanQuestion(t))return;
   if(/使用說明|可以做什麼|功能|怎麼用/.test(s)){addMsg('', 'bot', aiWelcomeHtml());return}
   if(/政府/.test(s)&&/配地|選地|重劃/.test(s)&&/提供|服務|查詢|確認/.test(s)){addMsg('', 'bot', `<b>有。</b>政府在市地重劃或區段徵收案件中，會依辦理階段提供土地分配結果查詢、閱覽與公告服務。<br><br>本平台目前可先協助你做「地圖定位＋地籍查詢＋配地規劃圖層判讀＋門牌搜尋」。正式分配結果仍以主管機關公告、分配圖及清冊為準。`);return}
@@ -1003,6 +1022,7 @@ document.getElementById('searchBtn').onclick=()=>searchAddress(document.getEleme
 chat.addEventListener('click',e=>{const b=e.target.closest('.candidate-btn');if(!b)return;const i=Number(b.dataset.candidateIndex);if(Number.isInteger(i))locateCandidate(i)});
 document.getElementById('selectionClose').onclick=closeSelection;document.getElementById('aiFab').onclick=openAI;document.getElementById('aiClose').onclick=closeAI;document.getElementById('heroAi').onclick=openAI;
 document.getElementById('send').onclick=()=>askAI(document.getElementById('ask').value);document.getElementById('ask').onkeydown=e=>{if(e.key==='Enter')askAI(e.target.value)};document.querySelectorAll('.qbtn').forEach(b=>b.onclick=()=>askAI(b.textContent));
+{const q=document.getElementById('aiQuick'),g=q&&q.querySelector('.qgrid');if(g)g.addEventListener('wheel',e=>{if(!q.classList.contains('expanded')&&Math.abs(e.deltaY)>Math.abs(e.deltaX)){g.scrollLeft+=e.deltaY;e.preventDefault()}},{passive:false})}
 ['groundToggle','sceneOverlayToggle','modelHeight'].forEach(id=>document.getElementById(id).addEventListener('input',updateModelPreview));
 document.getElementById('resetModelHeight').onclick=()=>{document.getElementById('modelHeight').value=0;updateModelPreview()};
 window.addEventListener('error',e=>{const box=document.getElementById('loadErr');if(box&&document.getElementById('loading').style.display!=='none')box.textContent='JavaScript 錯誤：'+e.message});
@@ -1324,7 +1344,12 @@ function lamFrame(ring){const c=AllocationCore.centroid(ring);const phi=2*Math.a
 function lamFmt(n,d=0){return Number(n||0).toLocaleString('zh-TW',{maximumFractionDigits:d,minimumFractionDigits:d})}
 function lamColor(uid){return LAM_CFG.colors[(uid-1)%LAM_CFG.colors.length]}
 
+function LAM_wrapSwitchMode(){if(window.__lamSwitchWrapped||typeof switchMode!=='function')return;window.__lamSwitchWrapped=true;const orig=switchMode;
+  switchMode=async function(mode){if(mode==='3d'&&!LAM.build.generating&&LAM.ready&&LAM.users.some(u=>u.allocs.length)&&!(LAM.buildLayer&&LAM.buildLayer.graphics.length)){return LAM_generateBuildings()}
+    if(mode==='2d'&&LAM.buildLayer&&LAM.buildLayer.graphics.length&&!LAM.build.generating){LAM.build.prev=null;LAM_clearBuildings();if(activeView()!==view3d)return}
+    return orig.apply(this,arguments)}}
 function LAM_setup(FeatureLayer,GraphicsLayer){
+  LAM_wrapSwitchMode();
   // 1) 紅色方向箭頭：分配方向 從「配地規劃線」獨立出來，比照參考網站以紅色顯示
   line.definitionExpression="layer <> '分配方向'";
   LAM.arrowLayer=new FeatureLayer({url:SERVICE+'/'+LYR.line,title:'配地分配方向（紅色箭頭）',definitionExpression:"layer = '分配方向'",outFields:['objectid','layer'],popupEnabled:false,visible:line.visible,minScale:45000,
@@ -1420,6 +1445,7 @@ async function LAM_onMapClick(mapPoint){
   const p=[mapPoint.x,mapPoint.y];if(mapPoint.spatialReference&&mapPoint.spatialReference.wkid!==3857&&mapPoint.spatialReference.wkid!==102100){const m=WebMercatorUtils.geographicToWebMercator(mapPoint);p[0]=m.x;p[1]=m.y}
   const inside=(pt,ring)=>{let c=false;for(let i=0,j=ring.length-1;i<ring.length;j=i++){const a=ring[i],b=ring[j];if((a[1]>pt[1])!==(b[1]>pt[1])&&pt[0]<(b[0]-a[0])*(pt[1]-a[1])/(b[1]-a[1])+a[0])c=!c}return c};
   const b=LAM.blocks.find(x=>inside(p,x.origRing));if(!b)return false;
+  if(LAM.ai)LAM.ai.picked=b.name;
   LAM_select(b.name,false);return true;
 }
 
@@ -1439,19 +1465,19 @@ function LAM_confirmCut(){
   const value=mode==='面積切割'?document.getElementById('lamArea').value:mode==='價格切割'?document.getElementById('lamPrice').value:null;
   LAM_confirm('<b style="color:#d32f2f">試分配僅供參考，分配街廓之單價、分配方向、角度、形狀、面積</b>仍應以後續抽籤配地作業說明會提供資料為準。',()=>LAM_doCut(u,b,mode,value));
 }
-function LAM_doCut(u,b,mode,value){
+function LAM_doCut(u,b,mode,value,silent){
   const fr=lamFrame(b.ring);
   const block=Object.assign({},LAM_rules(b),{ring:b.ring.map(fr.to),arrow:{tail:fr.to(b.arrow.tail),head:fr.to(b.arrow.head)},allocatedCount:b.allocs.length});
-  let res;try{res=AllocationCore.allocate(block,{budgetRemaining:u.remaining},{mode,value})}catch(e){toast(e.message);return}
-  if(!res.ok){LAM_alert(res.error);return}
+  let res;try{res=AllocationCore.allocate(block,{budgetRemaining:u.remaining},{mode,value})}catch(e){if(!silent)toast(e.message);return {ok:false,error:e.message}}
+  if(!res.ok){if(!silent)LAM_alert(res.error);return {ok:false,error:res.error}}
   const r=res.result;
   b.history.push(b.ring);b.ring=r.remainRing.length>=3?r.remainRing.map(fr.from):[];
   const alloc={block:b.name,userId:u.id,area:r.cutArea,unitPrice:r.unitPrice,price:r.price,ring:r.cutRing.map(fr.from),sides:r.sideLengths.map(s=>({p:fr.from(s.mid),len:s.length}))};
   b.allocs.push({userId:u.id,area:r.cutArea});u.allocs.push(alloc);u.remaining=r.budgetAfter;
   LAM_save();LAM_drawResults(alloc);
   if(b.ring.length)LAM_select(b.name,false);else{LAM.sel=null;showSelectOutline(null);LAM_render()}
-  toast(`已分配 ${b.name}：${lamFmt(r.cutArea,2)} ㎡，權利價值 ${lamFmt(r.price)}`);
-  if(res.warning)setTimeout(()=>toast(res.warning),1900);
+  if(!silent){toast(`已分配 ${b.name}：${lamFmt(r.cutArea,2)} ㎡，權利價值 ${lamFmt(r.price)}`);if(res.warning)setTimeout(()=>toast(res.warning),1900)}
+  return {ok:true,alloc,warning:res.warning};
 }
 
 /* ---------- 圖面 ---------- */
@@ -1529,7 +1555,8 @@ function LAM_print(){
   const w=window.open('','_blank');if(!w){toast('請允許彈出視窗');return}
   w.document.write(`<html><head><meta charset="utf-8"><title>試配地分配紀錄</title><style>body{font-family:"Microsoft JhengHei",sans-serif;padding:20px}table{border-collapse:collapse;width:100%}td,th{border:1px solid #999;padding:6px;text-align:right}th{background:#eee}<\/style><\/head><body><h3>試配地分配紀錄（僅供模擬參考）</h3><table><tr><th>分配人ID</th><th>街廓編號</th><th>土地面積(㎡)</th><th>評定單價</th><th>權利價值</th></tr>${LAM_rows().map(r=>`<tr>${r.map((c,i)=>`<td>${i>=3?lamFmt(c):esc(c)}</td>`).join('')}</tr>`).join('')}</table><\/body><\/html>`);w.document.close();w.focus();w.print();
 }
-function LAM_clearAll(){LAM_confirm('清除所有序號的分配紀錄，街廓恢復原狀？',()=>{for(const b of LAM.blocks){b.ring=b.origRing;b.history=[];b.allocs=[]}LAM.users=[];LAM.cur=null;LAM.sel=null;LAM_clearBuildings();showSelectOutline(null);LAM_save();LAM_drawResults();LAM_render()})}
+function LAM_clearAllNow(){for(const b of LAM.blocks){b.ring=b.origRing;b.history=[];b.allocs=[]}LAM.users=[];LAM.cur=null;LAM.sel=null;if(LAM.ai)Object.assign(LAM.ai,{budget:null,block:null,mode:null,value:null,awaitReset:false});if(LAM.buildLayer&&LAM.buildLayer.graphics.length)LAM_clearBuildings();showSelectOutline(null);LAM_save();LAM_drawResults();LAM_render()}
+function LAM_clearAll(){LAM_confirm('清除所有序號的分配紀錄，街廓恢復原狀？',LAM_clearAllNow)}
 function LAM_minNeed(b){const r=LAM_rules(b);const fr=lamFrame(b.ring);const a=AllocationCore.minCut(b.ring.map(fr.to),fr.to(b.arrow.tail),r['最小分配土地_面積'],r['土地使用管制相關規定_各宗基地最小面寬'],fr.to(b.arrow.head));return {area:a,price:Math.ceil(a*r['評定單價'])}}
 function LAM_alert(html){const m=document.getElementById('lamModal');m.querySelector('.lam-modal-text').innerHTML=html;m.querySelector('.lam-cancel').style.display='none';m.classList.add('open');m.querySelector('.lam-ok').onclick=()=>{m.classList.remove('open');m.querySelector('.lam-cancel').style.display=''}}
 function LAM_confirm(html,ok){document.getElementById('lamModal').querySelector('.lam-cancel').style.display='';
@@ -1627,7 +1654,7 @@ function LAM_houseGraphics(fpLocal,fr,floors,H,col,attrs,axis,seed){
     for(const e of facades){
       if(i===0&&e===front){box([cw(rect(e,0.5,e.length-0.5,0,0.08))],z+0.15,H-0.75,SHOP);continue}
       windows(e,z,1.4,1.5,0.9)}
-    if(i>0&&front&&front.length>=2.5){box([cw(rect(front,0.3,front.length-0.3,0,1.1))],z-0.15,0.15,SLAB,EDGE);box([cw(rect(front,0.3,front.length-0.3,1.03,1.1))],z,1.05,RAIL)}}
+    if(i>0&&front&&front.length>=2.5){const bd=1.0;box([cw(rect(front,0.3,front.length-0.3,0,bd))],z-0.15,0.15,SLAB,EDGE);box([cw(rect(front,0.3,front.length-0.3,bd-0.07,bd))],z,1.05,RAIL)}}
   const top=floors*H;box([fp],top,0.2,ROOF);
   const inner=lamInset(fpLocal,0.22);if(inner)box([fp,ccw(inner)],top,1.1,WALL,EDGE);
   if(axis){const pd=fpLocal.map(p=>p[0]*axis.d[0]+p[1]*axis.d[1]),pn=fpLocal.map(p=>p[0]*axis.n[0]+p[1]*axis.n[1]);
@@ -1647,11 +1674,13 @@ function LAM_siteGraphics(fr,lotLocal,m,col){
   flat(lot,0.04,[150,186,118,.95],{color:[...col,1],size:2.5});                     // 草地＋分配人顏色邊界
   for(const e of (m.roadL||[])){if(e.length<2)continue;const u=[(e.b[0]-e.a[0])/e.length,(e.b[1]-e.a[1])/e.length];let n=[-u[1],u[0]];if((c[0]-e.a[0])*n[0]+(c[1]-e.a[1])*n[1]<0)n=[-n[0],-n[1]];
     const walk=AllocationCore.clipHalfPlane(lotLocal,e.a,n,3,true);if(walk.length>=3)flat(lamSigned(walk)>0?walk.slice().reverse():walk,0.07,[206,200,188,1]);   // 無遮簷人行道 3m
-    const sb=e.isFront?m.sbFront:m.sbSide;if(sb>=4.5&&e.length>=5){const k=Math.max(1,Math.floor(e.length/7));for(let i=0;i<k;i++){const s=e.length*(i+.5)/k;const p=[e.a[0]+u[0]*s+n[0]*4,e.a[1]+u[1]*s+n[1]*4];
-      out.push(lamObj(fr,p,0,'cylinder',0.35,2.4,[112,86,62]));out.push(lamObj(fr,p,2.0,'sphere',3.0,3.4,[88+i*7%20,142,76]))}}}   // 行道樹
+    const sb=e.isFront?m.sbFront:m.sbSide;if(sb>=3&&e.length>=5){const k=Math.max(1,Math.floor(e.length/7));for(let i=0;i<k;i++){const s=e.length*(i+.5)/k;const p=[e.a[0]+u[0]*s+n[0]*1.2,e.a[1]+u[1]*s+n[1]*1.2];   // 行道樹種在 3m 人行道內側（距建築線 1.2m）
+      out.push(lamObj(fr,p,0,'cylinder',0.35,2.4,[112,86,62]));out.push(lamObj(fr,p,2.0,'sphere',2.4,3.0,[88+i*7%20,142,76]))}}}   // 行道樹
   return out;
 }
 async function LAM_generateBuildings(){
+  if(LAM.build.generating)return;LAM.build.generating=true;try{return await LAM_generateBuildings_()}finally{LAM.build.generating=false}}
+async function LAM_generateBuildings_(){
   if(LAM.build.prev==null)LAM.build.prev={mode:activeView()===view3d?'3d':'2d',vision:sceneModel?sceneModel.visible:false};
   const allocs=LAM.users.flatMap(u=>u.allocs.map(a=>({u,a})));
   if(!allocs.length){toast('尚無配地結果，請先完成切割分配');return}
@@ -1679,11 +1708,21 @@ async function LAM_generateBuildings(){
   if(LAM.build.hideVision){if(sceneModel)sceneModel.visible=false;if(map.ground&&LAM.build.groundOpacity==null){LAM.build.groundOpacity=map.ground.opacity;map.ground.opacity=1}}
   const pts=allocs.flatMap(x=>x.a.ring);const xs=pts.map(p=>p[0]),ys=pts.map(p=>p[1]);
   const cx=(Math.min(...xs)+Math.max(...xs))/2,cy=(Math.min(...ys)+Math.max(...ys))/2,span=Math.max(Math.max(...xs)-Math.min(...xs),Math.max(...ys)-Math.min(...ys),80);
-  await new Promise(r=>setTimeout(r,300));view3d.goTo({target:new Graphic({geometry:{type:'point',x:cx,y:cy,z:0,spatialReference:{wkid:3857}}}).geometry,scale:Math.max(700,span*8),tilt:62,heading:20},{duration:900}).catch(e=>console.warn(e));
+  await new Promise(r=>setTimeout(r,300));await LAM_camTo(cx,cy,{scale:Math.max(700,span*8),tilt:62,heading:20,z:0});
   setCesiumStatus('建物積木模型（模擬）｜依前竹細部計畫建蔽率、容積率與退縮規定生成；地形暫以平地顯示，與配地 CAD 圖層對齊');
   const ok=LAM.build.list.filter(x=>x.ok).length,warn=LAM.build.list.filter(x=>x.note).length;toast(ok?`已生成 ${ok} 棟建物積木模型（模擬）${warn?`，其中 ${warn} 棟退縮已放寬，見下方表格`:''}`:'沒有可生成的建物，請看下方表格原因');
 }
-function LAM_clearBuildings(){
+// 鏡頭移到指定位置；AI 視窗開啟時把目標放在視窗左側。只暫時使用 view.padding，結束後還原，避免日照等控制元件跑位
+async function LAM_camTo(x,y,o={}){const v=activeView();const ai=document.getElementById('aiPanel');const pad=ai&&ai.classList.contains('open')?Math.min(460,ai.offsetWidth+30):0;
+  const pt=new Graphic({geometry:{type:'point',x,y,z:o.z??6,spatialReference:{wkid:3857}}}).geometry;
+  if(v===view3d){try{const hd=o.heading??v.camera.heading,tl=o.tilt??65,sc=o.scale||320;await v.goTo({target:pt,scale:sc,tilt:tl,heading:hd},{duration:o.duration??800});
+    if(pad){const p2=v.toMap({x:v.width/2+pad/2,y:v.height/2});if(p2)await v.goTo({target:p2,scale:sc,tilt:tl,heading:hd},{duration:350})}}catch(e){}finally{v.padding={right:0}}}   // 3D：把鏡頭往右平移半個 AI 視窗寬，讓目標出現在視窗左側
+  else{try{await v.goTo({target:pt,scale:(o.scale||320)*2.5},{duration:o.duration??600});if(pad){const c=v.center.clone();c.x+=pad/2*v.resolution;await v.goTo(c,{duration:0})}}catch(e){}}}
+async function LAM_focusAlloc(uid,block,area){const u=LAM.users.find(x=>x.id===uid);const a=u&&(u.allocs.find(x=>x.block===block&&Math.abs(x.area-area)<0.5)||u.allocs.find(x=>x.block===block));
+  if(!a){toast('找不到這筆配地');return}const c=AllocationCore.centroid(a.ring);showSelectOutline(activeView()===view3d?null:{type:'polygon',rings:[a.ring],spatialReference:{wkid:3857}});
+  await LAM_camTo(c[0],c[1],{scale:activeView()===view3d?420:450,tilt:62});toast(`已定位：第 ${uid} 位 ${block}（${lamFmt(a.area,2)} ㎡）`)}
+function lamLocBtn(uid,block,area){return `<button class="lam-loc" title="定位到這棟" onclick="LAM_focusAlloc(${uid},'${esc(block)}',${Number(area)||0})">📍定位</button>`}
+function LAM_clearBuildings(){if(typeof view3d!=='undefined'&&view3d)view3d.padding={right:0};
   // 清除模型＝回到「生成模型之前」的畫面：原本在 2D 就回 2D；原本在 3D 就還原願景模型、地表與疊加設定
   LAM.buildLayer.removeAll();LAM.siteLayer.removeAll();LAM.build.list=[];
   if(LAM.build.elevWas){for(const [l,v] of LAM.build.elevWas)l.visible=v;LAM.build.elevWas=null}
@@ -1704,6 +1743,236 @@ function LAM_buildHtml(){
   h+=`<div class="info-note">建蔽率、容積率、退縮依《變更臺中市烏日地區都市計畫細部計畫（配合前竹地區區段徵收開發）第二次專案變更》：住宅區臨路退縮 5m、角地側院 3m，商業區退縮 6m（角地兩側），退縮空地臨建築線 3m 為無遮簷人行道、其餘植栽。系統圖資只標示「住宅區」，請選擇細分區。前竹細計未訂後院；配地最小面寬 7m／最小面積 140㎡ 為參考臺中市其他細部計畫之暫定值（前竹依臺中市畸零地使用自治條例）。<b style="color:#c62828">參數為示範值，非前竹正式土地使用管制。</b></div></div>`;
   return h;
 }
+
+
+/* ================= 智選地 AI 助理 × 試配地（自然語言配地＋生成建物模型） =================
+ * 民眾直接對 AI 說：「我有 1 億權利價值，在 A2-1 切 300 平方公尺」
+ * → 設定權利價值 → 沿紅色分配方向線切割 → 依前竹土地使用管制與退縮生成建物模型
+ * 不需開啟試配地面板；資訊不足時 AI 會追問（多輪對話）。
+ */
+LAM.ai={budget:null,block:null,mode:null,value:null,build:true,awaitReset:false};
+// 中文數字 → 阿拉伯數字（一億、五千萬、三千五百萬、兩百坪…）
+function lamCn2num(s){const D={'零':0,'〇':0,'一':1,'壹':1,'二':2,'兩':2,'貳':2,'三':3,'參':3,'四':4,'肆':4,'五':5,'伍':5,'六':6,'陸':6,'七':7,'柒':7,'八':8,'捌':8,'九':9,'玖':9},U={'十':10,'拾':10,'百':100,'佰':100,'千':1000,'仟':1000};let total=0,num=0;for(const ch of s){if(ch in D)num=D[ch];else if(ch in U){total+=(num||1)*U[ch];num=0}}return total+num}
+function lamNormText(t){return String(t||'').normalize('NFKC').replace(/[零〇一二兩三四五六七八九十百千壹貳參肆伍陸柒捌玖拾佰仟]+(?=\s*(億|萬|坪|平方|平米|元|塊|㎡|m2))/g,m=>String(lamCn2num(m))).replace(/(\d),(?=\d{3})/g,'$1')}
+// 找出句子中所有金額（含位置），單位：億、萬、元
+function lamParseMoney(t){const out=[];const re=/(\d+(?:\.\d+)?)\s*億(?:\s*(\d+(?:\.\d+)?)\s*萬)?|(\d+(?:\.\d+)?)\s*萬(?:元)?|(\d{5,}(?:\.\d+)?)\s*(?:元|塊)?/g;let m;
+  while((m=re.exec(t))){let v=0;if(m[1])v=parseFloat(m[1])*1e8+(m[2]?parseFloat(m[2])*1e4:0);else if(m[3])v=parseFloat(m[3])*1e4;else v=parseFloat(m[4]);
+    // 排除面積數字（後面接㎡、坪）
+    if(/^\s*(平方|㎡|m2|m²|坪|平米)/.test(t.slice(re.lastIndex)))continue;out.push({v,i:m.index,j:re.lastIndex})}return out}
+function lamParseArea(t){const m=t.match(/(\d+(?:\.\d+)?)\s*(平方公尺|平方米|平米|㎡|m2|m²|平方|坪)/i);if(!m)return null;let v=parseFloat(m[1]);if(m[2]==='坪')v=v*3.305785;return Math.round(v*100)/100}
+function lamParseBlock(t){const u=t.toUpperCase().replace(/\s+/g,'');const names=[...LAM.byName.keys()].sort((a,b)=>b.length-a.length);
+  for(const n of names){const re=new RegExp('(^|[^A-Z0-9-])'+n.toUpperCase().replace(/[()\-]/g,'\\$&')+'(?![0-9-])');if(re.test(u))return n}
+  if(/這塊|這裡|這個街廓|此街廓|選取|剛剛那|同一個|同街廓|這邊/.test(t)){if(LAM.ai.picked&&LAM.byName.has(LAM.ai.picked))return LAM.ai.picked;if(LAM.ai.block)return LAM.ai.block;if(LAM.sel)return LAM.sel.name;if(lastBlockName&&LAM.byName.has(lastBlockName))return lastBlockName}
+  return null}
+const LAM_RESET_ALL_RE=/(全部|所有|全都|通通|都).{0,6}(清|刪|重來|重設|重新|歸零|移除)|(清除|清掉|清空|刪除|刪掉|移除|重置|歸零).{0,6}(全部|所有|分配結果|配地結果|分配紀錄|配地紀錄|紀錄|分配人)|重新(開始|來過|來)|從頭|重置|歸零|清空|從第\s*(1|一)\s*位|重新從\s*(1|一)|回到第\s*(1|一)\s*位|第\s*(1|一)\s*位開始/;   // 全部清除、從第 1 位重新開始的各種說法
+function lamAiIntent(t){
+  if(LAM.ai&&LAM.ai.awaitReset)return true;   // 正在等待「確定／不要」
+  if(LAM.ready&&lamUnknownCodes(t).some(c=>c.includes('-')||LAM_aiActive()))return true;
+  {const n0=lamNormText(t).replace(/,/g,'').trim(),w=LAM.ai.awaiting;
+   if(/^(我有|有|共|大約|約)?\s*\d+(\.\d+)?\s*(億|萬)?\s*(\d+(\.\d+)?\s*萬)?\s*(元|塊)?\s*(的?權利價值|的?權值)?$/.test(n0))return true;   // 單純一個金額，例如「1億」「5000萬」
+   // 像地名的句子（例如「一億香蕉蛋糕」）且沒有配地用語 → 交給定位流程（配地中會先詢問）
+   if(typeof chatLocationIntent==='function'){const li=chatLocationIntent(t);if(li&&li.query&&!/權|配|切|分|整筆|坪|平方|㎡|街廓|模型|蓋|全部|平均|最小|下一位|重設|重來|清除|結果/.test(t)&&!lamParseBlock(n0))return false}
+   if(w==='budget'&&lamParseMoney(n0).length)return true;
+   if(w==='block'&&(lamParseBlock(n0)||lamParseBlocks(n0).length))return true;
+   if(w==='mode'&&(lamParseArea(n0)||lamParseMoney(n0).length||/整筆|全部|平均|最小|用完|各/.test(n0)))return true}
+  if(LAM_RESET_ALL_RE.test(String(t||'').normalize('NFKC'))&&!/模型|地圖|圖層|搜尋/.test(t))return true;
+  const s=t;if(LAM.ai.awaitReset)return true;
+  if(/配地資訊|配地規劃線|配地規劃面|規劃線|cad|圖例|分區/.test(s)&&!/權值|權利價值|切|蓋/.test(s))return false;
+  if(/權值|權利價值|試配|試分配|配地|分配|切割|分割|切\d|切.{0,3}(平方|坪|㎡)|整筆|蓋房|蓋.{0,2}(房|樓)|建物模型|積木|生成模型|清除模型|下一位|換人|重設權|最少要|門檻|剩多少|我的地|分到|全部重來|全部清除|清除全部|清除所有|重新開始|從頭/.test(s))return true;
+  const nt=lamNormText(s),hasMoney=lamParseMoney(nt).length>0,hasBlock=!!lamParseBlock(nt);
+  if(/\d\s*(平方公尺|平方米|㎡|坪)/.test(nt)&&hasBlock)return true;
+  if(hasMoney&&(hasBlock||/我有|權|預算|切|分|配|買/.test(nt)))return true;
+  if(hasBlock&&/切|整筆|分給|配給|選|配|分/.test(nt))return true;
+  return !!(LAM.ai.budget||LAM.ai.block||LAM.ai.mode||LAM.ai.multi)&&(lamParseMoney(nt).length||lamParseArea(nt)||lamParseBlock(nt)||/整筆|全部|用完|各|平均|最小/.test(nt));
+}
+function lamAiBtns(list){return `<div class="lam-ai-btns">${list.map(([label,q])=>`<button onclick="askAI(${esc(JSON.stringify(q))})">${esc(label)}</button>`).join('')}</div>`}
+function lamAiReply(html){return addMsg('', 'bot', html)}
+
+async function LAM_aiHandle(raw){
+  if(!lamAiIntent(raw))return false;
+  if(!LAM.ready){const busy=lamAiReply('<div class="map-busy"><i class="mini-spin"></i>正在載入街廓與分配方向線…</div>');try{await LAM_loadBlocks()}catch(e){lamAiReply('街廓資料載入失敗：'+esc(e.message));return true}finally{busy&&busy.remove()}}
+  if(typeof isQianzhuMode!=='undefined'&&!isQianzhuMode&&typeof focusQianzhu==='function'){try{await Promise.race([focusQianzhu(true),new Promise(r=>setTimeout(r,4000))])}catch(e){}}   // 自動進入前竹（顯示配地街廓、紅色箭頭、分區）
+  const t=lamNormText(raw),A=LAM.ai;let u=LAM_curUser();const prevAwait=A.awaiting;A.awaiting=null;A.lastAt=Date.now();
+  {const unk=lamUnknownCodes(raw);if(unk.length&&!A.awaitReset){const known=lamParseBlocks(t).map(x=>x.name);A.awaiting=prevAwait;
+    const sug=unk.map(c=>{const l=lamSuggest(c);return `「<b>${esc(c)}</b>」${l.length?`，相近的配地街廓：${l.map(esc).join('、')}`:''}`}).join('<br>');
+    const btns=[];unk.forEach(c=>lamSuggest(c).slice(0,3).forEach(n=>btns.push([`改成 ${n}`,raw.replace(new RegExp(c.replace(/[()\-]/g,'\\$&'),'i'),n)])));
+    if(known.length)btns.unshift([`只配 ${known.join('、')}`,unk.reduce((x,c)=>x.replace(new RegExp('[、,，\\s]*'+c.replace(/[()\-]/g,'\\$&'),'i'),''),raw)]);
+    lamAiReply(`⚠ 找不到下列街廓編號，它們不是前竹的<b>配地街廓</b>（可能打錯，或屬於道路、公園等公共設施）：<br>${sug}<br>請確認編號後再告訴我。${known.length?`（${known.map(esc).join('、')} 是有效的配地街廓）`:''}`+lamAiBtns(btns.slice(0,6)));return true}}
+
+  // ---- 確認重設 ----
+  if(A.awaitReset==='all'){A.awaitReset=false;if(/確定|是|好|對|ok/i.test(t)){LAM_clearAllNow();Object.assign(A,{budget:null,block:null,mode:null,value:null,picked:null});lamAiReply('已清除所有分配紀錄，街廓全部恢復原狀。現在從<b>第 1 位</b>開始，請告訴我您的權利價值。')}else lamAiReply('好的，保留原本的分配紀錄。');return true}
+  if(A.awaitReset){A.awaitReset=false;if(/確定|是|好|對|ok/i.test(t)&&u){for(let i=u.allocs.length-1;i>=0;i--){const a=u.allocs[i];const b=LAM.byName.get(a.block);if(b&&b.history.length){b.ring=b.history.pop();b.allocs.pop()}}
+      u.allocs=[];u.budget=null;u.remaining=null;Object.assign(A,{budget:null,mode:null,value:null});LAM_save();LAM_drawResults();if(LAM.buildLayer.graphics.length)LAM_clearBuildings();LAM_render();
+      lamAiReply(`已取消第 ${u.id} 位的所有配地，土地已退回。請重新告訴我您的權利價值。`);}else lamAiReply('好的，維持原本的配地。');return true}
+
+  // ---- 其他指令 ----
+  if(/怎麼|如何|說明|教我/.test(t)&&/配地|分配|試配/.test(t)&&!lamParseMoney(t).length){lamAiReply(LAM_aiHelp());return true}
+  if(/(生成|產生|蓋|顯示).{0,4}(建物|模型|房子)|^蓋房子/.test(t)&&!lamParseMoney(t).length&&!lamParseArea(t)&&!/整筆|全部/.test(t)){
+    if(!LAM.users.some(x=>x.allocs.length)){lamAiReply('目前還沒有配地結果。請先告訴我權利價值與想分配的街廓，例如「我有 1 億，在 A2-1 切 300 平方公尺」。');return true}
+    const busy=lamAiReply('<div class="map-busy"><i class="mini-spin"></i>正在生成建物模型…</div>');try{await LAM_generateBuildings()}finally{busy&&busy.remove()}
+    lamAiReply(`🏠 已生成 ${LAM.build.list.filter(x=>x.ok).length} 棟建物模型，點「📍定位」可直接飛過去：<br>${LAM.build.list.map(x=>`<div class="lam-ai-item">${x.ok?`・第${x.userId}位 <b>${esc(x.block)}</b>：${x.floors} 層，建築面積 ${lamFmt(x.fpArea,1)} ㎡`:`・第${x.userId}位 ${esc(x.block)}：${esc(x.reason)}`}${lamLocBtn(x.userId,x.block,x.land)}</div>`).join('')}`+lamAiBtns([['清除模型','清除模型']]));return true}
+  if(LAM_RESET_ALL_RE.test(t)&&!/模型/.test(t)){const n=LAM.users.filter(x=>x.allocs.length).length;
+    if(!n){LAM_clearAllNow();Object.assign(A,{budget:null,block:null,mode:null,value:null});lamAiReply('目前沒有分配紀錄，已從<b>第 1 位</b>開始。請告訴我您的權利價值。');return true}
+    A.awaitReset='all';lamAiReply(`確定要清除<b>全部 ${n} 位</b>的分配紀錄，讓所有街廓恢復原狀、從第 1 位重新開始嗎？`+lamAiBtns([['確定全部清除','確定'],['不要','不要']]));return true}
+  if(/清除模型|移除模型|刪除模型/.test(t)){LAM_clearBuildings();lamAiReply('已清除建物模型，回到原本的畫面。');return true}
+  if(/重設|取消.{0,4}(配地|分配)|重新(配|分)/.test(t)){if(!u||!u.allocs.length){Object.assign(A,{budget:null,block:null,mode:null,value:null});if(u){u.budget=null;u.remaining=null;LAM_save()}lamAiReply('已清除權利價值設定，請重新告訴我您的權利價值。');return true}
+    A.awaitReset=true;lamAiReply(`確定要取消第 ${u.id} 位已分配的 ${u.allocs.length} 宗土地（${u.allocs.map(a=>esc(a.block)+' '+lamFmt(a.area,2)+'㎡').join('、')}）嗎？${lamAiBtns([['確定取消','確定'],['不要','不要']])}`);return true}
+  if(/下一位|換人|完成.{0,4}(分配|配地)|結束分配/.test(t)){if(!u||!u.budget){lamAiReply('目前還沒有設定權利價值，不需要換下一位。');return true}
+    u.done=true;const n={id:u.id+1,allocs:[],done:false,budget:null,remaining:null};LAM.users.push(n);LAM.cur=n.id;Object.assign(A,{budget:null,block:null,mode:null,value:null});LAM.sel=null;showSelectOutline(null);LAM_save();LAM_render();
+    lamAiReply(`第 ${u.id} 位分配完成${u.remaining>0?`（剩餘權利價值 ${lamFmt(u.remaining)} 元未分配）`:''}。現在是<b>第 ${n.id} 位</b>，請告訴我您的權利價值。`);return true}
+  if(/我的(配地|地)|分到|配地結果|剩多少|剩餘權/.test(t)&&!lamParseMoney(t).length&&!lamParseArea(t)){lamAiReply(LAM_aiSummary());return true}
+  if(/最少|門檻|至少要/.test(t)){const bn=lamParseBlock(t);if(bn){const nd=LAM_minNeed(LAM.byName.get(bn));lamAiReply(`街廓 <b>${esc(bn)}</b> 目前最少需分配 <b>${lamFmt(nd.area,2)} ㎡</b>，約需權利價值 <b>${lamFmt(nd.price)}</b> 元（最小面寬 7m、最小面積 140㎡，暫定值）。`);return true}}
+
+  // ---- 解析參數 ----
+  const money=lamParseMoney(t),area=lamParseArea(t),bn=lamParseBlock(t);
+  const budgetKw=/權值|權利價值|預算|我有|共有|總共|手上|持有/;
+  let budgetV=null,priceV=null;
+  const known=()=>budgetV!=null||(u&&u.budget)||A.budget;
+  for(const m of money){const ctx=t.slice(Math.max(0,m.i-8),m.i)+'|'+t.slice(m.j,m.j+6);const isB=budgetKw.test(ctx);const explicitCut=/用|以|切|買|花/.test(t.slice(Math.max(0,m.i-3),m.i))||/切|分配|來切/.test(t.slice(m.j,m.j+3));
+    if(isB&&!explicitCut&&budgetV==null)budgetV=m.v;else if(explicitCut&&priceV==null)priceV=m.v;else if(!known())budgetV=m.v;else if(priceV==null)priceV=m.v}
+  if(budgetV!=null)A.budget=budgetV;
+  if(bn)A.block=bn;
+  {const bl=lamParseBlocks(t);if(bl.length>=2){A.multi=bl.map(x=>x.name);A.block=null}else if(bl.length===1)A.multi=null}
+  if(/整筆|整塊|全部土地|整個街廓/.test(t)){A.mode='整筆土地';A.value=null}
+  else if(area){A.mode='面積切割';A.value=area}
+  else if(priceV!=null){A.mode='價格切割';A.value=priceV}
+  else if(/全部權利價值|用完|全部用|帶入可分配|能分多少|盡量分|全部分/.test(t)){A.mode='全部';A.value=null}
+  if(/不要.{0,3}(蓋|模型)|不用.{0,3}(蓋|模型)|只要配地|先不要蓋/.test(t))A.build=false;else if(/蓋|建物|模型|房子|3d|立體/i.test(t))A.build=true;
+
+  // ---- 設定權利價值 ----
+  const msgs=[];
+  if(A.budget!=null&&(!u||!u.budget||u.budget!==A.budget)){
+    if(u&&u.allocs.length&&u.budget!==A.budget){lamAiReply(`第 ${u.id} 位已用 ${lamFmt(u.budget)} 元分配了土地。若要換成新的權利價值，請說「下一位」改由下一位地主配地，或說「重設配地」重新開始。`);A.budget=u.budget;return true}
+    if(!u){u={id:(LAM.users.reduce((m,x)=>Math.max(m,x.id),0)+1),allocs:[],done:false};LAM.users.push(u);LAM.cur=u.id}
+    u.budget=A.budget;u.remaining=A.budget;LAM_save();LAM_render();
+    msgs.push(`已設定<b>第 ${u.id} 位</b>的權利價值 <b>${lamFmt(A.budget)}</b> 元。`);
+    {const prev=LAM.users.filter(x=>x.id!==u.id&&x.allocs.length).length;if(prev&&!A.noticed){A.noticed=true;msgs.push(`<br><span style="color:#b45309">（此瀏覽器保留了先前 ${prev} 位的模擬分配紀錄，所以接續為第 ${u.id} 位。若要從第 1 位重新開始，請說「全部重來」。）</span>`)}}
+    const cheap=LAM.blocks.filter(b=>LAM_remainArea(b)>=10).map(b=>({b,need:LAM_minNeed(b)})).sort((x,y)=>x.need.price-y.need.price)[0];
+    if(cheap&&A.budget<cheap.need.price){lamAiReply(msgs.join('')+`<br><b style="color:#c62828">此權利價值不足以單獨分配任何一宗土地</b>（目前最低約需 ${lamFmt(cheap.need.price)} 元，街廓 ${esc(cheap.b.name)}）。實務上可與其他地主合併分配，或申請領取現金補償。`);return true}
+  }
+  u=LAM_curUser();
+  if(!u||!u.budget){A.awaiting='budget';lamAiReply(`好的，請先告訴我您的<b>權利價值</b>，例如「我有 1 億權利價值」。${A.block?`（已記下街廓 ${esc(A.block)}）`:''}`);return true}
+
+  if(A.multi&&A.multi.length>=2)return await LAM_aiMultiRun(t,u,msgs);
+  // ---- 缺街廓 ----
+  if(!A.block){const sug=(LAM.sel&&LAM.sel.name)||(lastBlockName&&LAM.byName.has(lastBlockName)?lastBlockName:null);
+    A.awaiting='block';lamAiReply(msgs.join('')+`<br>您想分配在哪個<b>街廓</b>？可以直接輸入編號（例如 A2-1），或先在地圖上點選街廓再說「這塊」。剩餘可分配權利價值 ${lamFmt(u.remaining)} 元。${sug?lamAiBtns([['分配在 '+sug,'分配在'+sug]]):''}`);return true}
+  const b=LAM.byName.get(A.block);
+  if(LAM_remainArea(b)<10){lamAiReply(`街廓 ${esc(b.name)} 已經分配完畢，請換一個街廓。`);A.block=null;return true}
+  LAM_select(b.name,true);
+
+  // ---- 缺切割方式 ----
+  const r=LAM_rules(b),ar=LAM_remainArea(b),nd=LAM_minNeed(b),canArea=Math.min(ar,u.remaining/r['評定單價']);
+  if(!A.mode){A.awaiting='mode';lamAiReply(msgs.join('')+`<br>街廓 <b>${esc(b.name)}</b>：剩餘 ${lamFmt(ar,2)} ㎡，評定單價 ${lamFmt(r['評定單價'])} 元/㎡（模擬值），最少需分配 ${lamFmt(nd.area,2)} ㎡。<br>您可在此分配約 <b>${lamFmt(canArea,2)} ㎡</b>。要怎麼切？`+
+    lamAiBtns([[`切 ${Math.ceil(nd.area)} ㎡（最小）`,`切${Math.ceil(nd.area)}平方公尺`],['用全部權利價值','用全部權利價值'],...(ar*r['評定單價']<=u.remaining?[['整筆土地','整筆']]:[])]));return true}
+
+  // ---- 執行切割 ----
+  let mode=A.mode,value=A.value;
+  if(mode==='全部'){const fa=AllocationCore.fullAmount(Object.assign({},r,{ring:b.ring.map(lamFrame(b.ring).to)}),{budgetRemaining:u.remaining});mode=fa.mode;value=fa.value}
+  const res=LAM_doCut(u,b,mode,value,true);
+  A.mode=null;A.value=null;
+  if(!res||!res.ok){lamAiReply(msgs.join('')+`<br><b style="color:#c62828">無法分配：</b>${esc(res?res.error:'未知錯誤')}`+lamAiBtns([[`改切 ${Math.ceil(nd.area)} ㎡`,`切${Math.ceil(nd.area)}平方公尺`],['用全部權利價值','用全部權利價值']]));return true}
+  const al=res.alloc;msgs.push(`<br>✅ 已沿<b style="color:#d32f2f">紅色分配方向線</b>在街廓 <b>${esc(b.name)}</b> 分配 <b>${lamFmt(al.area,2)} ㎡</b>，權利價值 ${lamFmt(al.price)} 元。<br>剩餘可分配權利價值：<b>${lamFmt(u.remaining)}</b> 元。`);
+  if(res.warning)msgs.push(`<br><span style="color:#b45309">${esc(res.warning)}</span>`);
+  if(!A.build){lamAiReply(msgs.join('')+lamAiBtns([['生成建物模型','生成建物模型'],['我的配地結果','我的配地結果'],['下一位','下一位']]));return true}
+  lamAiReply(msgs.join(''));const busy=lamAiReply('<div class="map-busy"><i class="mini-spin"></i>正在依前竹土地使用管制與退縮規定生成建物模型…</div>');
+  try{await LAM_generateBuildings()}finally{busy&&busy.remove()}
+  const m=LAM.build.list.find(x=>x.userId===u.id&&x.block===b.name&&Math.abs(x.land-al.area)<0.5)||LAM.build.list[LAM.build.list.length-1];
+  if(m&&m.ok){const p=m.param;lamAiReply(`🏠 建物模型已生成（3D）${lamLocBtn(u.id,b.name,al.area)}<br>分區：${esc(m.zone)}（${esc(p.sub||p.name)}，建蔽率 ${p.cov}%、容積率 ${p.far}%）<br>基地 ${lamFmt(m.land,1)} ㎡ → 建築面積 ${lamFmt(m.fpArea,1)} ㎡、<b>${m.floors} 層樓</b>（約 ${lamFmt(m.height,1)} m），總樓地板 ${lamFmt(m.gfa,0)} ㎡<br>臨路退縮 ${p.setback} m，退縮空地留設 3m 無遮簷人行道。${m.note?`<br><span style="color:#b45309">${esc(m.note)}</span>`:''}<br><span style="color:#8294a6;font-size:11px">評定單價、最小分配面積為模擬值，僅供參考。</span>`+
+    lamAiBtns([['再切一塊','我還想再分配'],['我的配地結果','我的配地結果'],['下一位地主','下一位'],['清除模型','清除模型']]))}
+  else if(m)lamAiReply('建物模型生成失敗：'+esc(m.reason||''));
+  return true;
+}
+function LAM_aiSummary(){const u=LAM_curUser();if(!u||!u.budget)return '目前尚未設定權利價值。請告訴我，例如「我有 1 億權利價值」。';
+  if(!u.allocs.length)return `第 ${u.id} 位：權利價值 ${lamFmt(u.budget)} 元，尚未分配土地。`;
+  return `<b>第 ${u.id} 位的配地結果</b><br>${u.allocs.map(a=>`<div class="lam-ai-item">・<b>${esc(a.block)}</b>：${lamFmt(a.area,2)} ㎡（${lamFmt(a.price)} 元）${lamLocBtn(u.id,a.block,a.area)}</div>`).join('')}權利價值 ${lamFmt(u.budget)} 元，已分配 ${lamFmt(u.budget-u.remaining)} 元，剩餘 <b>${lamFmt(u.remaining)}</b> 元。`+lamAiBtns([['生成建物模型','生成建物模型'],['下一位','下一位']])}
+function LAM_aiHelp(){return `<b>用說的就能試配地</b><br>告訴我<b>權利價值</b>、<b>街廓編號</b>和<b>切割方式</b>，我會沿紅色分配方向線切割，並依前竹土地使用管制與退縮規定生成建物模型。<br><br>例如：<br>・「我有 1 億權利價值，在 A2-1 切 300 平方公尺」<br>・「權值 8000 萬，B1-3 整筆」<br>・「用 3000 萬在 A3-1 切」<br>・「這塊切 100 坪」（先點地圖選街廓）<br>・「用全部權利價值分配在 A2-2」<br>・「B10-2、E8-2、E5-1 各切 400 平方公尺」<br>・「B10-2 切 500、E8-2 整筆」<br>・「A2-1、A2-2 平均分配全部權利價值」<br><br>其他：「我的配地結果」、「A2-1 最少要多少」、「下一位」、「重設配地」、「清除模型」。`+lamAiBtns([['試試看：1億在A2-1切300㎡','我有1億權利價值，在A2-1切300平方公尺']])}
+
+
+
+/* ---------- 配地對話中：非配地編號提示、定位前先確認 ---------- */
+// 找出看起來像街廓編號、但不在 161 個配地街廓內的代碼
+function lamUnknownCodes(t){const up=lamNormText(t).toUpperCase().replace(/[－—–]/g,'-');const known=new Set([...LAM.byName.keys()].map(n=>n.toUpperCase()));const out=[];
+  const re=/(?<![A-Z0-9])([A-Z]{1,2}\d{1,2}(?:\s*-\s*\d{1,2})?(?:\(\d\))?)(?![0-9\-])/g;let m;
+  while((m=re.exec(up))){const c=m[1].replace(/\s+/g,'');if(known.has(c)||/^M2$/.test(c))continue;
+    if(!c.includes('-')&&!/街廓|配|切|分/.test(up)&&!LAM_aiActive())continue;out.push(c)}
+  return [...new Set(out)]}
+function lamSuggest(code){const names=[...LAM.byName.keys()];const m=code.match(/^([A-Z]{1,2})(\d{1,2})/);if(!m)return [];
+  let c=names.filter(n=>n.toUpperCase().startsWith(m[1]+m[2]+'-')||n.toUpperCase()===m[1]+m[2]||n.toUpperCase().startsWith(m[1]+m[2]+'('));
+  if(!c.length)c=names.filter(n=>n.toUpperCase().startsWith(m[1]));
+  return c.sort((a,b)=>a.localeCompare(b,'zh-Hant',{numeric:true})).slice(0,8)}
+function LAM_aiActive(){const A=LAM.ai;if(!A||!A.lastAt||Date.now()-A.lastAt>15*60*1000)return false;const u=LAM_curUser();return !!(A.awaiting||A.multi||(u&&u.budget))}
+function LAM_aiContinue(){const A=LAM.ai,u=LAM_curUser();A.lastAt=Date.now();
+  const w=A.awaiting==='budget'?'請告訴我您的<b>權利價值</b>，例如「1億」。':A.awaiting==='block'?'請告訴我要分配的<b>街廓編號</b>，例如「A2-1」。':A.awaiting==='mode'?'請告訴我<b>怎麼切</b>，例如「300平方公尺」、「整筆」或「用全部權利價值」。':(u&&u.budget?`您目前剩餘可分配權利價值 <b>${lamFmt(u.remaining)}</b> 元，請告訴我要分配的街廓與切法，例如「A2-1 切 300 平方公尺」。`:'請告訴我您的權利價值。');
+  if(A.awaiting==='budget'||A.awaiting==='block'||A.awaiting==='mode'){const keep=A.awaiting;setTimeout(()=>{LAM.ai.awaiting=keep},0)}
+  lamAiReply('好的，繼續試配地。'+w)}
+
+/* ---------- AI 一次配多個街廓 ---------- */
+// 找出句子中所有街廓編號（依出現順序，含位置）
+function lamParseBlocks(t){const up=String(t).toUpperCase();const names=[...LAM.byName.keys()].sort((a,b)=>b.length-a.length);const found=[];
+  for(const n of names){const re=new RegExp('(^|[^A-Z0-9-])('+n.toUpperCase().replace(/[()\-]/g,'\\$&')+')(?![0-9-])','g');let m;
+    while((m=re.exec(up))){const i=m.index+m[1].length,j=i+m[2].length;if(!found.some(f=>i<f.j&&j>f.i))found.push({name:n,i,j})}}
+  return found.sort((a,b)=>a.i-b.i)}
+// 解析一段文字中的切割參數
+function lamParseParam(seg,allowMoney=true){
+  if(/整筆|整塊|全部土地|整個街廓/.test(seg))return {mode:'整筆土地'};
+  if(/最小/.test(seg)&&!lamParseArea(seg))return {mode:'最小'};
+  const a=lamParseArea(seg);if(a)return {mode:'面積切割',value:a};
+  if(/平均/.test(seg)&&/權值|權利價值|全部|預算/.test(seg))return {mode:'平均'};
+  if(/全部權利價值|用完|全部用|盡量/.test(seg))return {mode:'全部'};
+  if(allowMoney){const ms=lamParseMoney(seg).filter(m=>!/權值|權利價值|預算|我有|共有|總共|手上/.test(seg.slice(Math.max(0,m.i-8),m.i)));if(ms.length)return {mode:'價格切割',value:ms[0].v}}
+  return null}
+async function LAM_aiMultiRun(t,u,msgs){
+  const A=LAM.ai;const found=lamParseBlocks(t);let plan;
+  if(found.length>=2){
+    const per=found.map((f,k)=>lamParseParam(t.slice(f.j,k+1<found.length?found[k+1].i:t.length)));
+    const pre=lamParseParam(t.slice(0,found[0].i));const has=per.filter(Boolean);
+    let all=null;
+    if(!has.length)all=pre;                                                     // 「各切 500 ㎡：B10-2、E8-2」
+    else if(has.length===1&&per[per.length-1]&&(found.length>1))all=per[per.length-1];  // 「B10-2、E8-2 各切 500 ㎡」
+    plan=found.map((f,k)=>({block:f.name,p:all||per[k]}));
+  }else plan=(A.multi||[]).map(n=>({block:n,p:lamParseParam(t)}));          // 先列街廓，下一句才給參數
+  A.multiPlan=plan;
+  if(plan.some(x=>!x.p)){LAM.ai.awaiting='mode';const miss=plan.filter(x=>!x.p).map(x=>x.block);
+    const need=plan.map(x=>LAM_minNeed(LAM.byName.get(x.block)));const maxMin=Math.ceil(Math.max(...need.map(n=>n.area)));const sumMin=need.reduce((s,n)=>s+n.price,0);
+    lamAiReply((msgs||[]).join('')+`<br>要在 <b>${plan.map(x=>esc(x.block)).join('、')}</b> 共 ${plan.length} 個街廓配地。${miss.length<plan.length?`其中 ${miss.map(esc).join('、')} 還沒指定切法。`:''}<br>各街廓最少需分配：${plan.map((x,k)=>`${esc(x.block)} ${lamFmt(need[k].area,1)}㎡`).join('、')}（合計約需 ${lamFmt(sumMin)} 元，您剩餘 ${lamFmt(u.remaining)} 元）。<br>要怎麼切？也可以分別指定，例如「${esc(plan[0].block)} 切 500 平方公尺、${esc(plan[1].block)} 整筆」。`+
+      lamAiBtns([[`各切 ${maxMin} ㎡`,`各切${maxMin}平方公尺`],['平均分配全部權利價值','平均分配全部權利價值'],['各切最小面積','各切最小面積']]));
+    return true}
+  plan.forEach(x=>{if(x.p.mode==='全部')x.p={mode:'平均'}});   // 多街廓時「全部權利價值」視為平均分配
+  // 平均分配：剩餘權利價值 ÷ 街廓數
+  const nAvg=plan.filter(x=>x.p.mode==='平均').length;const avg=nAvg?Math.floor(u.remaining/nAvg):0;
+  // 先試算總金額，不足就不切，避免只配到一半
+  {let total=0;const det=[];for(const x of plan){const b=LAM.byName.get(x.block);const up=LAM_rules(b)['評定單價'];let c=0;
+      if(x.p.mode==='面積切割')c=x.p.value*up;else if(x.p.mode==='價格切割')c=x.p.value;else if(x.p.mode==='整筆土地')c=Math.round(LAM_remainArea(b)*up);else if(x.p.mode==='最小')c=LAM_minNeed(b).price;else if(x.p.mode==='平均')c=avg;
+      total+=c;det.push(`${esc(x.block)} ${lamFmt(c)} 元`)}
+    if(total>u.remaining+1){const each=Math.floor(u.remaining/plan.length/Math.max(...plan.map(x=>LAM_rules(LAM.byName.get(x.block))['評定單價'])));
+      lamAiReply((msgs||[]).join('')+`<br><b style="color:#c62828">權利價值不足，尚未切割。</b><br>這樣分配共需 <b>${lamFmt(total)}</b> 元（${det.join('、')}），您剩餘 <b>${lamFmt(u.remaining)}</b> 元。<br>可以改成平均分配，或減少面積：`+
+        lamAiBtns([['平均分配全部權利價值','平均分配全部權利價值'],...(each>0?[[`各切 ${each} ㎡`,`各切${each}平方公尺`]]:[]),['各切最小面積','各切最小面積']]));A.multi=plan.map(x=>x.block);return true}}
+  // 先逐一試算規則（最小面積、面寬、畸零地），任何一塊不符合就全部不切，避免只配到一半
+  {const bad=[];const seen=new Set();for(const x of plan){const b=LAM.byName.get(x.block);if(seen.has(b.name))continue;seen.add(b.name);
+      if(LAM_remainArea(b)<10){bad.push(`${esc(b.name)}：已分配完畢`);continue}
+      let {mode,value}=x.p;if(mode==='平均'){mode='價格切割';value=avg}if(mode==='最小'){mode='面積切割';value=Math.ceil(LAM_minNeed(b).area*100)/100}
+      const fr=lamFrame(b.ring);const o=AllocationCore.allocate(Object.assign({},LAM_rules(b),{ring:b.ring.map(fr.to),arrow:{tail:fr.to(b.arrow.tail),head:fr.to(b.arrow.head)},allocatedCount:b.allocs.length}),{budgetRemaining:1e15},{mode,value});
+      if(!o.ok)bad.push(`${esc(b.name)}：${esc(o.error)}`)}
+    if(bad.length){A.multi=plan.map(x=>x.block);A.awaiting='mode';
+      lamAiReply((msgs||[]).join('')+`<br><b style="color:#c62828">有 ${bad.length} 個街廓不符合配地規定，全部尚未切割：</b><br>${bad.map(x=>'・'+x).join('<br>')}<br>請調整後再試：`+lamAiBtns([['各切最小面積','各切最小面積'],['平均分配全部權利價值','平均分配全部權利價值']]));return true}}
+  const rows=[];
+  for(const x of plan){const b=LAM.byName.get(x.block);let {mode,value}=x.p;
+    if(LAM_remainArea(b)<10){rows.push(`❌ ${esc(b.name)}：已分配完畢`);continue}
+    if(mode==='平均'){mode='價格切割';value=avg}
+    if(mode==='最小'){mode='面積切割';value=Math.ceil(LAM_minNeed(b).area*100)/100}
+    if(mode==='全部'){const fa=AllocationCore.fullAmount(Object.assign({},LAM_rules(b),{ring:b.ring.map(lamFrame(b.ring).to)}),{budgetRemaining:u.remaining});mode=fa.mode;value=fa.value}
+    const res=LAM_doCut(u,b,mode,value,true);
+    rows.push(res&&res.ok?`✅ ${esc(b.name)}：${lamFmt(res.alloc.area,2)} ㎡，${lamFmt(res.alloc.price)} 元 ${lamLocBtn(u.id,b.name,res.alloc.area)}`:`❌ ${esc(b.name)}：${esc(res?res.error:'失敗')}`)}
+  A.multi=null;A.multiPlan=null;A.block=plan[plan.length-1].block;
+  const okN=rows.filter(r=>r.startsWith('✅')).length;
+  lamAiReply((msgs||[]).join('')+`<br>已沿<b style="color:#d32f2f">紅色分配方向線</b>處理 ${plan.length} 個街廓（成功 ${okN}）：<br>${rows.join('<br>')}<br>剩餘可分配權利價值：<b>${lamFmt(u.remaining)}</b> 元。`);
+  if(!okN)return true;
+  if(!A.build){lamAiReply('需要的話可以說「生成建物模型」。');return true}
+  const busy=lamAiReply('<div class="map-busy"><i class="mini-spin"></i>正在生成建物模型…</div>');try{await LAM_generateBuildings()}finally{busy&&busy.remove()}
+  const mine=LAM.build.list.filter(m=>m.userId===u.id&&plan.some(x=>x.block===m.block));
+  lamAiReply(`🏠 已生成建物模型（3D），點「📍定位」可直接飛過去：<br>${mine.map(m=>`<div class="lam-ai-item">${m.ok?`・<b>${esc(m.block)}</b>：${esc(m.param.sub||m.param.name)}，${m.floors} 層，建築面積 ${lamFmt(m.fpArea,1)} ㎡${m.note?`（${esc(m.note)}）`:''}`:`・${esc(m.block)}：${esc(m.reason)}`}${lamLocBtn(m.userId,m.block,m.land)}</div>`).join('')}`+lamAiBtns([['我的配地結果','我的配地結果'],['下一位地主','下一位'],['清除模型','清除模型']]));
+  return true}
 
 /* ---------- 保存（瀏覽器 localStorage） ---------- */
 function LAM_save(){try{localStorage.setItem(LAM_CFG.storageKey,JSON.stringify({users:LAM.users,cur:LAM.cur,blocks:LAM.blocks.filter(b=>b.allocs.length||Object.keys(b.rules||{}).length).map(b=>({name:b.name,ring:b.ring,history:b.history,allocs:b.allocs,rules:b.rules}))}))}catch(e){}}
